@@ -9,7 +9,12 @@
     namespace ADWLM\IncipitSearch;
 
     use SimpleXMLElement;
+
+    use GuzzleHttp\Client;
+
+    // autoload muss ach anders gehn
     require_once "IncipitEntry.php";
+    require 'vendor/autoload.php';
 
     /**
      * Class IncipitCrawler
@@ -78,6 +83,11 @@
             $incipitEntry->year = (string) $year;
 
             return $incipitEntry;
+
+        }
+
+        public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipit)
+        {
 
         }
 
