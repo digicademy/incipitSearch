@@ -9,6 +9,7 @@
     namespace ADWLM\IncipitSearch;
 
     use SimpleXMLElement;
+    require_once "IncipitEntry.php";
 
     /**
      * Class IncipitCrawler
@@ -47,27 +48,43 @@
          * @param string $file
          * @return IncipitEntry
          */
-        public function incipitEntryFromXML(string $xml): string
+        public function incipitEntryFromXML(string $url, string $xml): IncipitEntry
         {
-            $catalog;
-            $catalogItemIDXPath;
-            $dataURL;
-            $detailURL;
-            $incipitKeyXPath;
-            $incipitTimeXPath;
-            $incipitNoteXPath = "//datafield[@tag='031']/subfield[@code='p']";
-            $composer;
-            $title;
-            $year;
-
 
             $xmlDict = new SimpleXMLElement($xml);
-            return $xmlDict->xpath($incipitNoteXPath)[0];
+
+//nicer solution to get first element of array?
+            $catalogItemID = $xmlDict->xpath("/record/controlfield[@tag='001']")[0];
+            $incipitKey = $xmlDict->xpath("/record/datafield[@tag='031']/subfield[@code='g']")[0];
+            $incipitAccidentals= $xmlDict->xpath("/record/datafield[@tag='031']/subfield[@code='n']")[0];
+            $incipitTime = $xmlDict->xpath("/record/datafield[@tag='031']/subfield[@code='o']")[0];
+            $incipitNote = $xmlDict->xpath("/record/datafield[@tag='031']/subfield[@code='p']")[0];
+            $composer = $xmlDict->xpath("/record/datafield[@tag='100']/subfield[@code='a']")[0];
+            $title = $xmlDict->xpath("/record/datafield[@tag='240']/subfield[@code='a']")[0];
+            $part = $xmlDict->xpath("/record/datafield[@tag='240']/subfield[@code='k']")[0];
+            $year = $xmlDict->xpath("/record/datafield[@tag='260']/subfield[@code='c']")[0];
+
+            $incipitEntry = new IncipitEntry();
+            $incipitEntry->catalog = "RISM";
+            $incipitEntry->dataURL = $url;
+            $incipitEntry->detailURL = "https://opac.rism.info/search?id=" . $catalogItemID;
+            $incipitEntry->catalogItemID = (string) $catalogItemID;
+            $incipitEntry->incipitKey = (string) $incipitKey;
+            $incipitEntry->incipitAccidentals = (string) $incipitAccidentals;
+            $incipitEntry->incipitTime = (string) $incipitTime;
+            $incipitEntry->incipitNotes = (string) $incipitNote;
+            $incipitEntry->composer = (string) $composer;
+            $incipitEntry->title = $title . " " . $part;
+            $incipitEntry->year = (string) $year;
+
+            return $incipitEntry;
+
         }
 
     }
 
     $crawler = new IncipitCrawler();
 $xml = $crawler->readFileFromURL("https://opac.rism.info/id/rismid/400110699?format=marc");
-echo $crawler->incipitEntryFromXML($xml);
+$incipit = $crawler->incipitEntryFromXML("https://opac.rism.info/id/rismid/400110699?format=marc",$xml);
+echo $incipit->json();
 

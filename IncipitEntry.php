@@ -12,8 +12,9 @@ namespace ADWLM\IncipitSearch;
 class IncipitEntry
 {
 
+// TODO: getter & setter
     /**
-     * @var catalog
+     * @var  catalog
      */
     public $catalog;
 
@@ -40,12 +41,19 @@ class IncipitEntry
     /**
      * @var
      */
+    public $incipitAccidentals;
+
+    /**
+     * @var
+     */
     public $incipitTime;
 
     /**
      * @var
      */
-    public $incipitNote;
+    public $incipitNotes;
+
+    // complete incipit?
 
     /**
      * @var
@@ -62,5 +70,17 @@ class IncipitEntry
      */
     public $year;
 
+/**
+    public function __construct($catalog, $catalogID)
+    {
 
+    }
+
+**/
+
+public function json()
+{
+return json_encode($this);
 }
+}
+
