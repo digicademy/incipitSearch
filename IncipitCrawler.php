@@ -71,13 +71,17 @@
 
         /**
          * @param string $file
-         * @return IncipitEntry
+         * @return IncipitEntry The incipit entry or null
          */
-        public function incipitEntryFromXML(string $url, string $xml): IncipitEntry
+        public function incipitEntryFromXML(string $url, string $xml) //can return null
         {
-
-            $parentXMLElement = new SimpleXMLElement($xml);
-            
+            try {
+                $parentXMLElement = new SimpleXMLElement($xml);
+            } catch (\Exception $e) {
+                // Handle all other exceptions
+                echo "incipitEntryFromXML at {$url} > could not parse XML > {$e->getMessage()} \n";
+                return null;
+            }
 //nicer solution to get first element of array?
             $catalogItemID = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/controlfield[@tag='001']");
             $incipitKey = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='g']");
@@ -108,7 +112,7 @@
 
         private function contentOfXMLElementAtPath(SimpleXMLElement $xmlElement, string $xpath): string {
             if ($xmlElement == null) {
-                echo "contentOfXMLElementAtPath > no xmlElement given";
+                echo "contentOfXMLElementAtPath > no xmlElement given\n";
                 return "";
             }
             $matchingElements = $xmlElement->xpath($xpath);
@@ -121,13 +125,17 @@
         public function crawlCatalog()
         {
 
-            $startID = 400110699;
-            $endID = 400110710;
+            $startID = 400110860;
+            $endID =   400112000;
 
             for ($i = $startID; $i < $endID; $i++) {
                 $url = "https://opac.rism.info/id/rismid/" . $i . "?format=marc";
                 $response = $this->catalogClient->request('GET', $url);
                 $xml = $response->getBody();
+                if ($xml == null || strlen($xml) == 0) {
+                    echo "crawlCatalog > not found at {$url}\n";
+                    continue;
+                }
                 $incipit = $this->incipitEntryFromXML($url, $xml);
                 $this->addIncipitEntryToElasticSearchIndex($incipit);
             }
@@ -135,11 +143,14 @@
         }
 
 
-        public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipit)
+        public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipit = null)
         {
+            if ($incipit == null) {
+                return;
+            }
             $path = '/incipits/incipit/' . $incipit->catalog . $incipit->catalogItemID;
             $response = $this->elasticClient->request('PUT', $path, ['body' => $incipit->json()]);
-            echo "addIncipidToES > Response: " . $response->getBody() . "\n";
+            echo "addIncipidToES > Response: {$response->getBody()} \n";
 
         }
 
@@ -148,7 +159,7 @@
     $crawler = new IncipitCrawler();
 //$xml = $crawler->readFileFromURL("https://opac.rism.info/id/rismid/400110699?format=marc");
 //$incipit = $crawler->incipitEntryFromXML("https://opac.rism.info/id/rismid/400110699?format=marc",$xml);
-//echo $incipit->json();
+//echo $incipit->json() . "\n";
 //$crawler->addIncipitEntryToElasticSearchIndex($incipit);
 $crawler->crawlCatalog();
 
