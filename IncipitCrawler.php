@@ -93,14 +93,14 @@
             $incipitEntry->catalog = "RISM";
             $incipitEntry->dataURL = $url;
             $incipitEntry->detailURL = "https://opac.rism.info/search?id=" . $catalogItemID;
-            $incipitEntry->catalogItemID = (string) $catalogItemID;
-            $incipitEntry->incipitKey = (string) $incipitKey;
-            $incipitEntry->incipitAccidentals = (string) $incipitAccidentals;
-            $incipitEntry->incipitTime = (string) $incipitTime;
-            $incipitEntry->incipitNotes = (string) $incipitNote;
-            $incipitEntry->composer = (string) $composer;
+            $incipitEntry->catalogItemID = $catalogItemID;
+            $incipitEntry->incipitKey = $incipitKey;
+            $incipitEntry->incipitAccidentals = $incipitAccidentals;
+            $incipitEntry->incipitTime = $incipitTime;
+            $incipitEntry->incipitNotes = $incipitNote;
+            $incipitEntry->composer = $composer;
             $incipitEntry->title = $title . " " . $part;
-            $incipitEntry->year = (string) $year;
+            $incipitEntry->year = $year;
 
             return $incipitEntry;
 
@@ -108,6 +108,7 @@
 
         private function contentOfXMLElementAtPath(SimpleXMLElement $xmlElement, string $xpath): string {
             if ($xmlElement == null) {
+                echo "contentOfXMLElementAtPath > no xmlElement given";
                 return "";
             }
             $matchingElements = $xmlElement->xpath($xpath);
@@ -133,11 +134,12 @@
 
         }
 
+
         public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipit)
         {
             $path = '/incipits/incipit/' . $incipit->catalog . $incipit->catalogItemID;
             $response = $this->elasticClient->request('PUT', $path, ['body' => $incipit->json()]);
-            echo $response->getBody();
+            echo "addIncipidToES > Response: " . $response->getBody() . "\n";
 
         }
 
