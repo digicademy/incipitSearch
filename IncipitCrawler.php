@@ -76,18 +76,18 @@
         public function incipitEntryFromXML(string $url, string $xml): IncipitEntry
         {
 
-            $xmlDict = new SimpleXMLElement($xml);
-
+            $parentXMLElement = new SimpleXMLElement($xml);
+            
 //nicer solution to get first element of array?
-            $catalogItemID = $xmlDict->xpath("/record/controlfield[@tag='001']")[0];
-            $incipitKey = $xmlDict->xpath("/record/datafield[@tag='031']/subfield[@code='g']")[0];
-            $incipitAccidentals= $xmlDict->xpath("/record/datafield[@tag='031']/subfield[@code='n']")[0];
-            $incipitTime = $xmlDict->xpath("/record/datafield[@tag='031']/subfield[@code='o']")[0];
-            $incipitNote = $xmlDict->xpath("/record/datafield[@tag='031']/subfield[@code='p']")[0];
-            $composer = $xmlDict->xpath("/record/datafield[@tag='100']/subfield[@code='a']")[0];
-            $title = $xmlDict->xpath("/record/datafield[@tag='240']/subfield[@code='a']")[0];
-            $part = $xmlDict->xpath("/record/datafield[@tag='240']/subfield[@code='k']")[0];
-            $year = $xmlDict->xpath("/record/datafield[@tag='260']/subfield[@code='c']")[0];
+            $catalogItemID = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/controlfield[@tag='001']");
+            $incipitKey = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='g']");
+            $incipitAccidentals = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='n']");
+            $incipitTime = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='o']");
+            $incipitNote = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='p']");
+            $composer = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='100']/subfield[@code='a']");
+            $title = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='240']/subfield[@code='a']");
+            $part = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='240']/subfield[@code='k']");
+            $year = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='260']/subfield[@code='c']");
 
             $incipitEntry = new IncipitEntry();
             $incipitEntry->catalog = "RISM";
@@ -106,37 +106,31 @@
 
         }
 
+        private function contentOfXMLElementAtPath(SimpleXMLElement $xmlElement, string $xpath): string {
+            if ($xmlElement == null) {
+                return "";
+            }
+            $matchingElements = $xmlElement->xpath($xpath);
+            if ($matchingElements == null ||  empty($matchingElements)) {
+                return "";
+            }
+            return (string) $matchingElements[0];
+        }
+
         public function crawlCatalog()
         {
 
+            $startID = 400110699;
+            $endID = 400110710;
 
-            $requests = function (int $startID, int $endID) {
+            for ($i = $startID; $i < $endID; $i++) {
+                $url = "https://opac.rism.info/id/rismid/" . $i . "?format=marc";
+                $response = $this->catalogClient->request('GET', $url);
+                $xml = $response->getBody();
+                $incipit = $this->incipitEntryFromXML($url, $xml);
+                $this->addIncipitEntryToElasticSearchIndex($incipit);
+            }
 
-                for ($i = $startID; $i < $endID; $i++) {
-                    $url = "https://opac.rism.info/id/rismid/" . $i . "?format=marc";
-                    yield new Request('GET', $url);
-                }
-            };
-
-            $pool = new Pool($this->catalogClient, $requests(400110699,400110707), [
-                'concurrency' => 5,
-                'fulfilled' => function ($response, $index) {
-
-                    $url = "https://opac.rism.info/id/rismid/" . $index . "?format=marc";
-                    $incipit = $this->incipitEntryFromXML($url, $response->getBody());
-                    $this->addIncipitEntryToElasticSearchIndex($incipit);
-                },
-                'rejected' => function ($reason, $index) {
-                    // this is delivered each failed request
-                    echo "Failed crawl index " . $index;
-                },
-            ]);
-
-// Initiate the transfers and create a promise
-            $promise = $pool->promise();
-
-// Force the pool of requests to complete.
-            $promise->wait();
         }
 
         public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipit)
