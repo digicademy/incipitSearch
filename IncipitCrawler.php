@@ -89,6 +89,14 @@
         public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipit)
         {
 
+            $client = new Client([
+                'base_uri' => 'http://localhost:9200',
+                'timeout'  => 2.0,
+            ]);
+            $path = '/incipits/incipit/' . $incipit->catalog . $incipit->catalogItemID;
+            $response = $client->request('PUT', $path, ['body' => $incipit->json()]);
+            echo $response->getBody();
+
         }
 
     }
@@ -97,4 +105,5 @@
 $xml = $crawler->readFileFromURL("https://opac.rism.info/id/rismid/400110699?format=marc");
 $incipit = $crawler->incipitEntryFromXML("https://opac.rism.info/id/rismid/400110699?format=marc",$xml);
 echo $incipit->json();
+$crawler->addIncipitEntryToElasticSearchIndex($incipit);
 
