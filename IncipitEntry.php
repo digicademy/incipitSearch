@@ -70,17 +70,17 @@ class IncipitEntry
      */
     public $year;
 
-/**
+    /**
     public function __construct($catalog, $catalogID)
     {
 
     }
 
-**/
+     **/
 
-public function json()
-{
-return json_encode($this);
-}
+    public function json()
+    {
+        return json_encode($this);
+    }
 }
 

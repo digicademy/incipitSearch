@@ -10,7 +10,9 @@
 
     use SimpleXMLElement;
 
+    use GuzzleHttp\Pool;
     use GuzzleHttp\Client;
+    use GuzzleHttp\Psr7\Request;
 
     // autoload muss ach anders gehn
     require_once "IncipitEntry.php";
@@ -23,10 +25,26 @@
     class IncipitCrawler
     {
 
+        private $elasticClient;
+        private $catalogClient;
+
 // Documents for Testing:
 // Gluck, Artaserse https://opac.rism.info/search?id=400110699
 // RDF: https://opac.rism.info/id/rismid/400110699?format=rdf
 // MARC XML: https://opac.rism.info/id/rismid/400110699?format=marc
+
+
+        public function __construct()
+        {
+            $this->elasticClient = new Client([
+                'base_uri' => 'http://localhost:9200',
+                'timeout'  => 2.0,
+            ]);
+
+            $this->catalogClient = new Client([
+                'timeout'  => 2.0,
+            ]);
+        }
 
         /**
          * Reads given url and saves the content
@@ -35,6 +53,8 @@
          */
         public function readFileFromURL(string $url): string
         {
+
+
 
             $options = array(
                 'http'=>array(
@@ -86,15 +106,43 @@
 
         }
 
-        public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipit)
+        public function crawlCatalog()
         {
 
-            $client = new Client([
-                'base_uri' => 'http://localhost:9200',
-                'timeout'  => 2.0,
+
+            $requests = function (int $startID, int $endID) {
+
+                for ($i = $startID; $i < $endID; $i++) {
+                    $url = "https://opac.rism.info/id/rismid/" . $i . "?format=marc";
+                    yield new Request('GET', $url);
+                }
+            };
+
+            $pool = new Pool($this->catalogClient, $requests(400110699,400110707), [
+                'concurrency' => 5,
+                'fulfilled' => function ($response, $index) {
+
+                    $url = "https://opac.rism.info/id/rismid/" . $index . "?format=marc";
+                    $incipit = $this->incipitEntryFromXML($url, $response->getBody());
+                    $this->addIncipitEntryToElasticSearchIndex($incipit);
+                },
+                'rejected' => function ($reason, $index) {
+                    // this is delivered each failed request
+                    echo "Failed crawl index " . $index;
+                },
             ]);
+
+// Initiate the transfers and create a promise
+            $promise = $pool->promise();
+
+// Force the pool of requests to complete.
+            $promise->wait();
+        }
+
+        public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipit)
+        {
             $path = '/incipits/incipit/' . $incipit->catalog . $incipit->catalogItemID;
-            $response = $client->request('PUT', $path, ['body' => $incipit->json()]);
+            $response = $this->elasticClient->request('PUT', $path, ['body' => $incipit->json()]);
             echo $response->getBody();
 
         }
@@ -102,8 +150,9 @@
     }
 
     $crawler = new IncipitCrawler();
-$xml = $crawler->readFileFromURL("https://opac.rism.info/id/rismid/400110699?format=marc");
-$incipit = $crawler->incipitEntryFromXML("https://opac.rism.info/id/rismid/400110699?format=marc",$xml);
-echo $incipit->json();
-$crawler->addIncipitEntryToElasticSearchIndex($incipit);
+//$xml = $crawler->readFileFromURL("https://opac.rism.info/id/rismid/400110699?format=marc");
+//$incipit = $crawler->incipitEntryFromXML("https://opac.rism.info/id/rismid/400110699?format=marc",$xml);
+//echo $incipit->json();
+//$crawler->addIncipitEntryToElasticSearchIndex($incipit);
+$crawler->crawlCatalog();
 
