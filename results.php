@@ -12,10 +12,5 @@
      * Licensed under The MIT License (MIT)
      */
 
-    namespace ADWLM\IncipitSearch;
-
-
-    class SearchQuery
-    {
-
-    }
+     $incipit = $_POST["incipit"];
+     echo $incipit;
