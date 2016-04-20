@@ -8,15 +8,18 @@
 
     namespace ADWLM\IncipitSearch;
 
+    // autoload muss ach anders gehn
+    require 'vendor/autoload.php';
+    
     use SimpleXMLElement;
 
     use GuzzleHttp\Pool;
     use GuzzleHttp\Client;
     use GuzzleHttp\Psr7\Request;
 
-    // autoload muss ach anders gehn
+    require_once "Incipit.php";
     require_once "IncipitEntry.php";
-    require 'vendor/autoload.php';
+    
 
     /**
      * Class IncipitCrawler
@@ -74,41 +77,40 @@
          * @param string $file
          * @return IncipitEntry The incipit entry or null
          */
-        public function incipitEntryFromXML(string $url, string $xml) //can return null
+        public function incipitEntryFromXML(string $dataURL, string $xml) //can return null
         {
             try {
                 $parentXMLElement = new SimpleXMLElement($xml);
             } catch (\Exception $e) {
                 // Handle all other exceptions
-                echo "incipitEntryFromXML at {$url} > could not parse XML > {$e->getMessage()} \n";
+                echo "incipitEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()} \n";
                 return null;
             }
 //nicer solution to get first element of array?
-            $catalogItemID = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/controlfield[@tag='001']");
-            $incipitKey = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='g']");
+            $catalogItemID = $this->contentOfXMLElementAtPath($parentXMLElement,
+                "/record/controlfield[@tag='001']");
+            $incipitKey = $this->contentOfXMLElementAtPath($parentXMLElement,
+                "/record/datafield[@tag='031']/subfield[@code='g']");
             $incipitAccidentals = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='n']");
             $incipitTime = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='o']");
-            $incipitNote = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='p']");
-            $composer = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='100']/subfield[@code='a']");
-            $title = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='240']/subfield[@code='a']");
-            $part = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='240']/subfield[@code='k']");
-            $year = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='260']/subfield[@code='c']");
+            $incipitNotes = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='p']");
+            $composer = $this->contentOfXMLElementAtPath($parentXMLElement,
+                "/record/datafield[@tag='100']/subfield[@code='a']");
+            $title = $this->contentOfXMLElementAtPath($parentXMLElement,
+                "/record/datafield[@tag='240']/subfield[@code='a']");
+            $subtitle = $this->contentOfXMLElementAtPath($parentXMLElement,
+                "/record/datafield[@tag='240']/subfield[@code='k']");
+            $year = $this->contentOfXMLElementAtPath($parentXMLElement,
+                "/record/datafield[@tag='260']/subfield[@code='c']");
 
-            $incipitEntry = new IncipitEntry();
-            $incipitEntry->catalog = "RISM";
-            $incipitEntry->dataURL = $url;
-            $incipitEntry->detailURL = "https://opac.rism.info/search?id=" . $catalogItemID;
-            $incipitEntry->catalogItemID = $catalogItemID;
-            $incipitEntry->incipitKey = $incipitKey;
-            $incipitEntry->incipitAccidentals = $incipitAccidentals;
-            $incipitEntry->incipitTime = $incipitTime;
-            $incipitEntry->incipitNotes = $incipitNote;
-            $incipitEntry->composer = $composer;
-            $incipitEntry->title = $title . " " . $part;
-            $incipitEntry->year = $year;
+            $detailURL = "https://opac.rism.info/search?id=" . $catalogItemID;
+            $fullTitle = $title . " " . $subtitle;
+            
+            $incipit = new Incipit($incipitNotes, $incipitKey, $incipitAccidentals, $incipitTime);
+            $incipitEntry = new IncipitEntry($incipit, "RISM", $catalogItemID, $dataURL, $detailURL,
+                $composer, $fullTitle, $year);
 
             return $incipitEntry;
-
         }
 
         private function contentOfXMLElementAtPath(SimpleXMLElement $xmlElement, string $xpath): string {
@@ -122,12 +124,13 @@
             }
             return (string) $matchingElements[0];
         }
+        
 
         public function crawlCatalog()
         {
 
-            $startID = 400110860;
-            $endID =   400112000;
+            $startID = 400110660;
+            $endID =   400110862;
 
             for ($i = $startID; $i < $endID; $i++) {
                 $url = "https://opac.rism.info/id/rismid/" . $i . "?format=marc";
@@ -144,13 +147,13 @@
         }
 
 
-        public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipit = null)
+        public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipitEntry = null)
         {
-            if ($incipit == null) {
+            if ($incipitEntry == null) {
                 return;
             }
-            $path = '/incipits/incipit/' . $incipit->catalog . $incipit->catalogItemID;
-            $response = $this->elasticClient->request('PUT', $path, ['body' => $incipit->json()]);
+            $path = '/incipits/incipit/' . $incipitEntry->getCatalog() . $incipitEntry->getCatalogItemID();
+            $response = $this->elasticClient->request('PUT', $path, ['body' => $incipitEntry->getJSONRepresentation()]);
             echo "addIncipidToES > Response: {$response->getBody()} \n";
 
         }
