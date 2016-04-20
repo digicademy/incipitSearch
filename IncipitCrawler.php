@@ -37,7 +37,8 @@
         public function __construct()
         {
             $this->elasticClient = new Client([
-                'base_uri' => 'http://localhost:9200',
+            // for some reason localhost not working sometimes => IP
+                'base_uri' => 'http://127.0.0.1:9200',
                 'timeout'  => 2.0,
             ]);
 

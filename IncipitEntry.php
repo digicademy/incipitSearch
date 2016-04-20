@@ -53,7 +53,10 @@ class IncipitEntry
      */
     public $incipitNotes;
 
-    // complete incipit?
+    /**
+     * @var
+     */
+    public $incipitFull;
 
     /**
      * @var
