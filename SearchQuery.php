@@ -17,8 +17,6 @@
 
     require 'vendor/autoload.php';
 
-    use GuzzleHttp\Client;
-    use GuzzleHttp\Psr7\Request;
     use Elasticsearch\ClientBuilder;
 
     require_once "Incipit.php";

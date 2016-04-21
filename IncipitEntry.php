@@ -69,7 +69,7 @@
         {
             $incipit = Incipit::incipitFromDicitonary($dict["incipit"]);
             $incipitEntry = new IncipitEntry($incipit, $dict["catalog"],
-            $dict["calatogItemID"],
+            $dict["catalogItemID"],
             $dict["dataURL"],
             $dict["detailURL"], $dict["composer"], $dict["title"], $dict["year"]);
             return $incipitEntry;
