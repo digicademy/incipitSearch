@@ -19,6 +19,7 @@
 
     use GuzzleHttp\Client;
     use GuzzleHttp\Psr7\Request;
+    use Elasticsearch\ClientBuilder;
 
     require_once "Incipit.php";
     require_once "IncipitEntry.php";
@@ -54,42 +55,53 @@
             echo "Incipit is set \n ";
         }
 
-        public function createJSONQuery(): string
+        private function generateSearchParams(): array
         {
-            $queryStructure = ["query" => [
-                "query_string" => [
-                    "fields" => $this->fields,
-                    "wildcard" => [
-                        "name" => [
-                            "query" => "*" . $this->query . "*"
+
+            $searchParams = [
+                'index' => 'incipits',
+                'type' => 'incipit',
+                'body' => [
+                    'query' => [
+                        "query_string" => [
+                            "fields" => $this->fields,
+                            "wildcard" => [
+                                "name" => [
+                                    "query" => "*" . $this->query . "*"
+                                ]
+                            ]
                         ]
-                    ]
-
+                    ],
+                    "size" => 10
                 ]
-            ],
-            "size" => 10
             ];
-        $jsonQuery = json_encode($queryStructure, JSON_PRETTY_PRINT);
-        return "{$jsonQuery} \n\n";
+
+            return $searchParams;
+
         }
 
 
-        public function performSearchQuery()
+        public function performSearchQuery(): array
         {
-            $elasticClient = new Client([
-                // for some reason localhost not working sometimes => IP
-                'base_uri' => 'http://127.0.0.1:9200',
-                'timeout'  => 2.0,
-            ]);
-
-            $path = '/incipits/_search';
-
-            $response = $elasticClient->request('POST', $path, ['body' => $this->createJSONQuery()]);
-            return $response->getBody();
-
-            //TODO: return array of IncipitsEntries
+            $client = ClientBuilder::create()->setHosts(["127.0.0.1:9200"])->build();
+            $results = $client->search($this->generateSearchParams());
+            return $this->parseSearchResponse($results);
         }
 
+        /**
+         * @param array $response
+         * @return mixed
+         */
+        private function parseSearchResponse(array $results): array
+        {
+            $hits = $results["hits"]["hits"];
+            $incipitEntries = [];
+            foreach ($hits as $hit) {
+                $incipitEntry = IncipitEntry::incipitEntryFromDictionary($hit["_source"]);
+                array_push($incipitEntries, $incipitEntry);
+            }
+            return $incipitEntries;
+        }
 
 
     }

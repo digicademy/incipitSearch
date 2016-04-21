@@ -1,6 +1,7 @@
 {
     "require": {
         "monolog/monolog": "^1.19",
-        "guzzlehttp/guzzle": "^6.2"
+        "guzzlehttp/guzzle": "^6.2",
+        "elasticsearch/elasticsearch": "^2.1"
     }
 }

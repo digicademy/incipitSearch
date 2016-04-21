@@ -3,6 +3,7 @@
      namespace ADWLM\IncipitSearch;
 
      require_once "SearchQuery.php";
+     require_once "IncipitEntry.php";
 
     /**
      * Copyright notice
@@ -17,10 +18,13 @@
      * Licensed under The MIT License (MIT)
      */
 
-     $incipit = $_POST["incipit"];
+     $incipit = $_GET["incipit"];
 
      $searchQuery = new SearchQuery();
      $searchQuery->setQuery($incipit);
-     $resultSet = $searchQuery->performSearchQuery();
+     $incipitEntries = $searchQuery->performSearchQuery();
 
-     echo $resultSet;
+
+    foreach ($incipitEntries as $incipitEntry) {
+     echo "<p>" . $incipitEntry->getTitle() . " : " . $incipitEntry->getIncipit()->getCompleteIncipit() . "</p>";
+    }

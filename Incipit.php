@@ -53,14 +53,23 @@ class Incipit
 
 
     public function getDictionaryRepresentation(): Array {
-        $dict = ['key' => $this->getKey(),
+        $dict = ['notes' => $this->getNotes(),
+            'key' => $this->getKey(),
             'accidentals' => $this->getAccidentals(),
             'time' => $this->getTime(),
-            'notes' => $this->getNotes(),
             'completeIncipit' => $this->getCompleteIncipit(),
             'normalizedIncipit' => $this->getNotesNormalized()
         ];
         return $dict;
+    }
+
+    /**
+     * @param array $dict
+     * @return Incipit
+     */
+    public static function incipitFromDicitonary(array $dict): Incipit {
+        $incipit = new Incipit( $dict["notes"],$dict["key"], $dict["accidentals"],$dict["time"]);
+        return $incipit;
     }
 
 
