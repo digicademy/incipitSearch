@@ -22,6 +22,9 @@
     use GuzzleHttp\Client;
     use GuzzleHttp\Psr7\Request;
 
+    use Elasticsearch\ClientBuilder;
+
+
     require_once "Incipit.php";
     require_once "IncipitEntry.php";
     
@@ -44,11 +47,7 @@
 
         public function __construct()
         {
-            $this->elasticClient = new Client([
-            // for some reason localhost not working sometimes => IP
-                'base_uri' => 'http://127.0.0.1:9200',
-                'timeout'  => 2.0,
-            ]);
+            $this->elasticClient = ClientBuilder::create()->setHosts(["127.0.0.1:9200"])->build();
 
             $this->catalogClient = new Client([
                 'timeout'  => 2.0,
@@ -62,9 +61,6 @@
          */
         public function readFileFromURL(string $url): string
         {
-
-
-
             $options = array(
                 'http'=>array(
                     'method'=>"GET",
@@ -157,9 +153,16 @@
             if ($incipitEntry == null) {
                 return;
             }
-            $path = '/incipits/incipit/' . $incipitEntry->getCatalog() . $incipitEntry->getCatalogItemID();
-            $response = $this->elasticClient->request('PUT', $path, ['body' => $incipitEntry->getJSONRepresentation()]);
-            echo "addIncipidToES > Response: {$response->getBody()} \n";
+
+            $esId = $incipitEntry->getCatalog() . $incipitEntry->getCatalogItemID();
+            $params = [
+                'index' => 'incipits',
+                'type' => 'incipit',
+                'id' => $esId,
+                'body' => $incipitEntry->getJSONRepresentation()
+            ];
+            $response = $this->elasticClient->index($params);
+            echo "addIncipidToES > Response: " . json_encode($response) . "\n";
 
         }
 
