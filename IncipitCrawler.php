@@ -19,7 +19,6 @@
     
     use SimpleXMLElement;
 
-    use GuzzleHttp\Pool;
     use GuzzleHttp\Client;
     use GuzzleHttp\Psr7\Request;
 
