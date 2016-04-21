@@ -33,11 +33,13 @@
     <link rel="stylesheet" href="style.css">
     <script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"></script>
     <title>Search results</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 </head>
 <body>
 <!-- The div where we are going to insert the SVG -->
 
-<div id="output"/>
+<div id="output"></div>
 <script type="text/javascript">
     /* The Plain and Easy code to be rendered */
     var data = "@clef:G-2\n\
@@ -51,14 +53,44 @@
         data,
         JSON.stringify({ inputFormat: 'pae' })
     );
+
+
+    $( document ).ready(function() {
+        //var vrvToolkit = new verovio.toolkit();
+
+        $('.result').each(function(i, domElement) {
+            var element = $(domElement);
+            var incipit = element.find('.incipit').innerHTML;
+
+            var notesDiv = element.find('.incipitNotes');
+            //notesDiv.html("Hello");
+
+            notesDiv.html  = vrvToolkit.renderData(
+                incipit,
+                JSON.stringify({ inputFormat: 'pae' })
+            );
+
+        });
+
+    });
+
 </script>
+
+
+<?php
+foreach ($incipitEntries as $incipitEntry) {
+    echo "<div class='result'>" . $incipitEntry->getTitle() . " : " . $incipitEntry->getIncipit()->getNotesNormalized() . "\n";
+    echo '<div class="incipit">' . $incipitEntry->getIncipit()->getCompleteIncipit() . "</div>\n";
+    echo '<div class="incipitNotes"></div>\n';
+    echo '</div><!--end entry-->';
+}
+
+?>
+
 </body>
 </html>
 
-<?php
-    foreach ($incipitEntries as $incipitEntry) {
-        echo "<p>" . $incipitEntry->getTitle() . " : " . $incipitEntry->getIncipit()->getCompleteIncipit() . "</p>";
-    }
+
 
 
 
