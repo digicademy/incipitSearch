@@ -44,6 +44,7 @@
          */
         private $query;
         private $fields = ["incipit.normalizedIncipit"];
+        private $numOfResults;
 
 
         public function setQuery(string $userInput)
@@ -91,6 +92,7 @@
          */
         private function parseSearchResponse(array $results): array
         {
+            $this->numOfResults = $results["hits"]["total"];
             $hits = $results["hits"]["hits"];
             $incipitEntries = [];
             foreach ($hits as $hit) {
@@ -99,6 +101,16 @@
             }
             return $incipitEntries;
         }
+
+        /**
+         * @return mixed
+         */
+        public function getNumOfResults()
+        {
+            return $this->numOfResults;
+        }
+
+
 
 
     }

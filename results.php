@@ -24,6 +24,7 @@
     $searchQuery = new SearchQuery();
     $searchQuery->setQuery($incipit);
     $incipitEntries = $searchQuery->performSearchQuery();
+    $numOfResults = $searchQuery->getNumOfResults();
 
 ?>
 <!DOCTYPE html>
@@ -37,7 +38,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 </head>
 <body>
+
+<p><a href="searchInterface.html">Back to search</a></p>
+
 <!-- The div where we are going to insert the SVG -->
+
+<p>
+<?php
+echo $numOfResults;
+?>
+ results found</p>
+
 
 <script type="text/javascript">
 
@@ -56,10 +67,11 @@
             options = JSON.stringify({
                 inputFormat: 'pae',
                 pageHeight: 300,
-                pageWidth: 400,
+                pageWidth: 4000,
                 ignoreLayout: 1,
-                border: 20,
-                scale: 100
+                border: 0,
+                scale: 50,
+                adjustPageHeight: 1
             });
 
             var vrvToolkit = new verovio.toolkit();
