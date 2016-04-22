@@ -94,7 +94,7 @@
             $hits = $results["hits"]["hits"];
             $incipitEntries = [];
             foreach ($hits as $hit) {
-                $incipitEntry = IncipitEntry::incipitEntryFromDictionary($hit["_source"]);
+                $incipitEntry = IncipitEntry::incipitEntryFromJSONArray($hit["_source"]);
                 array_push($incipitEntries, $incipitEntry);
             }
             return $incipitEntries;
