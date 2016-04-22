@@ -114,6 +114,11 @@
             return $incipitEntry;
         }
 
+        /**
+         * @param SimpleXMLElement $xmlElement
+         * @param string $xpath
+         * @return string
+         */
         private function contentOfXMLElementAtPath(SimpleXMLElement $xmlElement, string $xpath): string {
             if ($xmlElement == null) {
                 echo "contentOfXMLElementAtPath > no xmlElement given\n";
@@ -125,8 +130,11 @@
             }
             return (string) $matchingElements[0];
         }
-        
 
+
+        /**
+         * Crawls catalog from given url to given url
+         */
         public function crawlCatalog()
         {
 
@@ -147,7 +155,9 @@
 
         }
 
-
+        /**
+         * @param IncipitEntry|null $incipitEntry
+         */
         public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipitEntry = null)
         {
             if ($incipitEntry == null) {

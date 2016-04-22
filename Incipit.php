@@ -20,6 +20,13 @@ class Incipit
     protected $completeIncipit;
     protected $notesNormalized;
 
+    /**
+     * Incipit constructor.
+     * @param string $notes
+     * @param string|null $key
+     * @param string|null $accidentals
+     * @param string|null $time
+     */
     public function __construct(string $notes, string $key = null,
                                 string $accidentals = null, string $time = null)
     {
@@ -30,6 +37,7 @@ class Incipit
     }
 
     /**
+     * COmbines key, accidentals, time and notes in one string
      * @return mixed
      */
     public function getCompleteIncipit(): string
@@ -41,6 +49,11 @@ class Incipit
         return $this->completeIncipit;
     }
 
+//TODO: check if and what kind of normalization is necessary
+    /**
+     * Normalizes incipit for use in search: removes tone pitch and accidentals
+     * @return string
+     */
     public function getNotesNormalized(): string
     {
         if (empty($this->notesNormalized)) {
@@ -51,24 +64,27 @@ class Incipit
     }
 
 
-
-    public function getDictionaryRepresentation(): Array {
-        $dict = ['notes' => $this->getNotes(),
+    /**
+     * Creates json array
+     * @return mixed
+     */
+    public function getJSONArray(): Array {
+        $json = ['notes' => $this->getNotes(),
             'key' => $this->getKey(),
             'accidentals' => $this->getAccidentals(),
             'time' => $this->getTime(),
             'completeIncipit' => $this->getCompleteIncipit(),
             'normalizedIncipit' => $this->getNotesNormalized()
         ];
-        return $dict;
+        return $json;
     }
 
     /**
-     * @param array $dict
+     * @param array $json
      * @return Incipit
      */
-    public static function incipitFromDicitonary(array $dict): Incipit {
-        $incipit = new Incipit( $dict["notes"],$dict["key"], $dict["accidentals"],$dict["time"]);
+    public static function incipitFromJSONArray(array $json): Incipit {
+        $incipit = new Incipit( $json["notes"],$json["key"], $json["accidentals"],$json["time"]);
         return $incipit;
     }
 
