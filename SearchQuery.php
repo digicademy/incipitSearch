@@ -50,7 +50,6 @@
         {
             //TODO: escape user input
             $this->query = $userInput;
-            echo "Incipit is set \n ";
         }
 
         private function generateSearchParams(): array

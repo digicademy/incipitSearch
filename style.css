@@ -5,10 +5,11 @@ body {
 	background: #eee;
 	font: 20px Helvetica, sans-serif;
 	color: #222;
-	text-align: center;
 }
 
-
+.hidden {
+	display: none;
+}
 
 .form-wrapper {
 	background-color: #f6f6f6;

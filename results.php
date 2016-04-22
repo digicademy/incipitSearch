@@ -4,6 +4,7 @@
 
     require_once "SearchQuery.php";
     require_once "IncipitEntry.php";
+    require_once "Incipit.php";
 
     /**
      * Copyright notice
@@ -18,7 +19,6 @@
      * Licensed under The MIT License (MIT)
      */
 
-
     $incipit = $_GET["incipit"];
 
     $searchQuery = new SearchQuery();
@@ -26,7 +26,7 @@
     $incipitEntries = $searchQuery->performSearchQuery();
 
 ?>
-
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -39,50 +39,65 @@
 <body>
 <!-- The div where we are going to insert the SVG -->
 
-<div id="output"></div>
 <script type="text/javascript">
-    /* The Plain and Easy code to be rendered */
-    var data = "@clef:G-2\n\
-    @keysig:xFCGD\n\
-    @timesig:3/8\n\
-    @data:'6B/{8B+(6B''E'B})({AFD})/{6.E3G},8B-/({6'EGF})({FAG})({GEB})/";
-    /* Create the Vevorio toolkit instance */
-    var vrvToolkit = new verovio.toolkit();
-    /* Render the data and insert it as content of the #output div */
-    document.getElementById("output").innerHTML = vrvToolkit.renderData(
-        data,
-        JSON.stringify({ inputFormat: 'pae' })
-    );
-
 
     $( document ).ready(function() {
         //var vrvToolkit = new verovio.toolkit();
 
-        $('.result').each(function(i, domElement) {
-            var element = $(domElement);
-            var incipit = element.find('.incipit').innerHTML;
+        $('.result').each(function(i, domResult) {
+            var result = $(domResult);
+            var incipit = result.find('.incipit').text();
 
-            var notesDiv = element.find('.incipitNotes');
-            //notesDiv.html("Hello");
+            var data = "@clef:" + result.find('.incipitClef').text() + "\n";
+            data += "@keysig:" + result.find('.incipitAccidentals').text() + "\n";
+            data += "@timesig:" + result.find('.incipitTime').text() + "\n";
+            data += "@data:" + result.find('.incipitNotes').text();
 
-            notesDiv.html  = vrvToolkit.renderData(
-                incipit,
-                JSON.stringify({ inputFormat: 'pae' })
-            );
+            options = JSON.stringify({
+                inputFormat: 'pae',
+                pageHeight: 300,
+                pageWidth: 400,
+                ignoreLayout: 1,
+                border: 20,
+                scale: 100
+            });
 
-        });
+            var vrvToolkit = new verovio.toolkit();
+            var notesSVG = vrvToolkit.renderData(data, options);
+            var svgContainerDiv = result.find('.incipitSVG');
+            svgContainerDiv.html(notesSVG);
 
-    });
+        });//end for each result
+
+    });//end doc ready
 
 </script>
 
 
 <?php
 foreach ($incipitEntries as $incipitEntry) {
-    echo "<div class='result'>" . $incipitEntry->getTitle() . " : " . $incipitEntry->getIncipit()->getNotesNormalized() . "\n";
-    echo '<div class="incipit">' . $incipitEntry->getIncipit()->getCompleteIncipit() . "</div>\n";
-    echo '<div class="incipitNotes"></div>\n';
-    echo '</div><!--end entry-->';
+    $completeIncipit = $incipitEntry->getIncipit()->getCompleteIncipit();
+    $incipitNotes = $incipitEntry->getIncipit()->getNotes();
+    $incipitClef = $incipitEntry->getIncipit()->getKey();
+    $incipitAccidentals = $incipitEntry->getIncipit()->getAccidentals();
+    $incipitTime = $incipitEntry->getIncipit()->getTime();
+
+    $title = $incipitEntry->getTitle();
+    $incipitNormalized = $incipitEntry->getIncipit()->getNotesNormalized();
+
+    echo <<< EOS
+    <div class="result">
+        $title $incipitNormalized
+        <span class="incipitNotes hidden">$incipitNotes</span>
+        <span class="incipitClef hidden">$incipitClef</span>
+        <span class="incipitAccidentals hidden">$incipitAccidentals</span>
+        <span class="incipitTime hidden">$incipitTime</span>
+
+        <div class="incipitSVG"></div>
+    </div><!--end result-->
+    <br/>
+    
+EOS;
 }
 
 ?>
