@@ -53,13 +53,23 @@
             data += "@timesig:" + result.find('.incipitTime').text() + "\n";
             data += "@data:" + result.find('.incipitNotes').text();
 
+            var windowWidth = $(window).width();
+            console.log("Window Width: " + windowWidth);
+            var scale = 50;
+            if (windowWidth < 1000) {
+                scale = 30;
+            } else if (windowWidth < 500) {
+                scale = 15;
+            }
+
             options = JSON.stringify({
                 inputFormat: 'pae',
-                pageHeight: 300,
-                pageWidth: 400,
+                pageHeight: 500,
+                pageWidth: windowWidth * (1/scale),
                 ignoreLayout: 1,
-                border: 20,
-                scale: 100
+                border: 0,
+                scale: scale,
+                adjustPageHeight: 1
             });
 
             var vrvToolkit = new verovio.toolkit();
