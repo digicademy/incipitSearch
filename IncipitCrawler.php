@@ -1,4 +1,6 @@
 <?php
+namespace ADWLM\IncipitSearch;
+
     /**
      * Copyright notice
      *
@@ -12,7 +14,7 @@
      * Licensed under The MIT License (MIT)
      */
 
-    namespace ADWLM\IncipitSearch;
+
 
     // autoload muss ach anders gehn
     require 'vendor/autoload.php';
