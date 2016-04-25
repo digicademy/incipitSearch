@@ -49,7 +49,13 @@ namespace ADWLM\IncipitSearch;
 
         public function __construct()
         {
-            $this->elasticClient = ClientBuilder::create()->setHosts(["127.0.0.1:9200"])->build();
+            $jsonConfig = json_decode(file_get_contents("config.json"));
+            $elasticHost = $jsonConfig->elasticSearch->host;
+            if (empty($elasticHost)) {
+                $elasticHost = "127.0.0.1";
+            }
+            
+            $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
 
             $this->catalogClient = new Client([
                 'timeout'  => 2.0,
@@ -171,7 +177,7 @@ namespace ADWLM\IncipitSearch;
                 'index' => 'incipits',
                 'type' => 'incipit',
                 'id' => $esId,
-                'body' => $incipitEntry->getJSONRepresentation()
+                'body' => $incipitEntry->getJSONString()
             ];
             $response = $this->elasticClient->index($params);
             echo "addIncipidToES > Response: " . json_encode($response) . "\n";
