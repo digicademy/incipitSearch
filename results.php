@@ -41,7 +41,7 @@
 </head>
 <body>
 
-<p><a href="index.html">Back to search</a></p>
+<p><a href="templates/index.html">Back to search</a></p>
 
 <!-- The div where we are going to insert the SVG -->
 
