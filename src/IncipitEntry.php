@@ -1,4 +1,7 @@
 <?php
+
+    namespace ADWLM\IncipitSearch;
+
     /**
      * Copyright notice
      *
@@ -12,9 +15,7 @@
      * Licensed under The MIT License (MIT)
      */
 
-    namespace ADWLM\IncipitSearch;
-
-    require_once "Incipit.php";
+    use ADWLM\IncipitSearch\Incipit;
 
     /**
      * Specifies one incipit entry with metadata and incipit (key, accidentals, time, notes)

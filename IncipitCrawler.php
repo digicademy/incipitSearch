@@ -15,7 +15,6 @@ namespace ADWLM\IncipitSearch;
      */
 
 
-
     // autoload muss ach anders gehn
     require 'vendor/autoload.php';
     
@@ -27,8 +26,8 @@ namespace ADWLM\IncipitSearch;
     use Elasticsearch\ClientBuilder;
 
 
-    require_once "Incipit.php";
-    require_once "IncipitEntry.php";
+    use ADWLM\IncipitSearch\Incipit;
+    use ADWLM\IncipitSearch\IncipitEntry;
     
 
     /**
@@ -180,7 +179,7 @@ namespace ADWLM\IncipitSearch;
                 'body' => $incipitEntry->getJSONString()
             ];
             $response = $this->elasticClient->index($params);
-            echo "addIncipidToES > Response: " . json_encode($response) . "\n";
+            echo "addIncipitToES > Response: " . json_encode($response) . "\n";
 
         }
 

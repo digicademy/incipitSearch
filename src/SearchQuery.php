@@ -19,8 +19,8 @@
 
     use Elasticsearch\ClientBuilder;
 
-    require_once "Incipit.php";
-    require_once "IncipitEntry.php";
+    use ADWLM\IncipitSearch\Incipit;
+    use ADWLM\IncipitSearch\IncipitEntry;
 
     class SearchQuery
     {

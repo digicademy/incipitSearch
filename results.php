@@ -2,10 +2,6 @@
 
     namespace ADWLM\IncipitSearch;
 
-    require_once "SearchQuery.php";
-    require_once "IncipitEntry.php";
-    require_once "Incipit.php";
-
     /**
      * Copyright notice
      *
@@ -18,6 +14,12 @@
      *
      * Licensed under The MIT License (MIT)
      */
+
+    use ADWLM\IncipitSearch\SearchQuery;
+    use ADWLM\IncipitSearch\Incipit;
+    use ADWLM\IncipitSearch\IncipitEntry;
+
+    require 'vendor/autoload.php';
 
     $incipit = $_GET["incipit"];
 
@@ -39,7 +41,7 @@
 </head>
 <body>
 
-<p><a href="searchInterface.html">Back to search</a></p>
+<p><a href="index.html">Back to search</a></p>
 
 <!-- The div where we are going to insert the SVG -->
 
