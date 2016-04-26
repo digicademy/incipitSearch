@@ -45,6 +45,19 @@
         private $query;
         private $fields = ["incipit.normalizedIncipit"];
         private $numOfResults;
+        private $elasticClient;
+
+        public function __construct()
+        {
+            $jsonConfig = json_decode(file_get_contents("config.json"));
+            $elasticHost = $jsonConfig->elasticSearch->host;
+            if (empty($elasticHost)) {
+                $elasticHost = "127.0.0.1";
+            }
+
+            $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
+
+        }
 
 
         public function setQuery(string $userInput)
@@ -81,8 +94,7 @@
 
         public function performSearchQuery(): array
         {
-            $client = ClientBuilder::create()->setHosts(["127.0.0.1:9200"])->build();
-            $results = $client->search($this->generateSearchParams());
+            $results = $this->elasticClient->search($this->generateSearchParams());
             return $this->parseSearchResponse($results);
         }
 
