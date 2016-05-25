@@ -3,8 +3,9 @@
         "monolog/monolog": "^1.19",
         "guzzlehttp/guzzle": "^6.2",
         "elasticsearch/elasticsearch": "^2.1",
-        "slim/slim": "^3.0",
-        "twig/twig": "~1.0"
+        "slim/slim": "^3.4",
+        "twig/twig": "~1.0",
+        "slim/twig-view": "^2.1"
     },
 
     "autoload": {

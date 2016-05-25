@@ -27,18 +27,41 @@
     $filehandler = new StreamHandler("logs/app.log");
     $logger->pushHandler($filehandler);
 
-    $loader = new Twig_Loader_Filesystem("templates");
-    $twig = new Twig_Environment($loader, array("cache" => "templates/cache"));
 
-    $app = new \Slim\App;
+    $configuration = [
+        'settings' => [
+            'displayErrorDetails' => true,
+        ],
+    ];
+
+    $container = new \Slim\Container($configuration);
+    $app = new \Slim\App($container);
+
+    // Register component on container
+    $container['view'] = function ($container) {
+        $view = new \Slim\Views\Twig('templates', [
+            'cache' => false
+        ]);
+        $view->addExtension(new \Slim\Views\TwigExtension(
+            $container['router'],
+            $container['request']->getUri()
+        ));
+
+        return $view;
+    };
+
+    $app->get('/hello/{name}', function (Request $request, Response $response) {
+        $name = $request->getAttribute('name');
+        $response->getBody()->write("Hello, $name");
+        return $response;
+    });
+
     // currently without URL rewrite; access: http://incipitsearch.local/index.php/hello;
     // http://localhost:8080/hello
     //TODO: specify URL rewrite http://docs.slimframework.com/routing/rewrite/
 
-    $app->get('/hello', function (Request $request, Response $response) {
-        $output = $this->twig->render("index.html");
-        $response->getBody()->write("$output");
-        $this->logger->addInfo($output);
-        return $response;
+
+    $app->get('/', function (Request $request, Response $response) {
+        return $this->view->render($response, 'index.html', []);
     });
     $app->run();
