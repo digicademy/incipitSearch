@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"></script>
+    <title>Search results</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+</head>
+<body>
+
+<p><a href="/">Back to search</a></p>
+
+<p>
+
+    results found</p>
+
+
+<script type="text/javascript">
+
+    $( document ).ready(function() {
+        var vrvToolkit = new verovio.toolkit();
+
+        $('.result').each(function(i, domResult) {
+            var result = $(domResult);
+            var incipit = result.find('.incipit').text();
+
+            var data = "@clef:" + result.find('.incipitClef').text() + "\n";
+            data += "@keysig:" + result.find('.incipitAccidentals').text() + "\n";
+            data += "@timesig:" + result.find('.incipitTime').text() + "\n";
+            data += "@data:" + result.find('.incipitNotes').text();
+
+            var windowWidth = $(window).width();
+            console.log("Window Width: " + windowWidth);
+            var scale = 50;
+            if (windowWidth < 1000) {
+                scale = 30;
+            } else if (windowWidth < 500) {
+                scale = 15;
+            }
+
+            options = JSON.stringify({
+                inputFormat: 'pae',
+                pageHeight: 500,
+                pageWidth: windowWidth * (1/scale),
+                ignoreLayout: 1,
+                border: 0,
+                scale: scale,
+                adjustPageHeight: 1
+            });
+
+            var notesSVG = vrvToolkit.renderData(data, options);
+            var svgContainerDiv = result.find('.incipitSVG');
+            svgContainerDiv.html(notesSVG);
+
+        });//end for each result
+
+    });//end doc ready
+
+</script>
+
+
+{% for incipitEntry in incipitEntries %}
+
+<div class="result">
+    <b>{{ incipitEntry.title }}</b>
+    <span class="incipitNotes hidden">{{ incipitEntry.incipit.notes }}</span>
+    <span class="incipitClef hidden">{{ incipitEntry.incipit.key }}</span>
+    <span class="incipitAccidentals hidden">{{ incipitEntry.incipit.accidentals }}</span>
+    <span class="incipitTime hidden">{{ incipitEntry.incipit.time }}</span>
+
+    <div class="incipitSVG"></div>
+</div><!--end result-->
+<br/>
+
+{% endfor %}
+
+
+
+</body>
+</html>
