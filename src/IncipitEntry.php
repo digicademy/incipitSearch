@@ -18,7 +18,7 @@
     use ADWLM\IncipitSearch\Incipit;
 
     /**
-     * Specifies one incipit entry with metadata and incipit (key, accidentals, time, notes)
+     * Specifies one incipit entry with metadata and incipit (clef, accidentals, time, notes)
      *
      * Class IncipitEntry
      * @package ADWLM\IncipitSearch

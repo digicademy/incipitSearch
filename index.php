@@ -53,7 +53,7 @@
         return $this->view->render($response, 'index.twig', []);
     });
 
-    
+
     $app->get('/results', function (Request $request, Response $response) {
         $incipit = $request->getParam('incipit');
 
@@ -63,9 +63,9 @@
 
         $response = $this->view->render($response, 'results.twig', ['incipitEntries' => $incipitEntries]);
         return $response;
-        //$response->getBody()->write("Hello, $incipitEntries");
 
     })->setName("results");
 
+    
 
     $app->run();

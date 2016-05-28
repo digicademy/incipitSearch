@@ -91,13 +91,13 @@ namespace ADWLM\IncipitSearch;
                 $parentXMLElement = new SimpleXMLElement($xml);
             } catch (\Exception $e) {
                 // Handle all other exceptions
-                echo "incipitEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()} \n";
+                echo "error: incipitEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()} <br>\n";
                 return null;
             }
 //nicer solution to get first element of array?
             $catalogItemID = $this->contentOfXMLElementAtPath($parentXMLElement,
                 "/record/controlfield[@tag='001']");
-            $incipitKey = $this->contentOfXMLElementAtPath($parentXMLElement,
+            $incipitClef = $this->contentOfXMLElementAtPath($parentXMLElement,
                 "/record/datafield[@tag='031']/subfield[@code='g']");
             $incipitAccidentals = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='n']");
             $incipitTime = $this->contentOfXMLElementAtPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='o']");
@@ -114,7 +114,7 @@ namespace ADWLM\IncipitSearch;
             $detailURL = "https://opac.rism.info/search?id=" . $catalogItemID;
             $fullTitle = $title . " " . $subtitle;
             
-            $incipit = new Incipit($incipitNotes, $incipitKey, $incipitAccidentals, $incipitTime);
+            $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
             $incipitEntry = new IncipitEntry($incipit, "RISM", $catalogItemID, $dataURL, $detailURL,
                 $composer, $fullTitle, $year);
 
@@ -128,7 +128,7 @@ namespace ADWLM\IncipitSearch;
          */
         private function contentOfXMLElementAtPath(SimpleXMLElement $xmlElement, string $xpath): string {
             if ($xmlElement == null) {
-                echo "contentOfXMLElementAtPath > no xmlElement given\n";
+                echo "error: contentOfXMLElementAtPath > no xmlElement given <br>\n";
                 return "";
             }
             $matchingElements = $xmlElement->xpath($xpath);
@@ -153,7 +153,7 @@ namespace ADWLM\IncipitSearch;
                 $response = $this->catalogClient->request('GET', $url);
                 $xml = $response->getBody();
                 if ($xml == null || strlen($xml) == 0) {
-                    echo "crawlCatalog > not found at {$url}\n";
+                    echo "error: crawlCatalog > not found at {$url}<br>\n";
                     continue;
                 }
                 $incipit = $this->incipitEntryFromXML($url, $xml);
@@ -179,16 +179,27 @@ namespace ADWLM\IncipitSearch;
                 'body' => $incipitEntry->getJSONString()
             ];
             $response = $this->elasticClient->index($params);
-            echo "addIncipitToES > Response: " . json_encode($response) . "\n";
+
+            echo "data: addIncipitToES > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))) . "<br>\n";
 
         }
 
+
     }
 
+//ostrich-sara-pint-riot
+$password = $_GET["password"];
+if ($password != "ostrich-sara-pint-riot") {
+    sleep(10);
+    echo "<b>Wrong password.</b>";
+} else {
     $crawler = new IncipitCrawler();
+
+    $crawler->crawlCatalog();
+}
+
 //$xml = $crawler->readFileFromURL("https://opac.rism.info/id/rismid/400110699?format=marc");
 //$incipit = $crawler->incipitEntryFromXML("https://opac.rism.info/id/rismid/400110699?format=marc",$xml);
 //echo $incipit->json() . "\n";
 //$crawler->addIncipitEntryToElasticSearchIndex($incipit);
-$crawler->crawlCatalog();
 

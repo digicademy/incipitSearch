@@ -13,7 +13,7 @@ class Incipit
 {
 
 
-    protected $key;
+    protected $clef;
     protected $accidentals;
     protected $time;
     protected $notes;
@@ -23,27 +23,27 @@ class Incipit
     /**
      * Incipit constructor.
      * @param string $notes
-     * @param string|null $key
+     * @param string|null $clef
      * @param string|null $accidentals
      * @param string|null $time
      */
-    public function __construct(string $notes, string $key = null,
+    public function __construct(string $notes, string $clef = null,
                                 string $accidentals = null, string $time = null)
     {
         $this->notes = $notes;
-        $this->key = $key ?? "";
+        $this->clef = $clef ?? "";
         $this->accidentals = $accidentals ?? "";
         $this->time = $time ?? "";
     }
 
     /**
-     * COmbines key, accidentals, time and notes in one string
+     * COmbines clef, accidentals, time and notes in one string
      * @return mixed
      */
     public function getCompleteIncipit(): string
     {
         if (empty($this->completeIncipit)) {
-            $this->completeIncipit = $this->key . $this->accidentals .
+            $this->completeIncipit = $this->clef . $this->accidentals .
                 $this->time . $this->notes;
         }
         return $this->completeIncipit;
@@ -70,7 +70,7 @@ class Incipit
      */
     public function getJSONArray(): Array {
         $json = ['notes' => $this->getNotes(),
-            'key' => $this->getKey(),
+            'clef' => $this->getClef(),
             'accidentals' => $this->getAccidentals(),
             'time' => $this->getTime(),
             'completeIncipit' => $this->getCompleteIncipit(),
@@ -84,7 +84,7 @@ class Incipit
      * @return Incipit
      */
     public static function incipitFromJSONArray(array $json): Incipit {
-        $incipit = new Incipit( $json["notes"],$json["key"], $json["accidentals"],$json["time"]);
+        $incipit = new Incipit( $json["notes"],$json["clef"], $json["accidentals"],$json["time"]);
         return $incipit;
     }
 
@@ -98,9 +98,9 @@ class Incipit
     /**
      * @return string
      */
-    public function getKey()
+    public function getClef()
     {
-        return $this->key;
+        return $this->clef;
     }
 
     /**
@@ -128,5 +128,9 @@ class Incipit
     public function getNotes()
     {
         return $this->notes;
+    }
+
+    public static function filterPlaineEasieCode(string $input): string {
+        $filterd = preg_replace('/[^$/a-zA-Z]/', '', $input);
     }
 }
