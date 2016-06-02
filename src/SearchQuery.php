@@ -62,7 +62,8 @@
 
         public function setQuery(string $userInput)
         {
-            //TODO: escape user input
+            //escape user input
+            $this->query = json_encode($userInput);
             $this->query = $userInput;
         }
 
