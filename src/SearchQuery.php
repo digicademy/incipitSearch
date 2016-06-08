@@ -56,7 +56,6 @@
             }
 
             $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
-
         }
 
 

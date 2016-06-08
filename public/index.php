@@ -14,12 +14,16 @@
      * Licensed under The MIT License (MIT)
      */
 
+    require '../vendor/autoload.php';
+
     use \Psr\Http\Message\ServerRequestInterface as Request;
     use \Psr\Http\Message\ResponseInterface as Response;
     use Monolog\Logger;
     use Monolog\Handler\StreamHandler;
+    use Slim\Container as Container;
+    use Slim\App as App;
+    Use Slim\Views as Views;
 
-    require 'vendor/autoload.php';
 
     $logger = new Logger('annilogger');
     $filehandler = new StreamHandler("logs/app.log");
@@ -32,15 +36,15 @@
         ],
     ];
 
-    $container = new \Slim\Container($configuration);
-    $app = new \Slim\App($container);
+    $container = new Container($configuration);
+    $app = new App($container);
 
     // Register component on container
     $container['view'] = function ($container) {
-        $view = new \Slim\Views\Twig('templates', [
+        $view = new Views\Twig('../templates', [
             'cache' => false
         ]);
-        $view->addExtension(new \Slim\Views\TwigExtension(
+        $view->addExtension(new Views\TwigExtension(
             $container['router'],
             $container['request']->getUri()
         ));

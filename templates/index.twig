@@ -3,16 +3,71 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="style.css">
-	<script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"></script>
-	<title>Search Interface for incipit search</title>
+	<link rel="stylesheet" href="piano/piano_style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"></script> <!--Only needed for notes display-->
+	<script src="piano/piano.js"></script>
+	<title>Incipit Search</title>
 </head>
 <body>
 
-<form class="form-wrapper" action="{{ path_for('results') }}" method="GET">
-	<input name="incipit" type="text" id="search" placeholder="Search for incipit" required>
-	<input type="submit" value="Submit" id="submit">
-</form>
 
+<script type="text/javascript">
+
+	$( document ).ready(function() {
+		//create piano with 1 octave, starting at C4 (lowest key)
+		//shows labels and octave shift buttons
+		var keyboardHTML = htmlForKeyboardWithOctaves(1, octaves.C4, true, false, false, false)
+		//render the keyboard in the div
+		$("#keyboardContainer").html(keyboardHTML)
+		//when keys are pressed updatePreview() is called
+		bindKeysToFunction(updatePreviewWithNote)
+		//set the default clef to G4
+		setSelectedClef(clefs.G4)
+        $("#backspaceButton").click(deleteLast)
+
+    })
+
+    //this stores all keyboard input
+    var plaineEasieCodes = []
+    var selectedClef = clefs.G4
+
+    //this is called whenever a piano key is pressed
+    function updatePreviewWithNote(sender, paeNote) {
+        console.log("key pressed is " + paeNote)
+        plaineEasieCodes.push(paeNote)
+        updateNotesSVG()
+    }
+
+    //delete last input
+    function deleteLast() {
+        plaineEasieCodes.pop()
+        updateNotesSVG()
+    }
+
+    function updateNotesSVG() {
+        $('#search').val(plaineEasieCodes.join(""))
+        //render the notes to an SVG using the Verovio tookit
+        //width of the svg is 800px and note scaling 50%
+        var notesSVG = svgNotesForPlaineEasieCode(plaineEasieCodes.join(""), selectedClef, 800, 50)
+        //insert thes SVG code in our div
+        var svgContainerDiv = $('#svgNotesContainer')
+        svgContainerDiv.html(notesSVG)
+    }
+
+
+</script>
+
+
+
+	<form class="form-wrapper" action="{{ path_for('results') }}" method="GET">
+		<input name="incipit" type="text" id="search" placeholder="Search for incipit" required>
+        <button type="button" id="backspaceButton">←</button>
+        <input type="submit" value="Submit" id="submit">
+	</form>
+
+	<div id="keyboardContainer"></div><!-- this will hold the keyboard -->
+	<div id="svgNotesContainer"></div><!-- this will hold the SVG with rendered notes -->
 
 </body>
 </html>

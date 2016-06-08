@@ -15,8 +15,7 @@ namespace ADWLM\IncipitSearch;
      */
 
 
-    // autoload muss ach anders gehn
-    require 'vendor/autoload.php';
+    require '../vendor/autoload.php';
     
     use SimpleXMLElement;
 
@@ -24,7 +23,6 @@ namespace ADWLM\IncipitSearch;
     use GuzzleHttp\Psr7\Request;
 
     use Elasticsearch\ClientBuilder;
-
 
     use ADWLM\IncipitSearch\Incipit;
     use ADWLM\IncipitSearch\IncipitEntry;

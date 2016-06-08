@@ -49,7 +49,6 @@ class Incipit
         return $this->completeIncipit;
     }
 
-//TODO: check if and what kind of normalization is necessary
     /**
      * Normalizes incipit for use in search: removes tone pitch and accidentals
      * @return string
