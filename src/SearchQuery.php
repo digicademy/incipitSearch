@@ -47,6 +47,9 @@
         private $numOfResults;
         private $elasticClient;
 
+        private $page = 0;
+        private $pageSize = 10;
+
         public function __construct()
         {
             $jsonConfig = json_decode(file_get_contents("config.json"));
@@ -83,6 +86,7 @@
                             ]
                         ]
                     ],
+                    "from" => 0,
                     "size" => 10
                 ]
             ];
@@ -120,6 +124,38 @@
         public function getNumOfResults()
         {
             return $this->numOfResults;
+        }
+
+        /**
+         * @return int
+         */
+        public function getPage()
+        {
+            return $this->page;
+        }
+
+        /**
+         * @param int $page
+         */
+        public function setPage($page)
+        {
+            $this->page = $page;
+        }
+
+        /**
+         * @return int
+         */
+        public function getPageSize()
+        {
+            return $this->pageSize;
+        }
+
+        /**
+         * @param int $pageSize
+         */
+        public function setPageSize($pageSize)
+        {
+            $this->pageSize = $pageSize;
         }
 
 

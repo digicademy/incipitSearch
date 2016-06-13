@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="/public/style.css">
+	<title>Incipit Crawler</title>
+</head>
+<body>
+
+<h1>Incipit Crawler</h1>
+
+
+{% if password %}
+
+    <b>All these actions might take several minutes and might not give immediate feedback.<br>Use with care!</b>
+    <button href="{{ path_for('crawler_resetIndex') }}?password={{ password }}">Delete Index</button>
+    <button href="{{ path_for('crawler_index_RISM') }}?passwordd={{ password }}">Re-Index RISM</button>
+
+{% else %}
+
+    <b>Wrong password. (This output is intentionally slow)</b>
+
+{% endif %}
+
+</body>
+</html>

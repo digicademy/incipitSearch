@@ -37,6 +37,7 @@ namespace ADWLM\IncipitSearch;
 
         private $elasticClient;
         private $catalogClient;
+        private $adminPassword;
 
 // Documents for Testing:
 // Gluck, Artaserse https://opac.rism.info/search?id=400110699
@@ -57,6 +58,8 @@ namespace ADWLM\IncipitSearch;
             $this->catalogClient = new Client([
                 'timeout'  => 2.0,
             ]);
+
+
         }
 
         /**
@@ -188,7 +191,7 @@ namespace ADWLM\IncipitSearch;
 //ostrich-sara-pint-riot
 $password = $_GET["password"];
 if ($password != "ostrich-sara-pint-riot") {
-    sleep(10);
+    sleep(2);
     echo "<b>Wrong password.</b>";
 } else {
     $crawler = new IncipitCrawler();
