@@ -19,7 +19,7 @@
     use \Psr\Http\Message\ServerRequestInterface as Request;
     use \Psr\Http\Message\ResponseInterface as Response;
     use Monolog\Logger;
-    use Monolog\Handler\StreamHandler;
+    use Monolog\Handler\BrowserConsoleHandler;
     use Slim\Container as Container;
     use Slim\App as App;
     Use Slim\Views as Views;
@@ -51,9 +51,9 @@
     };
 
     $container['logger'] = function($c) {
-        $logger = new \Monolog\Logger('my_logger');
-        $file_handler = new \Monolog\Handler\StreamHandler("logs/app.log");
-        $logger->pushHandler($file_handler);
+        $logger = new \Monolog\Logger('IncipitLog');
+        $console_handler = new \Monolog\Handler\BrowserConsoleHandler();
+        $logger->pushHandler($console_handler);
         return $logger;
     };
 
@@ -69,6 +69,8 @@
 
 
     $app->get('/', function (Request $request, Response $response) {
+        $this->logger->addInfo("Get: /");
+
         return $this->view->render($response, 'index.twig', []);
     });
 
@@ -120,6 +122,8 @@
             sleep(2);
             redirect("/");
         }
+        $crawler = new IncipitCrawler();
+        $crawler->resetIndex();
 
         $response = $this->view->render($response, 'crawler.twig', []);
         return $response;
