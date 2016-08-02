@@ -1,14 +1,29 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gaby
- * Date: 20/04/16
- * Time: 12:27
- */
 
 namespace ADWLM\IncipitSearch;
 
-
+/**
+ * The Incipit class represents a single incipit in Plaine and Easie code.
+ * To work conveniently with the Veriovio rendering kit, it separates clef,
+ * accidentals, time and notes.
+ *
+ * To allow searching for incipits by string matching it provides
+ * normalization functions that resolve ambiguity in the PAE-Encoding.
+ *
+ *
+ * Copyright notice
+ *
+ * (c) 2016
+ * Anna Neovesky  Anna.Neovesky@adwmainz.de
+ * Gabriel Reimers g.a.reimers@gmail.com
+ *
+ * Digital Academy www.digitale-akademie.de
+ * Academy of Sciences and Literatur | Mainz www.adwmainz.de
+ *
+ * Licensed under The MIT License (MIT)
+ *
+ * @package ADWLM\IncipitSearch
+ */
 class Incipit
 {
 
@@ -24,9 +39,9 @@ class Incipit
     /**
      * Incipit constructor.
      * @param string $notes
-     * @param string|null $clef
-     * @param string|null $accidentals
-     * @param string|null $time
+     * @param string|null $clef will be set to empty if null
+     * @param string|null $accidentals will be set to empty if null
+     * @param string|null $time will be set to empty if null
      */
     public function __construct(string $notes, string $clef = null,
                                 string $accidentals = null, string $time = null)
@@ -38,8 +53,8 @@ class Incipit
     }
 
     /**
-     * Combines clef, accidentals, time and notes to one incipit string
-     * @return mixed
+     * Creates a single incipit string by combining clef, accidentals, time and notes.
+     * @return string
      */
     public function getCompleteIncipit(): string
     {
@@ -51,8 +66,13 @@ class Incipit
     }
 
     /**
-     * Normalizes incipit for use in search: removes tone pitch and accidentals
-     * @return string
+     * Creates incipit normalized on a single octave for use in search.
+     * Removes all infomation except the note names.
+     *
+     * E.g. ''8{AB}2-/4C'F with xCF accidentals
+     * becomes ABxCxF
+     *
+     * @return string incipit normalized on single octave
      */
     public function getNotesNormalized(): string
     {
@@ -63,37 +83,17 @@ class Incipit
     }
 
 
-    public function getSharpAccidentals() : Array {
-        if (strlen($this->getAccidentals()) < 2) {
-            return [];
-        }
-        if ($this->getAccidentals()[0] != "x") {
-            return [];
-        }
-        $sharpAccidentals = [];
-        for ($i = 1; $i < strlen($this->getAccidentals()); $i++) {
-            array_push($sharpAccidentals, $this->getAccidentals()[$i]);
-        }
-        return $sharpAccidentals;
-    }
 
-    public function getFlatAccidentals() : Array {
-        if (strlen($this->getAccidentals()) < 2) {
-            return [];
-        }
-        if ($this->getAccidentals()[0] != "b") {
-            return [];
-        }
-        $flatAccidentals = [];
-        for ($i = 1; $i < strlen($this->getAccidentals()); $i++) {
-            array_push($flatAccidentals, $this->getAccidentals()[$i]);
-        }
-        return $flatAccidentals;
-    }
 
     /**
-     * Normalizes incipit for use in search: removes accidentals
-     * @return string
+     * Creates incipit normalized to note values for use in search.
+     * Removes rhythmic values, breaks and beamings but keeps all pitch values.
+     * Applies accidentals and octave markers to each note.
+     *
+     * E.g. ''8{AB}2-/4C'F with xCF accidentals
+     * becomes ''A''B''xC'xF
+     *
+     * @return string normalized incipit
      */
     public function getNotesNormalizedToPitch(): string
     {
@@ -153,21 +153,30 @@ class Incipit
                 $currentAccidental = "";
             }
 
-            }
+        }
         $this->notesNormalizedToPitch = $normalized;
 
         return $this->notesNormalizedToPitch;
     }
 
 
+    /**
+     * Creates a string that only contain valid PAE characters.
+     *
+     * @param string $dirtyString the string to sanatize
+     * @return string
+     */
     public static function getSanitizedIncipitString(string $dirtyString) : string
     {
         return preg_replace('/[^\',cbfgnoqrtxA-Z\d\{\}\/\-=()\.:\+;!%$@\^\?]|\s/', '', $dirtyString);
     }
 
     /**
-     * Creates json array
-     * @return mixed
+     * Creates JSON associative array from the Incipit.
+     *
+     * The array has the following keys: "notes", "clef", "accidentals",
+     * "time", "completeIncipit", "normalizedIncipit"
+     * @return Array of string
      */
     public function getJSONArray(): Array {
         $json = ['notes' => $this->getNotes(),
@@ -194,14 +203,55 @@ class Incipit
     }
 
 
+    /**
+     * Returns the note values of all sharp accidentals.
+     *
+     * E.g. for 'xFC' accidentals this returns ['F', 'C']
+     * @return array of strings with note values of sharp accidentals; empty if none
+     */
+    public function getSharpAccidentals() : Array {
+        if (strlen($this->getAccidentals()) < 2) {
+            return [];
+        }
+        if ($this->getAccidentals()[0] != "x") {
+            return [];
+        }
+        $sharpAccidentals = [];
+        for ($i = 1; $i < strlen($this->getAccidentals()); $i++) {
+            array_push($sharpAccidentals, $this->getAccidentals()[$i]);
+        }
+        return $sharpAccidentals;
+    }
 
+    /**
+     * Returns the note values of all flat accidentals.
+     *
+     * E.g. for 'bBE' accidentals this returns ['B', 'E']
+     * @return array of strings with note values of sharp accidentals; empty if none
+     */
+    public function getFlatAccidentals() : Array {
+        if (strlen($this->getAccidentals()) < 2) {
+            return [];
+        }
+        if ($this->getAccidentals()[0] != "b") {
+            return [];
+        }
+        $flatAccidentals = [];
+        for ($i = 1; $i < strlen($this->getAccidentals()); $i++) {
+            array_push($flatAccidentals, $this->getAccidentals()[$i]);
+        }
+        return $flatAccidentals;
+    }
 
     //////////////////////////
     // GETTERS
     //////////////////////////
 
     /**
-     * @return string
+     * The clef.
+     *
+     * Usually looks like 'G-2'
+     * @return string empty if none
      */
     public function getClef()
     {
@@ -209,7 +259,10 @@ class Incipit
     }
 
     /**
-     * @return string
+     * The accidentals.
+     *
+     * Usually looks like 'xFC' or ''
+     * @return string empty if none
      */
     public function getAccidentals()
     {
@@ -220,7 +273,7 @@ class Incipit
      * The time signature.
      *
      * This is usually a fraction like '2/4' but can also be 'c' for commom time.
-     * @return string
+     * @return string empty if none
      */
     public function getTime()
     {
@@ -228,14 +281,13 @@ class Incipit
     }
 
     /**
-     * @return string
+     * The actual musical notes in PAE code.
+     *
+     * @return string empty if none
      */
     public function getNotes()
     {
         return $this->notes;
     }
 
-    public static function filterPlaineEasieCode(string $input): string {
-        $filterd = preg_replace('/[^$/a-zA-Z]/', '', $input);
-    }
 }
