@@ -41,31 +41,31 @@ class IncipitTest extends PHPUnit_Framework_TestCase
 
 
     public function testNormalizationToPitch() {
-        $normalized1 = $this->incipit1->getNotesNormalizedToPitch();
-        $this->assertEquals("''DDDDDFAFGGGEFGEF", $normalized1);
+        $normalized1 = $this->incipit1->getNotesNormalizedToPitch(); //xFC accidentals
+        $this->assertEquals("''D''D''D''D''D''xF''A''xF''G''G''G''E''xF''G''E''xF", $normalized1);
 
-        $normalized2 = $this->incipit2->getNotesNormalizedToPitch();
-        $this->assertEquals("''DDDD,D,,FFFGFFEDExEF", $normalized2);
+        $normalized2 = $this->incipit2->getNotesNormalizedToPitch(); //xFC accidentals
+        $this->assertEquals("''D''D''D''D,D,,xF,,xF,,xF,,G,,xF,,xF,,E,,D,,E,,xE,,xF", $normalized2);
 
-        $normalized3 = $this->incipit3->getNotesNormalizedToPitch();
-        $this->assertEquals("''GDDEC'B''CDC'B''CDEDEC'B''C'ABAGG", $normalized3);
+        $normalized3 = $this->incipit3->getNotesNormalizedToPitch(); //bBE accidentals
+        $this->assertEquals("''G''D''D''bE''C'bB''C''D''C'bB''C''D''E''D''bE''C'bB''C'A'bB'A'G'G", $normalized3);
 
-        $normalized4 = $this->incipit4->getNotesNormalizedToPitch();
-        $this->assertEquals("'AA''DDDFEEEFD'B''ECDC'B''C'BA", $normalized4);
+        $normalized4 = $this->incipit4->getNotesNormalizedToPitch(); //xFC accidentals
+        $this->assertEquals("'A'A''D''D''D''xF''E''E''E''F''D'B''E''xC''D''xC'B''xC'B'A", $normalized4);
     }
 
     public function testNormalizationToSingleOctave() {
-        $normalized1 = $this->incipit1->getNotesNormalized();
-        $this->assertEquals("DDDDDFAFGGGEFGEF", $normalized1);
+        $normalized1 = $this->incipit1->getNotesNormalized();//xFC accidentals
+        $this->assertEquals("DDDDDxFAxFGGGExFGExF", $normalized1);
 
-        $normalized2 = $this->incipit2->getNotesNormalized();
-        $this->assertEquals("DDDDDFFFGFFEDExEF", $normalized2);
+        $normalized2 = $this->incipit2->getNotesNormalized();//xFC accidentals
+        $this->assertEquals("DDDDDxFxFxFGxFxFEDExExF", $normalized2);
 
-        $normalized3 = $this->incipit3->getNotesNormalized();
-        $this->assertEquals("GDDECBCDCBCDEDECBCABAGG", $normalized3);
+        $normalized3 = $this->incipit3->getNotesNormalized();//bBE accidentals
+        $this->assertEquals("GDDbECbBCDCbBCDEDbECbBCAbBAGG", $normalized3);
 
-        $normalized4 = $this->incipit4->getNotesNormalized();
-        $this->assertEquals("AADDDFEEEFDBECDCBCBA", $normalized4);
+        $normalized4 = $this->incipit4->getNotesNormalized();//xFC accidentals
+        $this->assertEquals("AADDDxFEEEFDBExCDxCBxCBA", $normalized4);
     }
 
     public function testSanitizedString() {

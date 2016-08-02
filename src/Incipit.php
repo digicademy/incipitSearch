@@ -19,6 +19,7 @@ class Incipit
     protected $notes;
     protected $completeIncipit;
     protected $notesNormalized;
+    protected $notesNormalizedToPitch;
 
     /**
      * Incipit constructor.
@@ -43,8 +44,8 @@ class Incipit
     public function getCompleteIncipit(): string
     {
         if (empty($this->completeIncipit)) {
-            $this->completeIncipit = $this->clef . $this->accidentals .
-                $this->time . $this->notes;
+            $this->completeIncipit = '%' . $this->clef . '$' . $this->accidentals .
+                '@' . $this->time . $this->notes;
         }
         return $this->completeIncipit;
     }
@@ -56,23 +57,106 @@ class Incipit
     public function getNotesNormalized(): string
     {
         if (empty($this->notesNormalized)) {
-            $notes = $this->notes;
-            $this->notesNormalized = preg_replace('/[^xbA-Z]/', '', $notes);
+            $this->notesNormalized = preg_replace('/[\',]/', '', $this->getNotesNormalizedToPitch());
         }
         return $this->notesNormalized;
     }
 
+
+    public function getSharpAccidentals() : Array {
+        if (strlen($this->getAccidentals()) < 2) {
+            return [];
+        }
+        if ($this->getAccidentals()[0] != "x") {
+            return [];
+        }
+        $sharpAccidentals = [];
+        for ($i = 1; $i < strlen($this->getAccidentals()); $i++) {
+            array_push($sharpAccidentals, $this->getAccidentals()[$i]);
+        }
+        return $sharpAccidentals;
+    }
+
+    public function getFlatAccidentals() : Array {
+        if (strlen($this->getAccidentals()) < 2) {
+            return [];
+        }
+        if ($this->getAccidentals()[0] != "b") {
+            return [];
+        }
+        $flatAccidentals = [];
+        for ($i = 1; $i < strlen($this->getAccidentals()); $i++) {
+            array_push($flatAccidentals, $this->getAccidentals()[$i]);
+        }
+        return $flatAccidentals;
+    }
+
     /**
-     * Normalizes incipit for use in search: removes tone pitch and accidentals
+     * Normalizes incipit for use in search: removes accidentals
      * @return string
      */
     public function getNotesNormalizedToPitch(): string
     {
-        if (empty($this->notesNormalized)) {
-            $notes = $this->notes;
-            $this->notesNormalized = preg_replace('/[^\',xbA-Z]/', '', $notes);
+        if (!empty($this->notesNormalizedToPitch)) {
+            return $this->notesNormalizedToPitch;
         }
-        return $this->notesNormalized;
+
+        $notes = preg_replace('/[^\',xbnA-Z]/', '', $this->notes);
+        $normalized = '';
+
+
+        $sharpAccidentals = $this->getSharpAccidentals();
+        $flatAccidentals = $this->getFlatAccidentals();
+
+        $notesLength = strlen($notes);
+        $octave = "'";
+        $currentAccidental = "";
+
+        for ($i = 0; $i < $notesLength; $i++) {
+            $char = $notes[$i];
+
+            if ($char == "'") {
+                $octave = "'";
+                while (($i + 1) < $notesLength && $notes[$i + 1] == "'") {
+                    $octave .= "'";
+                    $i++;
+                }
+                continue;
+            }
+
+            if ($char == ",") {
+                $octave = ",";
+                while (($i + 1) < $notesLength && $notes[$i + 1] == ",") {
+                    $octave .= ",";
+                    $i++;
+                }
+                continue;
+            }
+
+            if ($char == "b" || $char == "x" || $char == "n") {
+                $currentAccidental = $char;
+            } else {
+
+                //we add the accidentals to each single note
+                if (empty($currentAccidental) && in_array($char, $sharpAccidentals, true)) {
+                    $currentAccidental = "x";
+                } else if (empty($currentAccidental) && in_array($char, $flatAccidentals, true)) {
+                    $currentAccidental = "b";
+                }
+
+                //as accidentals have already been applied, the n can be removed
+                if ($currentAccidental == "n") {
+                    $currentAccidental = "";
+                }
+
+                $normalized .= $octave . $currentAccidental . $char;
+                $currentAccidental = "";
+            }
+
+            }
+        $this->notesNormalizedToPitch = $normalized;
+
+        return $this->notesNormalizedToPitch;
     }
 
 
