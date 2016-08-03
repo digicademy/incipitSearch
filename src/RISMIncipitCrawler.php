@@ -17,22 +17,22 @@ use GuzzleHttp\Psr7\Request;
 use Elasticsearch\ClientBuilder;
 
 use ADWLM\IncipitSearch\Incipit;
-use ADWLM\IncipitSearch\IncipitEntry;
+use ADWLM\IncipitSearch\CatalogEntry;
 
 class RISMIncipitCrawler extends IncipitCrawler
 {
 
     /**
      * @param string $file
-     * @return IncipitEntry The incipit entry or null
+     * @return CatalogEntry The incipit entry or null
      */
-    public function incipitEntryFromXML(string $dataURL, string $xml) //can return null
+    public function catalogEntryFromXML(string $dataURL, string $xml) //can return null
     {
         try {
             $parentXMLElement = new SimpleXMLElement($xml);
         } catch (\Exception $e) {
             // Handle all other exceptions
-            echo "error: incipitEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()} <br>\n";
+            echo "error: catalogEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()} <br>\n";
             return null;
         }
 //nicer solution to get first element of array?
@@ -56,10 +56,10 @@ class RISMIncipitCrawler extends IncipitCrawler
         $fullTitle = $title . " " . $subtitle;
 
         $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
-        $incipitEntry = new IncipitEntry($incipit, "RISM", $catalogItemID, $dataURL, $detailURL,
+        $catalogEntry = new CatalogEntry($incipit, "RISM", $catalogItemID, $dataURL, $detailURL,
             $composer, $fullTitle, $year);
 
-        return $incipitEntry;
+        return $catalogEntry;
     }
 
     /**
@@ -96,8 +96,8 @@ class RISMIncipitCrawler extends IncipitCrawler
                 echo "error: crawlCatalog > not found at {$url}<br>\n";
                 continue;
             }
-            $incipit = $this->incipitEntryFromXML($url, $xml);
-            $this->addIncipitEntryToElasticSearchIndex($incipit);
+            $catalogEntry = $this->catalogEntryFromXML($url, $xml);
+            $this->addCatalogEntryToElasticSearchIndex($catalogEntry);
         }
 
     }

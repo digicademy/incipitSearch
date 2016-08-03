@@ -55,16 +55,16 @@ class IncipitTest extends PHPUnit_Framework_TestCase
     }
 
     public function testNormalizationToSingleOctave() {
-        $normalized1 = $this->incipit1->getNotesNormalized();//xFC accidentals
+        $normalized1 = $this->incipit1->getNotesNormalizedToSingleOctave();//xFC accidentals
         $this->assertEquals("DDDDDxFAxFGGGExFGExF", $normalized1);
 
-        $normalized2 = $this->incipit2->getNotesNormalized();//xFC accidentals
+        $normalized2 = $this->incipit2->getNotesNormalizedToSingleOctave();//xFC accidentals
         $this->assertEquals("DDDDDxFxFxFGxFxFEDExExF", $normalized2);
 
-        $normalized3 = $this->incipit3->getNotesNormalized();//bBE accidentals
+        $normalized3 = $this->incipit3->getNotesNormalizedToSingleOctave();//bBE accidentals
         $this->assertEquals("GDDbECbBCDCbBCDEDbECbBCAbBAGG", $normalized3);
 
-        $normalized4 = $this->incipit4->getNotesNormalized();//xFC accidentals
+        $normalized4 = $this->incipit4->getNotesNormalizedToSingleOctave();//xFC accidentals
         $this->assertEquals("AADDDxFEEEFDBExCDxCBxCBA", $normalized4);
     }
 
@@ -111,7 +111,8 @@ class IncipitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->incipit4->getTime(), $json["time"]);
         $this->assertEquals($this->incipit4->getAccidentals(), $json["accidentals"]);
         $this->assertEquals($this->incipit4->getCompleteIncipit(), $json["completeIncipit"]);
-        $this->assertEquals($this->incipit4->getNotesNormalized(), $json["normalizedIncipit"]);
+        $this->assertEquals($this->incipit4->getNotesNormalizedToSingleOctave(), $json["normalizedToSingleOctave"]);
+        $this->assertEquals($this->incipit4->getNotesNormalizedToPitch(), $json["normalizedToPitch"]);
 
 
         $newIncpit = Incipit::incipitFromJSONArray($json);

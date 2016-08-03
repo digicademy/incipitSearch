@@ -74,15 +74,13 @@ class Incipit
      *
      * @return string incipit normalized on single octave
      */
-    public function getNotesNormalized(): string
+    public function getNotesNormalizedToSingleOctave(): string
     {
         if (empty($this->notesNormalized)) {
             $this->notesNormalized = preg_replace('/[\',]/', '', $this->getNotesNormalizedToPitch());
         }
         return $this->notesNormalized;
     }
-
-
 
 
     /**
@@ -101,60 +99,7 @@ class Incipit
             return $this->notesNormalizedToPitch;
         }
 
-        $notes = preg_replace('/[^\',xbnA-Z]/', '', $this->notes);
-        $normalized = '';
-
-
-        $sharpAccidentals = $this->getSharpAccidentals();
-        $flatAccidentals = $this->getFlatAccidentals();
-
-        $notesLength = strlen($notes);
-        $octave = "'";
-        $currentAccidental = "";
-
-        for ($i = 0; $i < $notesLength; $i++) {
-            $char = $notes[$i];
-
-            if ($char == "'") {
-                $octave = "'";
-                while (($i + 1) < $notesLength && $notes[$i + 1] == "'") {
-                    $octave .= "'";
-                    $i++;
-                }
-                continue;
-            }
-
-            if ($char == ",") {
-                $octave = ",";
-                while (($i + 1) < $notesLength && $notes[$i + 1] == ",") {
-                    $octave .= ",";
-                    $i++;
-                }
-                continue;
-            }
-
-            if ($char == "b" || $char == "x" || $char == "n") {
-                $currentAccidental = $char;
-            } else {
-
-                //we add the accidentals to each single note
-                if (empty($currentAccidental) && in_array($char, $sharpAccidentals, true)) {
-                    $currentAccidental = "x";
-                } else if (empty($currentAccidental) && in_array($char, $flatAccidentals, true)) {
-                    $currentAccidental = "b";
-                }
-
-                //as accidentals have already been applied, the n can be removed
-                if ($currentAccidental == "n") {
-                    $currentAccidental = "";
-                }
-
-                $normalized .= $octave . $currentAccidental . $char;
-                $currentAccidental = "";
-            }
-
-        }
-        $this->notesNormalizedToPitch = $normalized;
+        $this->notesNormalizedToPitch = IncipitNormalizer::normalizeToPitch($this->notes, $this->getSharpAccidentals(), $this->getFlatAccidentals());
 
         return $this->notesNormalizedToPitch;
     }
@@ -184,7 +129,8 @@ class Incipit
             'accidentals' => $this->getAccidentals(),
             'time' => $this->getTime(),
             'completeIncipit' => $this->getCompleteIncipit(),
-            'normalizedIncipit' => $this->getNotesNormalized()
+            'normalizedToSingleOctave' => $this->getNotesNormalizedToSingleOctave(),
+            'normalizedToPitch' => $this->getNotesNormalizedToPitch()
         ];
         return $json;
     }

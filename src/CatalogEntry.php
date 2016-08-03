@@ -5,11 +5,11 @@ namespace ADWLM\IncipitSearch;
 use ADWLM\IncipitSearch\Incipit;
 
 /**
- * The IncipitEntry class represents a database entry for the incipit collection.
+ * The CatalogEntry class represents a database entry for the incipit collection.
  *
  * It encapsulates an Incipit and all relevant meta information required for
  * search and retrieval. It provides JSON encoding function to directly
- * add the IncipitEntry to a JSON-base database (like ElasticSearch)
+ * add the CatalogEntry to a JSON-base database (like ElasticSearch)
  *
  *
  * Copyright notice
@@ -25,7 +25,7 @@ use ADWLM\IncipitSearch\Incipit;
  *
  * @package ADWLM\IncipitSearch
  */
-class IncipitEntry
+class CatalogEntry
 {
 
     protected $catalog;
@@ -38,7 +38,7 @@ class IncipitEntry
     protected $year;
 
     /**
-     * IncipitEntry constructor.
+     * CatalogEntry constructor.
      * @param Incipit|null $incipit
      * @param string|null $catalog
      * @param string|null $catalogItemID
@@ -53,10 +53,10 @@ class IncipitEntry
                                 string $composer = null, string $title = null, string $year = null)
     {
         if ($incipit == null) {
-            echo "IncipitEntry > construct > incipit is null";
+            echo "CatalogEntry > construct > incipit is null";
         }
         if ($catalogItemID == null) {
-            echo "IncipitEntry > construct > catalogItemID is null";
+            echo "CatalogEntry > construct > catalogItemID is null";
 
         }
         //TODO: catch invalid data
@@ -73,7 +73,7 @@ class IncipitEntry
 
 
     /**
-     * Parses object IncipitEntry to json representation (assoc array)
+     * Parses object CatalogEntry to json representation (assoc array)
      * @return mixed
      */
     public function getJSONArray(): array {
@@ -92,16 +92,16 @@ class IncipitEntry
     /**
      * Creates incipit entry from json representation
      * @param array $jsonArray
-     * @return IncipitEntry
+     * @return CatalogEntry
      */
-    public static function incipitEntryFromJSONArray(array $jsonArray): IncipitEntry
+    public static function catalogEntryFromJSONArray(array $jsonArray): CatalogEntry
     {
         $incipit = Incipit::incipitFromJSONArray($jsonArray["incipit"]);
-        $incipitEntry = new IncipitEntry($incipit, $jsonArray["catalog"],
+        $catalogEntry = new CatalogEntry($incipit, $jsonArray["catalog"],
             $jsonArray["catalogItemID"],
             $jsonArray["dataURL"],
             $jsonArray["detailURL"], $jsonArray["composer"], $jsonArray["title"], $jsonArray["year"]);
-        return $incipitEntry;
+        return $catalogEntry;
     }
 
     public function getJSONString(): string

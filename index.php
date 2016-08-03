@@ -83,13 +83,18 @@
 
 
     $app->get('/results/', function (Request $request, Response $response) {
+        $this->logger->addInfo("Get: /results/");
+
         $incipit = $request->getParam('incipit');
 
         $searchQuery = new SearchQuery();
+        $searchQuery->setLogger($this->logger);
         $searchQuery->setQuery($incipit);
-        $incipitEntries = $searchQuery->performSearchQuery();
+        $this->logger->addInfo("query: {$searchQuery->getQuery()}");
 
-        $response = $this->view->render($response, 'results.twig', ['incipitEntries' => $incipitEntries]);
+        $catalogEntries = $searchQuery->performSearchQuery();
+
+        $response = $this->view->render($response, 'results.twig', ['catalogEntries' => $catalogEntries]);
         return $response;
 
     })->setName("results");
@@ -123,6 +128,7 @@
             redirect("/");
         }
         $crawler = new IncipitCrawler();
+        $crawler->setLogger($this->logger);
         $crawler->resetIndex();
 
         $response = $this->view->render($response, 'crawler.twig', []);
@@ -141,6 +147,12 @@
             sleep(2);
             redirect("/");
         }
+
+        $crawler = new RISMIncipitCrawler();
+        $crawler->setLogger($this->logger);
+
+        $crawler->createIndex();
+        $crawler->crawlCatalog();
 
         $response = $this->view->render($response, 'crawler.twig', []);
         return $response;

@@ -15,7 +15,7 @@ use GuzzleHttp\Psr7\Request;
 use Elasticsearch\ClientBuilder;
 
 use ADWLM\IncipitSearch\Incipit;
-use ADWLM\IncipitSearch\IncipitEntry;
+use ADWLM\IncipitSearch\CatalogEntry;
 
 use Monolog\Logger;
 use Monolog\Handler\BrowserConsoleHandler;
@@ -66,24 +66,24 @@ class IncipitCrawler
 
 
     /**
-     * @param IncipitEntry|null $incipitEntry
+     * @param CatalogEntry|null $catalogEntry
      */
-    public function addIncipitEntryToElasticSearchIndex(IncipitEntry $incipitEntry = null)
+    public function addCatalogEntryToElasticSearchIndex(CatalogEntry $catalogEntry = null)
     {
-        if ($incipitEntry == null) {
+        if ($catalogEntry == null) {
             return;
         }
 
-        $esId = $incipitEntry->getCatalog() . $incipitEntry->getCatalogItemID();
+        $esId = $catalogEntry->getCatalog() . $catalogEntry->getCatalogItemID();
         $params = [
-            'index' => 'incipits',
-            'type' => 'incipit',
+            'index' => 'catalog_entries',
+            'type' => 'catalogEntry',
             'id' => $esId,
-            'body' => $incipitEntry->getJSONString()
+            'body' => $catalogEntry->getJSONString()
         ];
         $response = $this->elasticClient->index($params);
 
-        $this->logger->addInfo("data: addIncipitToES > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
+        $this->logger->addInfo("data: addCatalogEntryToES > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
 
     }
 
@@ -95,7 +95,7 @@ class IncipitCrawler
         $this->logger->addInfo("reset Index");
 
         $params = [
-            'index' => 'incipits'
+            'index' => 'catalog_entries'
         ];
 
         try {
@@ -119,11 +119,11 @@ class IncipitCrawler
         ];
         
         $params = [
-            'index' => 'incipits',
+            'index' => 'catalog_entries',
             'body' => [
                 
                 'mappings' => [
-                    'incipit' => [
+                    'catalogEntry' => [
                         '_source' => [
                             'enabled' => true
                         ],
@@ -137,16 +137,16 @@ class IncipitCrawler
                             'year' => [ "type" => "string"  ],
 
                             'incipit' => [
-                                'type' => 'nested',
+                                'type' => 'object',
                                 'properties' => [
                                     'notes' => $notAnalyzedStringType,
                                     'clef' => $notAnalyzedStringType,
                                     'accidentals' => $notAnalyzedStringType,
                                     'time' => $notAnalyzedStringType,
                                     'completeIncipit' => $notAnalyzedStringType,
-                                    'title' => $notAnalyzedStringType,
-                                    'normalizedIncipit' => $notAnalyzedStringType
-                                    ]
+                                    'normalizedToPitch' => $notAnalyzedStringType,
+                                    'normalizedToSingleOctave' => $notAnalyzedStringType
+                                ]
                             ]
 
                         ] //proerties

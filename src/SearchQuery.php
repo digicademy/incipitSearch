@@ -20,7 +20,10 @@
     use Elasticsearch\ClientBuilder;
 
     use ADWLM\IncipitSearch\Incipit;
-    use ADWLM\IncipitSearch\IncipitEntry;
+    use ADWLM\IncipitSearch\CatalogEntry;
+
+    use Monolog\Logger;
+    use Monolog\Handler\BrowserConsoleHandler;
 
     class SearchQuery
     {
@@ -29,29 +32,32 @@
          *
          * Queries normalizedIncipit field for given string (wildcard enables to search for substrings)
          *{
-         * "query": {
-         *  "query_string": {
-         *      "fields": ["incipit.normalizedIncipit"],
-         *          "wildcard": {
-         *              "name": {
-         *                  "query": "*f*"
-         *                  }
-         *              }
-         *          }
-         *      },
-         * "size": 10
+         *  "query": {
+         *      "wildcard": {
+         *          "incipit.normalizedToPitch":  "*f*"
+         *      }
+         *  },
+         *  "size": 10
          * }
          */
         private $query;
-        private $fields = ["incipit.normalizedIncipit"];
+        private $fields = ["incipit.normalizedToSingleOctave", "incipit.normalizedToPitch"];
         private $numOfResults;
         private $elasticClient;
 
         private $page = 0;
         private $pageSize = 10;
 
+        protected $logger;
+
+
         public function __construct()
         {
+
+            $this->logger = new \Monolog\Logger('IncipitCrawlerLog');
+            $console_handler = new \Monolog\Handler\BrowserConsoleHandler();
+            $this->logger->pushHandler($console_handler);
+
             $jsonConfig = json_decode(file_get_contents("config.json"));
             $elasticHost = $jsonConfig->elasticSearch->host;
             if (empty($elasticHost)) {
@@ -65,30 +71,38 @@
         public function setQuery(string $userInput)
         {
             //escape user input
-            $this->query = json_encode($userInput);
-            $this->query = $userInput;
+            //$this->query = json_encode($userInput);
+            $this->query = IncipitNormalizer::normalizeToPitch($userInput);
+            $this->logger->addInfo("SearchQuery > set query to: " . $this->query);
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getQuery()
+        {
+            return $this->query;
         }
 
         private function generateSearchParams(): array
         {
 
             $searchParams = [
-                'index' => 'incipits',
-                'type' => 'incipit',
+                'index' => 'catalog_entries',
+                'type' => 'catalogEntry',
                 'body' => [
                     'query' => [
-                        "query_string" => [
-                            "fields" => $this->fields,
+//                        "query_string" => [
+//                            "fields" => $this->fields,
                             "wildcard" => [
-                                "name" => [
-                                    "query" => "*" . $this->query . "*"
-                                ]
+                                "incipit.normalizedToPitch" =>  "*" . $this->query . "*"
+
                             ]
                         ]
                     ],
                     "from" => 0,
                     "size" => 10
-                ]
+//                ]
             ];
 
             return $searchParams;
@@ -110,12 +124,12 @@
         {
             $this->numOfResults = $results["hits"]["total"];
             $hits = $results["hits"]["hits"];
-            $incipitEntries = [];
+            $catalogEntries = [];
             foreach ($hits as $hit) {
-                $incipitEntry = IncipitEntry::incipitEntryFromJSONArray($hit["_source"]);
-                array_push($incipitEntries, $incipitEntry);
+                $catalogEntry = CatalogEntry::catalogEntryFromJSONArray($hit["_source"]);
+                array_push($catalogEntries, $catalogEntry);
             }
-            return $incipitEntries;
+            return $catalogEntries;
         }
 
         /**
@@ -159,6 +173,12 @@
         }
 
 
-
+        /**
+         * @param mixed $logger
+         */
+        public function setLogger(Logger $logger)
+        {
+            $this->logger = $logger;
+        }
 
     }
