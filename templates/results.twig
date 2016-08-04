@@ -1,88 +1,94 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/public/style.css">
-    <script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"></script>
-    <title>Search results</title>
+{#
+    This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+ #}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-</head>
-<body>
+{% extends "base.twig" %}
 
-<p><a href="/">Back to search</a></p>
-
-<p>
-
-    results found</p>
+{% block title %}Search Results{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/public/piano/piano_style.css">
+    <script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"></script> <!--Only needed for notes display-->
+    <script src="/public/piano/piano.js"></script>
+{% endblock %}
 
 
-<script type="text/javascript">
+{% block pageContent %}
 
-    $( document ).ready(function() {
-        var vrvToolkit = new verovio.toolkit();
 
-        $('.result').each(function(i, domResult) {
-            var result = $(domResult);
-            var incipit = result.find('.incipit').text();
+    <script type="text/javascript">
 
-            var data = "@clef:" + result.find('.incipitClef').text() + "\n";
-            data += "@keysig:" + result.find('.incipitAccidentals').text() + "\n";
-            data += "@timesig:" + result.find('.incipitTime').text() + "\n";
-            data += "@data:" + result.find('.incipitNotes').text();
+        $(document).ready(function () {
+            var vrvToolkit = new verovio.toolkit();
 
-            var windowWidth = $(window).width();
-            console.log("Window Width: " + windowWidth);
-            var scale = 50;
-            if (windowWidth < 1000) {
-                scale = 30;
-            } else if (windowWidth < 500) {
-                scale = 15;
-            }
+            $('.result').each(function (i, domResult) {
+                var result = $(domResult);
+                var incipit = result.find('.incipit').text();
 
-            options = JSON.stringify({
-                inputFormat: 'pae',
-                pageHeight: 500,
-                pageWidth: windowWidth * (1/scale),
-                ignoreLayout: 1,
-                border: 0,
-                scale: scale,
-                adjustPageHeight: 1
-            });
+                var data = "@clef:" + result.find('.incipitClef').text() + "\n";
+                data += "@keysig:" + result.find('.incipitAccidentals').text() + "\n";
+                data += "@timesig:" + result.find('.incipitTime').text() + "\n";
+                data += "@data:" + result.find('.incipitNotes').text();
 
-            var notesSVG = vrvToolkit.renderData(data, options);
-            var svgContainerDiv = result.find('.incipitSVG');
-            svgContainerDiv.html(notesSVG);
+                var windowWidth = $(window).width();
+                console.log("Window Width: " + windowWidth);
+                var scale = 50;
+                if (windowWidth < 1000) {
+                    scale = 30;
+                } else if (windowWidth < 500) {
+                    scale = 15;
+                }
 
-        });//end for each result
+                options = JSON.stringify({
+                    inputFormat: 'pae',
+                    pageHeight: 500,
+                    pageWidth: windowWidth * (1 / scale),
+                    ignoreLayout: 1,
+                    border: 0,
+                    scale: scale,
+                    adjustPageHeight: 1
+                });
 
-    });//end doc ready
+                var notesSVG = vrvToolkit.renderData(data, options);
+                var svgContainerDiv = result.find('.incipitSVG');
+                svgContainerDiv.html(notesSVG);
 
-</script>
+            });//end for each result
+        });//end doc ready
 
-{{ searchString }}
+    </script>
 
-{% for catalogEntry in catalogEntries %}
 
-<div class="result">
-    <b>{{ catalogEntry.title }}</b>
+    <div class="container">
 
-    <!-- Display the rendered notes -->
-    <span class="incipitNotes hidden">{{ catalogEntry.incipit.notes }}</span>
-    <span class="incipitClef hidden">{{ catalogEntry.incipit.clef }}</span>
-    <span class="incipitAccidentals hidden">{{ catalogEntry.incipit.accidentals }}</span>
-    <span class="incipitTime hidden">{{ catalogEntry.incipit.time }}</span>
-    <span class="incipitNormalized hidden">{{ catalogEntry.incipit.notesNormalizedToSingleOctave }}</span>
+        <p><a href="/">Back to search</a></p>
 
-    <div class="incipitSVG"></div>
-    <!-- end notes displaying -->
-
-</div><!--end result-->
-<br/>
-
-{% endfor %}
+        <p>XX results found for "{{ searchString }}"</p>
 
 
 
-</body>
-</html>
+
+        {% for catalogEntry in catalogEntries %}
+
+            <div class="result">
+                <b>{{ catalogEntry.title }}</b>
+
+                <!-- Display the rendered notes -->
+                <span class="incipitNotes hidden">{{ catalogEntry.incipit.notes }}</span>
+                <span class="incipitClef hidden">{{ catalogEntry.incipit.clef }}</span>
+                <span class="incipitAccidentals hidden">{{ catalogEntry.incipit.accidentals }}</span>
+                <span class="incipitTime hidden">{{ catalogEntry.incipit.time }}</span>
+                <span class="incipitNormalized hidden">{{ catalogEntry.incipit.notesNormalizedToSingleOctave }}</span>
+
+                <div class="incipitSVG"></div>
+                <!-- end notes displaying -->
+
+            </div><!--end result-->
+            <br/>
+
+        {% endfor %}
+
+    </div><!-- end container -->
+
+{% endblock %} {# end pageContent #}
+

@@ -1,33 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" href="/public/style.css">
-	<title>Incipit Crawler</title>
-</head>
-<body>
+{#
+    This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+ #}
 
-<h1>Incipit Crawler</h1>
+{% extends "base.twig" %}
+
+{% block title %}Incipt Crawler Control Panel{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/public/piano/piano_style.css">
+    <script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"></script> <!--Only needed for notes display-->
+    <script src="/public/piano/piano.js"></script>
+{% endblock %}
 
 
-{% if password %}
+{% block pageContent %}
 
-    <b>All these actions might take several minutes and might not give immediate feedback.<br>Use with care!</b><br>
-    <br>
-    <a href="{{ path_for('crawler_resetIndex') }}?password={{ password }}">Delete Index</a><br>
-    <a href="{{ path_for('crawler_index_RISM') }}?password={{ password }}">Re-Index RISM</a>
+    <div class="container">
 
-{% else %}
+        <h1>Incipit Crawler Control Panel</h1>
 
-    <b>Please enter your password. (This output is intentionally slow)</b>
-    <br><br>
-    <form action="{{ path_for('crawler') }}">
-        Admin password:<br>
-        <input type="password" name="password">
-        <input type="submit" value="Submit">
-    </form>
 
-{% endif %}
+        {% if password %}
 
-</body>
-</html>
+            <b>All these actions might take several minutes and might not give immediate feedback.<br>Use with care!</b>
+            <br>
+            <br>
+            <a href="{{ path_for('crawler_resetIndex') }}?password={{ password }}">Delete Index</a><br>
+            <a href="{{ path_for('crawler_index_RISM') }}?password={{ password }}">Re-Index RISM</a>
+
+        {% else %}
+
+            <b>Please enter your password. (This output is intentionally slow)</b>
+            <br><br>
+            <form action="{{ path_for('crawler') }}">
+                Admin password:<br>
+                <input type="password" name="password">
+                <input type="submit" value="Submit">
+            </form>
+
+        {% endif %}
+    </div><!-- end container -->
+
+{% endblock %} {# end pageContent #}
+
+
