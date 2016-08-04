@@ -17,12 +17,14 @@ class IncipitTest extends PHPUnit_Framework_TestCase
     private $incipit2;
     private $incipit3;
     private $incipit4;
+    private $incipit5;
 
     public function setUp() {
         $this->incipit1 = new Incipit("''4D8DD4D-/DFAF/8GG4--G/EFGE/F--", "G-2", "xFC", "c");
         $this->incipit2 = new Incipit("''4DDD/D--/,D,,FF/FGF/gF4EDE/2xE4F/", "C-1", "xFC", "3/4");
         $this->incipit3 = new Incipit("=14/{''6GD}4D8E/{8.C'3B''C8D}C/{'6.B''3C8D}-nE/D{6EC}'8B6''C'A/B{AG}4G", "C-1", "bBE", "2/4");
         $this->incipit4 = new Incipit("=1/2-4(-)'8AA/4''DD-D/gF4EE-E/nFD'B''E/({8CDC})({'B''C'B})4A8-", "C-1", "xFC", "c");
+        $this->incipit5 = new Incipit("''8-{CD}+/{DC'B}/{xAA''F+}/{FED}/{nCGB+}/{bBBG+}/{GFE}/", "G-2", "xFCG", "3/8");
     }
 
     public function testConstructor() {
@@ -52,6 +54,9 @@ class IncipitTest extends PHPUnit_Framework_TestCase
 
         $normalized4 = $this->incipit4->getNotesNormalizedToPitch(); //xFC accidentals
         $this->assertEquals("'A'A''D''D''D''xF''E''E''E''F''D'B''E''xC''D''xC'B''xC'B'A", $normalized4);
+
+        $normalized5 = $this->incipit5->getNotesNormalizedToPitch(); //xFCG accidentals
+        $this->assertEquals("''xC''D''D''xC'B'xA'xA''xF''xF''E''D''C''xG''B''bB''bB''xG''xG''xF''E", $normalized5);
     }
 
     public function testNormalizationToSingleOctave() {
@@ -66,6 +71,9 @@ class IncipitTest extends PHPUnit_Framework_TestCase
 
         $normalized4 = $this->incipit4->getNotesNormalizedToSingleOctave();//xFC accidentals
         $this->assertEquals("AADDDxFEEEFDBExCDxCBxCBA", $normalized4);
+
+        $normalized5 = $this->incipit5->getNotesNormalizedToSingleOctave(); //xFCG accidentals
+        $this->assertEquals("xCDDxCBxAxAxFxFEDCxGBbBbBxGxGxFE", $normalized5);
     }
 
     public function testSanitizedString() {

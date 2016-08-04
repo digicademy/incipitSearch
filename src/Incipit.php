@@ -77,7 +77,9 @@ class Incipit
     public function getNotesNormalizedToSingleOctave(): string
     {
         if (empty($this->notesNormalized)) {
-            $this->notesNormalized = preg_replace('/[\',]/', '', $this->getNotesNormalizedToPitch());
+            //we don't call the IncipitNormalizer function here
+            //because normalizedToPitch has to be called anyway and is buffered here
+            $this->notesNormalized = str_replace(["'",","], '', $this->getNotesNormalizedToPitch());
         }
         return $this->notesNormalized;
     }

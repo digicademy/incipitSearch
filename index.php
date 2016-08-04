@@ -94,7 +94,7 @@
 
         $catalogEntries = $searchQuery->performSearchQuery();
 
-        $response = $this->view->render($response, 'results.twig', ['catalogEntries' => $catalogEntries]);
+        $response = $this->view->render($response, 'results.twig', ['catalogEntries' => $catalogEntries, 'searchString' => $searchQuery->getQuery()]);
         return $response;
 
     })->setName("results");

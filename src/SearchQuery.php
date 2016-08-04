@@ -72,7 +72,7 @@
         {
             //escape user input
             //$this->query = json_encode($userInput);
-            $this->query = IncipitNormalizer::normalizeToPitch($userInput);
+            $this->query = IncipitNormalizer::normalizeToSingleOctave($userInput);
             $this->logger->addInfo("SearchQuery > set query to: " . $this->query);
         }
 
@@ -95,7 +95,7 @@
 //                        "query_string" => [
 //                            "fields" => $this->fields,
                             "wildcard" => [
-                                "incipit.normalizedToPitch" =>  "*" . $this->query . "*"
+                                "incipit.normalizedToSingleOctave" =>  "*" . $this->query . "*"
 
                             ]
                         ]
