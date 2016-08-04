@@ -61,17 +61,19 @@
 
     <div class="container">
 
-        <p><a href="/">Back to search</a></p>
+        <h1>Found Incipits</h1>
+        <b>XX results found for "{{ searchString }}"</b>
+        <b><a href="/">Back to search</a></b>
 
-        <p>XX results found for "{{ searchString }}"</p>
-
-
+        <br><hr><br>
 
 
         {% for catalogEntry in catalogEntries %}
 
             <div class="result">
-                <b>{{ catalogEntry.title }}</b>
+                <h3>{{ catalogEntry.title }}</h3>
+                <b>{{ catalogEntry.composer }}</b><br>
+                <b>{{ catalogEntry.year }}</b>
 
                 <!-- Display the rendered notes -->
                 <span class="incipitNotes hidden">{{ catalogEntry.incipit.notes }}</span>
@@ -82,7 +84,8 @@
 
                 <div class="incipitSVG"></div>
                 <!-- end notes displaying -->
-
+                <b><a href="{{ catalogEntry.detailURL }}">Detail page in {{ catalogEntry.catalog }} </a></b>
+                <hr>
             </div><!--end result-->
             <br/>
 

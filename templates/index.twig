@@ -63,14 +63,19 @@
 
     <div class="container">
 
-        <form class="form-wrapper" action="{{ path_for('results') }}" method="GET">
-            <input name="incipit" type="text" id="search" placeholder="Search for incipit" required>
-            <button type="button" id="backspaceButton">←</button>
-            <input type="submit" value="Submit" id="submit">
-        </form>
+        <h1>Incipit Search</h1>
+        <h4>Enter a short melody using the virtual keyboard to search for matching incipits.</h4>
+        <div class="center">
+            <form class="" action="{{ path_for('results') }}" method="GET">
+                <input name="incipit" type="text" id="search" placeholder="Search for incipit" required>
+                <button type="button" id="backspaceButton">Reset</button>
+                <input type="submit" class="button-primary" value="Submit" id="submit">
+            </form>
 
-        <div id="keyboardContainer"></div><!-- this will hold the keyboard -->
-        <div id="svgNotesContainer"></div><!-- this will hold the SVG with rendered notes -->
+            <div id="keyboardContainer"></div><!-- this will hold the keyboard -->
+            <div id="svgNotesContainer"></div><!-- this will hold the SVG with rendered notes -->
+        </div><!-- end center -->
+
     </div><!-- end container -->
 
 {% endblock %} {# end pageContent #}

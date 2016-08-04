@@ -3,3 +3,13 @@
 .hidden {
 	display: none;
 }
+
+
+.center {
+	display: block;
+	text-align: center;
+}
+
+.container {
+    margin-top: 40px;
+}
