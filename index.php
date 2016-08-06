@@ -160,4 +160,28 @@
     })->setName("crawler_index_RISM");
 
 
+
+    $app->get('/crawler/index/gluck', function (Request $request, Response $response) use ($adminPassword) {
+
+        $this->logger->addInfo("Get: /crawler/index/gluck");
+
+        $password = $request->getParam('password');
+        if ($adminPassword != $password) {
+            $password = Null;
+            //sleep(2);
+            //redirect("/");
+        }
+
+        $crawler = new GluckIncipitCrawler();
+        $crawler->setLogger($this->logger);
+
+        //$crawler->createIndex();
+        $crawler->crawlCatalog();
+        $logs = $crawler->getLogs();
+        $response = $this->view->render($response, 'crawlerResults.twig', ['logs' => $logs]);
+        return $response;
+
+    })->setName("crawler_index_RISM");
+
+
     $app->run();

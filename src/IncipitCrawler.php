@@ -45,7 +45,7 @@ class IncipitCrawler
         $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
 
         $this->catalogClient = new Client([
-            'timeout'  => 2.0,
+            'timeout'  => 15.0,
         ]);
 
 
@@ -56,9 +56,15 @@ class IncipitCrawler
      * @param string $url URL to resouce
      * @return string content of url
      */
-    public function contentOfURL(string $url): string
+    public function contentOfURL(string $url) //can return null
     {
-        $response = $this->catalogClient->request('GET', $url);
+        try {
+            $response = $this->catalogClient->request('GET', $url);
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return null;
+        } catch (Exception $e) {
+            return null;
+        }
         $content = $response->getBody();
         return $content;
     }

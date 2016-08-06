@@ -1,0 +1,29 @@
+{#
+    This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+ #}
+
+{% extends "base.twig" %}
+
+{% block title %}Incipt Crawler Control Panel{% endblock %}
+
+
+{% block pageContent %}
+
+    <div class="container">
+
+        <h1>Crawler Results</h1>
+
+
+        {% for log in logs %}
+
+            <pre><code>
+                {{ log }}
+            </code></pre>
+            <br>
+
+        {% endfor %}
+    </div><!-- end container -->
+
+{% endblock %} {# end pageContent #}
+
+
