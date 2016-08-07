@@ -1,5 +1,10 @@
 {#
     This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+
+    The purpose of the OperationResults template is to display output of php classes.
+    PHP and slim seem not to be able to log to console for most operations
+    so we collect output manually and display it on a separate page (this page).
+
  #}
 
 {% extends "base.twig" %}
@@ -19,7 +24,7 @@
             <pre><code>
                 {{ log }}
             </code></pre>
-            <br>
+            
 
         {% endfor %}
     </div><!-- end container -->

@@ -23,8 +23,11 @@ class RISMIncipitCrawler extends IncipitCrawler
 {
 
     /**
-     * @param string $file
-     * @return CatalogEntry The incipit entry or null
+     * Creates a CatalogEntry with Incipit from the data at the given URL.
+     *
+     * @param string $dataURL url of data in catalog
+     * @param string $xml the xml data to parse
+     * @return CatalogEntry null in case of error
      */
     public function catalogEntryFromXML(string $dataURL, string $xml) //can return null
     {
@@ -63,9 +66,10 @@ class RISMIncipitCrawler extends IncipitCrawler
     }
 
     /**
+     * Extracts the string content of an XML element at the given xpath.
      * @param SimpleXMLElement $parentXmlElement
      * @param string $xpath
-     * @return string
+     * @return string the content, empty if not found
      */
     private function contentOfXMLPath(SimpleXMLElement $parentXmlElement, string $xpath): string {
         if ($parentXmlElement == null) {
@@ -81,7 +85,9 @@ class RISMIncipitCrawler extends IncipitCrawler
 
 
     /**
-     * Crawls catalog from given url to given url
+     * Crawls catalog and adds found CatalogEntries to ElasticSearch.
+     * For RISM this just crawls a selection of about 200 entries.
+     * This operation might take quite some time to complete.
      */
     public function crawlCatalog()
     {

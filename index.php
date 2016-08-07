@@ -131,7 +131,7 @@
         $crawler->setLogger($this->logger);
         $crawler->resetIndex();
 
-        $response = $this->view->render($response, 'crawler.twig', []);
+        $response = $this->view->render($response, 'crawler.twig', ["password" => $password]);
         return $response;
 
     })->setName("crawler_resetIndex");
@@ -168,20 +168,20 @@
         $password = $request->getParam('password');
         if ($adminPassword != $password) {
             $password = Null;
-            //sleep(2);
-            //redirect("/");
+            sleep(2);
+            redirect("/");
         }
 
         $crawler = new GluckIncipitCrawler();
         $crawler->setLogger($this->logger);
 
-        //$crawler->createIndex();
+        $crawler->createIndex();
         $crawler->crawlCatalog();
         $logs = $crawler->getLogs();
-        $response = $this->view->render($response, 'crawlerResults.twig', ['logs' => $logs]);
+        $response = $this->view->render($response, 'operationResults.twig', ['logs' => $logs]);
         return $response;
 
-    })->setName("crawler_index_RISM");
+    })->setName("crawler_index_gluck");
 
 
     $app->run();

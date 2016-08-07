@@ -24,9 +24,15 @@ class GluckIncipitCrawler extends IncipitCrawler
 
     protected $logs = [];
 
+    private function addLog(string $message) {
+        array_push($this->logs, $message);
+    }
+
     /**
-     * @param string $file
-     * @return CatalogEntry The incipit entry or null
+     * Creates a CatalogEntry with Incipit from the data at the given URL.
+     *
+     * @param string $dataURL url of data in catalog
+     * @return CatalogEntry null in case of error
      */
     public function catalogEntryFromWork(string $dataURL) //can return null
     {
@@ -34,14 +40,14 @@ class GluckIncipitCrawler extends IncipitCrawler
         $xml = $this->contentOfURL($dataURL);
 
         if ($xml == null || strlen($xml) == 0) {
-            array_push($this->logs, "error: catalogEntryFromWork > not found at {$dataURL}");
+            $this->addLog("error: catalogEntryFromWork > not found at {$dataURL}");
             return;
         }
         try {
             $parentXMLElement = new SimpleXMLElement($xml);
         } catch (\Exception $e) {
             // Handle all other exceptions
-            echo "error: catalogEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()} <br>\n";
+            $this->addLog("error: catalogEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()}");
             return null;
         }
 
@@ -60,31 +66,30 @@ class GluckIncipitCrawler extends IncipitCrawler
             $incipitTime = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/bsbmo:incipitTimesig");
             $incipitNotes = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/bsbmo:incipitScore");
             $composer = "Christoph Willibald Gluck";
-            array_push($this->logs, "catalogEntryFromWork > $workTitle $partTitle\n" .
+            $this->addLog("catalogEntryFromWork > $workTitle $partTitle\n" .
                 "$incipitClef $incipitAccidentals $incipitTime $incipitNotes");
 
 
             $fullTitle = $workTitle . " " . $partTitle;
 
             $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
-            $catalogEntry = new CatalogEntry($incipit, "Gluck Gesamtausgabe", $workIdentifier, $dataURL, $workDetailUrl,
+            $catalogEntry = new CatalogEntry($incipit, "Gluck-Gesamtausgabe", $workIdentifier, $dataURL, $workDetailUrl,
                 $composer, $fullTitle, "");
 
             return $catalogEntry;
         }
-
-
     }
 
     /**
+     * Extracts the string content of an XML element at the given xpath.
      * @param SimpleXMLElement $parentXmlElement
      * @param string $xpath
-     * @return string
+     * @return string the content, empty if not found
      */
     private function contentOfXMLPath(SimpleXMLElement $parentXmlElement, string $xpath): string
     {
         if ($parentXmlElement == null) {
-            echo "error: contentOfXMLElementAtPath > no parentXmlElement given <br>\n";
+            $this->addLog("error: contentOfXMLElementAtPath > no parentXmlElement given");
             return "";
         }
         $matchingElements = $parentXmlElement->xpath($xpath);
@@ -96,7 +101,8 @@ class GluckIncipitCrawler extends IncipitCrawler
 
 
     /**
-     * Crawls catalog from given url to given url
+     * Crawls catalog and adds found CatalogEntries to ElasticSearch.
+     * This operation might take quite some time to complete.
      */
     public function crawlCatalog()
     {
@@ -109,14 +115,14 @@ class GluckIncipitCrawler extends IncipitCrawler
             array_push($this->logs, "error: crawlCatalog > not found at {$url}");
             return;
         }
-        array_push($this->logs, "read index xml: \n\n {$xml}");
+        $this->addLog("read index xml: \n\n {$xml}");
 
 
         try {
             $parentXMLElement = new SimpleXMLElement($xml);
         } catch (\Exception $e) {
             // Handle all other exceptions
-            array_push($this->logs, "error: catalogEntryFromXML at $url > could not parse XML > {$e->getMessage()}");
+            $this->addLog("error: catalogEntryFromXML at $url > could not parse XML > {$e->getMessage()}");
             return null;
         }
 
@@ -124,7 +130,7 @@ class GluckIncipitCrawler extends IncipitCrawler
         foreach ($matchingElements as $resource) {
             $title = (string)$resource->xpath("title")[0];
             $workUrl = (string)$resource->attributes()["target"];
-            array_push($this->logs, "work: $title $workUrl ");
+            $this->addLog("work: $title $workUrl ");
             $catalogEntry = $this->catalogEntryFromWork($workUrl);
             $this->addCatalogEntryToElasticSearchIndex($catalogEntry);
         }
@@ -133,7 +139,9 @@ class GluckIncipitCrawler extends IncipitCrawler
     }
 
     /**
-     * @return array
+     * Returns an array of log entries generated during crawling.
+     *
+     * @return array of strings (log entries)
      */
     public function getLogs(): array
     {

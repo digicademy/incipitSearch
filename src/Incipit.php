@@ -38,6 +38,7 @@ class Incipit
 
     /**
      * Incipit constructor.
+     *
      * @param string $notes
      * @param string|null $clef will be set to empty if null
      * @param string|null $accidentals will be set to empty if null

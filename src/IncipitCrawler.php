@@ -29,6 +29,8 @@ class IncipitCrawler
     protected $elasticClient;
     protected $catalogClient;
 
+    protected $indexName = "catalog_entries";
+
     public function __construct()
     {
 
@@ -45,7 +47,7 @@ class IncipitCrawler
         $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
 
         $this->catalogClient = new Client([
-            'timeout'  => 15.0,
+            'timeout' => 15.0,
         ]);
 
 
@@ -70,7 +72,6 @@ class IncipitCrawler
     }
 
 
-
     /**
      * @param CatalogEntry|null $catalogEntry
      */
@@ -82,7 +83,7 @@ class IncipitCrawler
 
         $esId = $catalogEntry->getCatalog() . $catalogEntry->getCatalogItemID();
         $params = [
-            'index' => 'catalog_entries',
+            'index' => $this->indexName,
             'type' => 'catalogEntry',
             'id' => $esId,
             'body' => $catalogEntry->getJSONString()
@@ -95,15 +96,19 @@ class IncipitCrawler
 
 
     /**
+     * Deletes the catalog_entries index from Elastic Search.
      */
     public function resetIndex()
     {
         $this->logger->addInfo("reset Index");
 
         $params = [
-            'index' => 'catalog_entries'
+            'index' => $this->indexName
         ];
 
+        if ($this->elasticClient->indices()->exists($params) == false) { //already deleted
+            return;
+        }
         try {
             $response = $this->elasticClient->indices()->delete($params);
             $this->logger->addInfo("delete Index {$params['index']} > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
@@ -119,15 +124,23 @@ class IncipitCrawler
      */
     public function createIndex()
     {
+        $params = [
+            'index' => $this->indexName
+        ];
+        if ($this->elasticClient->indices()->exists($params)) {
+            return;
+        }
+
+
         $notAnalyzedStringType = [
             'type' => 'string',
-            'index' =>  'not_analyzed'
+            'index' => 'not_analyzed'
         ];
-        
+
         $params = [
-            'index' => 'catalog_entries',
+            'index' => $this->indexName,
             'body' => [
-                
+
                 'mappings' => [
                     'catalogEntry' => [
                         '_source' => [
@@ -138,9 +151,9 @@ class IncipitCrawler
                             'catalogItemID' => $notAnalyzedStringType,
                             'dataURL' => $notAnalyzedStringType,
                             'detailURL' => $notAnalyzedStringType,
-                            'composer' => [ "type" => "string"  ],
-                            'title' => [ "type" => "string"  ],
-                            'year' => [ "type" => "string"  ],
+                            'composer' => ["type" => "string"],
+                            'title' => ["type" => "string"],
+                            'year' => ["type" => "string"],
 
                             'incipit' => [
                                 'type' => 'object',
@@ -160,10 +173,10 @@ class IncipitCrawler
                 ] //mappings
             ] //body
         ];
-        
+
         // Create the index with mappings and settings now
         $response = $this->elasticClient->indices()->create($params);
-        
+
         $this->logger->addInfo("created Index {$params['index']} > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
     }
 
