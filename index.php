@@ -67,40 +67,39 @@
     $adminPassword = $jsonConfig->security->adminPassword;
 
 
-
+    /**
+     * Route for index / start page.
+     */
     $app->get('/', function (Request $request, Response $response) {
         $this->logger->addInfo("Get: /");
 
         return $this->view->render($response, 'index.twig', []);
     });
 
-    $app->get('/hello/{name}', function (Request $request, Response $response) {
-        $name = $request->getAttribute('name');
-        $response->getBody()->write("Hello, $name");
 
-        return $response;
-    });
-
-
+    /**
+     * Route for search results.
+     */
     $app->get('/results/', function (Request $request, Response $response) {
         $this->logger->addInfo("Get: /results/");
 
         $incipit = $request->getParam('incipit');
 
         $searchQuery = new SearchQuery();
-        $searchQuery->setLogger($this->logger);
-        $searchQuery->setQuery($incipit);
-        $this->logger->addInfo("query: {$searchQuery->getQuery()}");
+        $searchQuery->setIncipitQuery($incipit);
+        $this->logger->addInfo("query: {$searchQuery->getIncipitQuery()}");
 
         $catalogEntries = $searchQuery->performSearchQuery();
 
-        $response = $this->view->render($response, 'results.twig', ['catalogEntries' => $catalogEntries, 'searchString' => $searchQuery->getQuery()]);
+        $response = $this->view->render($response, 'results.twig', ['catalogEntries' => $catalogEntries, 'searchString' => $searchQuery->getIncipitQuery()]);
         return $response;
 
     })->setName("results");
 
 
-
+    /**
+     * Route for crawler control center.
+     */
     $app->get('/crawler[/]', function (Request $request, Response $response) use ($adminPassword) {
 
         $this->logger->addInfo("Get: /crawler");
@@ -117,6 +116,9 @@
     })->setName("crawler");
 
 
+    /**
+     * Route to reset elastic search index.
+     */
     $app->get('/crawler/reset', function (Request $request, Response $response) use ($adminPassword) {
 
         $this->logger->addInfo("Get: /crawler/reset");
@@ -128,7 +130,6 @@
             redirect("/");
         }
         $crawler = new IncipitCrawler();
-        $crawler->setLogger($this->logger);
         $crawler->resetIndex();
 
         $response = $this->view->render($response, 'crawler.twig', ["password" => $password]);
@@ -137,6 +138,9 @@
     })->setName("crawler_resetIndex");
 
 
+    /**
+     * Route to re-index RISM catalog.
+     */
     $app->get('/crawler/index/RISM', function (Request $request, Response $response) use ($adminPassword) {
 
         $this->logger->addInfo("Get: /crawler/index/RISM");
@@ -149,18 +153,20 @@
         }
 
         $crawler = new RISMIncipitCrawler();
-        $crawler->setLogger($this->logger);
 
         $crawler->createIndex();
         $crawler->crawlCatalog();
 
-        $response = $this->view->render($response, 'crawler.twig', []);
+        $logs = $crawler->getLogs();
+        $response = $this->view->render($response, 'operationResults.twig', ['logs' => $logs]);
         return $response;
 
     })->setName("crawler_index_RISM");
 
 
-
+    /**
+     * Route to re-index Gluck Gesamtausgabe catalog.
+     */
     $app->get('/crawler/index/gluck', function (Request $request, Response $response) use ($adminPassword) {
 
         $this->logger->addInfo("Get: /crawler/index/gluck");
@@ -173,7 +179,6 @@
         }
 
         $crawler = new GluckIncipitCrawler();
-        $crawler->setLogger($this->logger);
 
         $crawler->createIndex();
         $crawler->crawlCatalog();

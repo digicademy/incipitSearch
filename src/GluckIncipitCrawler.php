@@ -22,11 +22,6 @@ use ADWLM\IncipitSearch\CatalogEntry;
 class GluckIncipitCrawler extends IncipitCrawler
 {
 
-    protected $logs = [];
-
-    private function addLog(string $message) {
-        array_push($this->logs, $message);
-    }
 
     /**
      * Creates a CatalogEntry with Incipit from the data at the given URL.
@@ -138,15 +133,7 @@ class GluckIncipitCrawler extends IncipitCrawler
 
     }
 
-    /**
-     * Returns an array of log entries generated during crawling.
-     *
-     * @return array of strings (log entries)
-     */
-    public function getLogs(): array
-    {
-        return $this->logs;
-    }
+
 
 
 }

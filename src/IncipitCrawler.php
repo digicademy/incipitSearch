@@ -17,26 +17,35 @@ use Elasticsearch\ClientBuilder;
 use ADWLM\IncipitSearch\Incipit;
 use ADWLM\IncipitSearch\CatalogEntry;
 
-use Monolog\Logger;
-use Monolog\Handler\BrowserConsoleHandler;
-
-
 class IncipitCrawler
 {
 
-    protected $logger;
 
     protected $elasticClient;
     protected $catalogClient;
 
     protected $indexName = "catalog_entries";
 
+    protected $logs = [];
+    protected function addLog(string $message) {
+        array_push($this->logs, $message);
+    }
+
+    /**
+     * Returns an array of log entries generated during crawling.
+     *
+     * @return array of strings (log entries)
+     */
+    public function getLogs(): array
+    {
+        return $this->logs;
+    }
+
+    /**
+     * IncipitCrawler constructor.
+     */
     public function __construct()
     {
-
-        $this->logger = new \Monolog\Logger('IncipitCrawlerLog');
-        $console_handler = new \Monolog\Handler\BrowserConsoleHandler();
-        $this->logger->pushHandler($console_handler);
 
         $jsonConfig = json_decode(file_get_contents("config.json"));
         $elasticHost = $jsonConfig->elasticSearch->host;
@@ -90,7 +99,7 @@ class IncipitCrawler
         ];
         $response = $this->elasticClient->index($params);
 
-        $this->logger->addInfo("data: addCatalogEntryToES > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
+        $this->addLog("data: addCatalogEntryToES > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
 
     }
 
@@ -100,7 +109,7 @@ class IncipitCrawler
      */
     public function resetIndex()
     {
-        $this->logger->addInfo("reset Index");
+        $this->addLog("reset Index");
 
         $params = [
             'index' => $this->indexName
@@ -111,11 +120,10 @@ class IncipitCrawler
         }
         try {
             $response = $this->elasticClient->indices()->delete($params);
-            $this->logger->addInfo("delete Index {$params['index']} > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
+            $this->addLog("delete Index {$params['index']} > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
         } catch (Exception $e) {
-            $this->logger->addInfo("delete Index {$params['index']} > Failed with Error:\n " . $e->getMessage());
+            $this->addLog("delete Index {$params['index']} > Failed with Error:\n " . $e->getMessage());
         }
-
 
     }
 
@@ -177,16 +185,9 @@ class IncipitCrawler
         // Create the index with mappings and settings now
         $response = $this->elasticClient->indices()->create($params);
 
-        $this->logger->addInfo("created Index {$params['index']} > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
+        $this->addLog("created Index {$params['index']} > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
     }
 
-    /**
-     * @param mixed $logger
-     */
-    public function setLogger(Logger $logger)
-    {
-        $this->logger = $logger;
-    }
 
 
 }

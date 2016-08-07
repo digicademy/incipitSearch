@@ -1,184 +1,280 @@
 <?php
+namespace ADWLM\IncipitSearch;
+
+
+require 'vendor/autoload.php';
+
+use Elasticsearch\ClientBuilder;
+
+use ADWLM\IncipitSearch\Incipit;
+use ADWLM\IncipitSearch\CatalogEntry;
+
+
+/**
+ * The SearchQuery class encapsulates search queries to elastic search
+ * and its results.
+ *
+ *
+ * Copyright notice
+ *
+ * (c) 2016
+ * Anna Neovesky  Anna.Neovesky@adwmainz.de
+ * Gabriel Reimers g.a.reimers@gmail.com
+ *
+ * Digital Academy www.digitale-akademie.de
+ * Academy of Sciences and Literatur | Mainz www.adwmainz.de
+ *
+ * Licensed under The MIT License (MIT)
+ *
+ * @package ADWLM\IncipitSearch
+ */
+class SearchQuery
+{
+
+    private $incipitQuery = "";
+    private $catalogFilter = null;
+
+
+    private $numOfResults = 0;
+    private $elasticClient;
+
+    private $page = 0;
+    private $pageSize = 100;
+
+
     /**
-     * Copyright notice
-     *
-     * (c) 2016
-     * Anna Neovesky  Anna.Neovesky@adwmainz.de
-     * Gabriel Reimers g.a.reimers@gmail.com
-     *
-     * Digital Academy www.digitale-akademie.de
-     * Academy of Sciences and Literatur | Mainz www.adwmainz.de
-     *
-     * Licensed under The MIT License (MIT)
+     * SearchQuery constructor.
      */
-
-    namespace ADWLM\IncipitSearch;
-
-
-    require 'vendor/autoload.php';
-
-    use Elasticsearch\ClientBuilder;
-
-    use ADWLM\IncipitSearch\Incipit;
-    use ADWLM\IncipitSearch\CatalogEntry;
-
-    use Monolog\Logger;
-    use Monolog\Handler\BrowserConsoleHandler;
-
-    class SearchQuery
+    public function __construct()
     {
 
-        /**
-         *
-         * Queries normalizedIncipit field for given string (wildcard enables to search for substrings)
-         *{
-         *  "query": {
-         *      "wildcard": {
-         *          "incipit.normalizedToPitch":  "*f*"
-         *      }
-         *  },
-         *  "size": 10
-         * }
-         */
-        private $query;
-        private $fields = ["incipit.normalizedToSingleOctave", "incipit.normalizedToPitch"];
-        private $numOfResults;
-        private $elasticClient;
+        $jsonConfig = json_decode(file_get_contents("config.json"));
+        $elasticHost = $jsonConfig->elasticSearch->host;
+        if (empty($elasticHost)) {
+            $elasticHost = "127.0.0.1";
+        }
 
-        private $page = 0;
-        private $pageSize = 10;
-
-        protected $logger;
+        $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
+    }
 
 
-        public function __construct()
+    /**
+     * Creates the search query for elastic search as JSON-compatible
+     * associated array.
+     * Inserts the set incipit query and filter to the elastic
+     * search query DSL.
+     *
+     * @return array associative array of JSON-formatted query
+     */
+    private function generateSearchParams(): array
+    {
+
+        /* original REST query looks like this:
+
         {
-
-            $this->logger = new \Monolog\Logger('IncipitCrawlerLog');
-            $console_handler = new \Monolog\Handler\BrowserConsoleHandler();
-            $this->logger->pushHandler($console_handler);
-
-            $jsonConfig = json_decode(file_get_contents("config.json"));
-            $elasticHost = $jsonConfig->elasticSearch->host;
-            if (empty($elasticHost)) {
-                $elasticHost = "127.0.0.1";
+            "query": {
+                "bool": {
+                    "must": {
+                        "wildcard" : {
+                            "incipit.normalizedToPitch" :  "*F*"
+                        }
+                    },
+                    "filter": {
+                        "term": {
+                            "catalog": "Gluck-Gesamtausgabe"
+                        }
+                    }
+                }
             }
 
-            $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
         }
 
+        */
 
-        public function setQuery(string $userInput)
-        {
-            //escape user input
-            //$this->query = json_encode($userInput);
-            $this->query = IncipitNormalizer::normalizeToSingleOctave($userInput);
-            $this->logger->addInfo("SearchQuery > set query to: " . $this->query);
-        }
-
-        /**
-         * @return mixed
-         */
-        public function getQuery()
-        {
-            return $this->query;
-        }
-
-        private function generateSearchParams(): array
-        {
-
-            $searchParams = [
-                'index' => 'catalog_entries',
-                'type' => 'catalogEntry',
-                'body' => [
-                    'query' => [
-//                        "query_string" => [
-//                            "fields" => $this->fields,
-                            "wildcard" => [
-                                "incipit.normalizedToSingleOctave" =>  "*" . $this->query . "*"
-
+        $searchParams = [
+            'index' => 'catalog_entries',
+            'type' => 'catalogEntry',
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            'wildcard' => [
+                                "incipit.normalizedToSingleOctave" => "*" . $this->incipitQuery . "*"
                             ]
-                        ]
-                    ],
-                    "from" => 0,
-                    "size" => 10
-//                ]
-            ];
+                        ],
+                        'filter' => $this->getFilterArray() //there might be multiple filter set or not
+                    ]
 
-            return $searchParams;
+                ]
+            ],
+            "from" => $this->page,
+            "size" => $this->pageSize
+        ];
 
-        }
-
-
-        public function performSearchQuery(): array
-        {
-            $results = $this->elasticClient->search($this->generateSearchParams());
-            return $this->parseSearchResponse($results);
-        }
-
-        /**
-         * @param array $response
-         * @return mixed
-         */
-        private function parseSearchResponse(array $results): array
-        {
-            $this->numOfResults = $results["hits"]["total"];
-            $hits = $results["hits"]["hits"];
-            $catalogEntries = [];
-            foreach ($hits as $hit) {
-                $catalogEntry = CatalogEntry::catalogEntryFromJSONArray($hit["_source"]);
-                array_push($catalogEntries, $catalogEntry);
-            }
-            return $catalogEntries;
-        }
-
-        /**
-         * @return mixed
-         */
-        public function getNumOfResults()
-        {
-            return $this->numOfResults;
-        }
-
-        /**
-         * @return int
-         */
-        public function getPage()
-        {
-            return $this->page;
-        }
-
-        /**
-         * @param int $page
-         */
-        public function setPage($page)
-        {
-            $this->page = $page;
-        }
-
-        /**
-         * @return int
-         */
-        public function getPageSize()
-        {
-            return $this->pageSize;
-        }
-
-        /**
-         * @param int $pageSize
-         */
-        public function setPageSize($pageSize)
-        {
-            $this->pageSize = $pageSize;
-        }
-
-
-        /**
-         * @param mixed $logger
-         */
-        public function setLogger(Logger $logger)
-        {
-            $this->logger = $logger;
-        }
+        return $searchParams;
 
     }
+
+    /**
+     * Generates an associative array of all set filters for the search query.
+     *
+     * @return array filters for search query, empty array if none
+     */
+    private function getFilterArray(): array
+    {
+        $filter = [];
+
+        if (!empty($this->getCatalogFilter())) {
+            $filter[] = [
+                'term' =>
+                    ['catalog' => $this->getCatalogFilter()]
+            ];
+        }
+        return $filter;
+    }
+
+    /**
+     * Performs the actual search for the set query and filters
+     * and returns the matching results as an array of CatalogEntry.
+     *
+     * @return array matching CatalogEntrys, emtpy if noen
+     */
+    public function performSearchQuery(): array
+    {
+        $results = $this->elasticClient->search($this->generateSearchParams());
+        return $this->parseSearchResponse($results);
+    }
+
+    /**
+     * Creates an array of CatalogEntry by parsing
+     * the JSON result returned by a search request.
+     *
+     * @param array $results associative array as returned by elastic search
+     * @return array of CatalogEntry
+     */
+    private function parseSearchResponse(array $results): array
+    {
+        $this->numOfResults = $results["hits"]["total"];
+        $hits = $results["hits"]["hits"];
+        $catalogEntries = [];
+        foreach ($hits as $hit) {
+            $catalogEntry = CatalogEntry::catalogEntryFromJSONArray($hit["_source"]);
+            array_push($catalogEntries, $catalogEntry);
+        }
+        return $catalogEntries;
+    }
+
+
+
+    //////////////////////////////////////////
+    // GETTERS AND SETTERS
+    //////////////////////////////////////////
+
+
+
+    /**
+     * Sets the incipit search query.
+     * @param string $userInput
+     */
+    public function setIncipitQuery(string $userInput)
+    {
+        $this->incipitQuery = IncipitNormalizer::normalizeToSingleOctave($userInput);
+        $this->addLog("SearchQuery > set query to: " . $this->incipitQuery);
+    }
+
+    /**
+     * Gets the currently set incipitQuery string
+     * @return mixed
+     */
+    public function getIncipitQuery(): string
+    {
+        return $this->incipitQuery;
+    }
+
+    /**
+     * Gets the currently set catalog filter.
+     * @return string|null
+     */
+    public function getCatalogFilter()
+    {
+        return $this->catalogFilter;
+    }
+
+    /**
+     * Sets the catalog filter.
+     * @param string|null $catalogFilter
+     */
+    public function setCatalogFilter(string $catalogFilter = null)
+    {
+        $this->catalogFilter = $catalogFilter;
+    }
+
+    /**
+     * Gets number of search results.
+     * @return int
+     */
+    public function getNumOfResults():int
+    {
+        return $this->numOfResults;
+    }
+
+    /**
+     * Gets the current results page.
+     * @return int
+     */
+    public function getPage():int
+    {
+        return $this->page;
+    }
+
+    /**
+     * Sets the current results page.
+     * @param int $page
+     */
+    public function setPage(int $page)
+    {
+        $this->page = $page;
+    }
+
+    /**
+     * Gets the page size.
+     * @return int
+     */
+    public function getPageSize(): int
+    {
+        return $this->pageSize;
+    }
+
+    /**
+     * Sets the page size.
+     * @param int $pageSize
+     */
+    public function setPageSize(int $pageSize)
+    {
+        $this->pageSize = $pageSize;
+    }
+
+
+    /////////////////////
+    // LOGGING
+    ////////////////////
+
+    protected $logs = [];
+
+    protected function addLog(string $message)
+    {
+        array_push($this->logs, $message);
+    }
+
+    /**
+     * Returns an array of log entries generated during crawling.
+     *
+     * @return array of strings (log entries)
+     */
+    public function getLogs(): array
+    {
+        return $this->logs;
+    }
+
+
+}
