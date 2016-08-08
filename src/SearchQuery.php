@@ -1,7 +1,6 @@
 <?php
 namespace ADWLM\IncipitSearch;
 
-
 require 'vendor/autoload.php';
 
 use Elasticsearch\ClientBuilder;

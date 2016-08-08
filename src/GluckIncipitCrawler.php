@@ -19,6 +19,25 @@ use Elasticsearch\ClientBuilder;
 use ADWLM\IncipitSearch\Incipit;
 use ADWLM\IncipitSearch\CatalogEntry;
 
+
+/**
+ * GluckIncipitCrawler gets all incipits from the Gluck Gesamtausgabe catalog
+ * and adds them to the Elastic Search instance.
+ *
+ *
+ * Copyright notice
+ *
+ * (c) 2016
+ * Anna Neovesky  Anna.Neovesky@adwmainz.de
+ * Gabriel Reimers g.a.reimers@gmail.com
+ *
+ * Digital Academy www.digitale-akademie.de
+ * Academy of Sciences and Literatur | Mainz www.adwmainz.de
+ *
+ * Licensed under The MIT License (MIT)
+ *
+ * @package ADWLM\IncipitSearch
+ */
 class GluckIncipitCrawler extends IncipitCrawler
 {
 

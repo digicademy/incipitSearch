@@ -17,6 +17,26 @@ use Elasticsearch\ClientBuilder;
 use ADWLM\IncipitSearch\Incipit;
 use ADWLM\IncipitSearch\CatalogEntry;
 
+
+/**
+ * IncipitCrawler is a base class for crawler implementations for
+ * different catalogs.
+ * It provides common functionality like index management and http requests.
+ *
+ *
+ * Copyright notice
+ *
+ * (c) 2016
+ * Anna Neovesky  Anna.Neovesky@adwmainz.de
+ * Gabriel Reimers g.a.reimers@gmail.com
+ *
+ * Digital Academy www.digitale-akademie.de
+ * Academy of Sciences and Literatur | Mainz www.adwmainz.de
+ *
+ * Licensed under The MIT License (MIT)
+ *
+ * @package ADWLM\IncipitSearch
+ */
 class IncipitCrawler
 {
 
@@ -82,6 +102,8 @@ class IncipitCrawler
 
 
     /**
+     * Adds a CatalogEntry to the elastic search instance.
+     *
      * @param CatalogEntry|null $catalogEntry
      */
     public function addCatalogEntryToElasticSearchIndex(CatalogEntry $catalogEntry = null)
@@ -129,6 +151,8 @@ class IncipitCrawler
 
 
     /**
+     * Creates a new catalog_entries index in the elastic search instance.
+     * Does nothing if index already exists.
      */
     public function createIndex()
     {
