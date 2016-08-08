@@ -4,7 +4,7 @@
 
 {% extends "base.twig" %}
 
-{% block title %}Search Results{% endblock %}
+{% block title %}Such Ergebnisse - Gluck Incipit Suche{% endblock %}
 {% block head %}
     {{ parent() }}
     <link rel="stylesheet" href="/public/piano/piano_style.css">
@@ -61,9 +61,9 @@
 
     <div class="container">
 
-        <h1>Found Incipits</h1>
-        <b>XX results found for "{{ searchString }}"</b>
-        <b><a href="/">Back to search</a></b>
+        <h1>Gefundene Werke</h1>
+        <b>XX Ergebnisse für das Incipit "{{ searchString }}"</b>
+        <b><a href="/">Zurück zur Suche</a></b>
 
         <br><hr><br>
 
@@ -84,7 +84,7 @@
 
                 <div class="incipitSVG"></div>
                 <!-- end notes displaying -->
-                <b><a href="{{ catalogEntry.detailURL }}">Detail page in {{ catalogEntry.catalog }} </a></b>
+                <b><a href="{{ catalogEntry.detailURL }}">Detail-Seite in {{ catalogEntry.catalog }} </a></b>
                 <hr>
             </div><!--end result-->
             <br/>

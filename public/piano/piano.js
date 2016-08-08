@@ -110,7 +110,8 @@ function svgNotesForPlaineEasieCode(paeCode, clef, width, scalePercent) {
 
     
     console.log("svgNotesForPlaineEasieCode > data: \n" + data)
-    var pageWidth = width * 100/scalePercent //so the resulting width of the SVG element is always as defined in width
+    var pageWidth = width * 100/scalePercent
+    //so the resulting width of the SVG element is always as defined in width
 
     var options = JSON.stringify({
         inputFormat: 'pae',

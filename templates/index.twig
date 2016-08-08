@@ -4,7 +4,7 @@
 
 {% extends "base.twig" %}
 
-{% block title %}Search for Incipits{% endblock %}
+{% block title %}Gluck Incipit Suche{% endblock %}
 {% block head %}
     {{ parent() }}
     <link rel="stylesheet" href="/public/piano/piano_style.css">
@@ -63,8 +63,8 @@
 
     <div class="container">
 
-        <h1>Incipit Search</h1>
-        <h4>Enter a short melody using the virtual keyboard to search for matching incipits.</h4>
+        <h1>Gluck Incipit Suche</h1>
+        <h4>Geben Sie über die virtuele Tastatur eine kurze Melodie ein, um nach Werken zu suchen die damit beginnen.</h4>
         <div class="center">
             <form class="" action="{{ path_for('results') }}" method="GET">
                 <input name="incipit" type="text" id="search" placeholder="Search for incipit" required>
