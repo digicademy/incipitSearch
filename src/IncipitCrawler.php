@@ -49,6 +49,7 @@ class IncipitCrawler
     protected $logs = [];
     protected function addLog(string $message) {
         array_push($this->logs, $message);
+        echo $message . "\n";
     }
 
     /**
