@@ -186,6 +186,7 @@ class IncipitCrawler
                             'detailURL' => $notAnalyzedStringType,
                             'composer' => ["type" => "string"],
                             'title' => ["type" => "string"],
+                            'subTitle' => ["type" => "string"],
                             'year' => ["type" => "string"],
 
                             'incipit' => [

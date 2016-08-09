@@ -91,7 +91,9 @@
 
         $catalogEntries = $searchQuery->performSearchQuery();
 
-        $response = $this->view->render($response, 'results.twig', ['catalogEntries' => $catalogEntries, 'searchString' => $searchQuery->getIncipitQuery()]);
+        $response = $this->view->render($response, 'results.twig',
+            ['catalogEntries' => $catalogEntries, 'searchString' => $searchQuery->getIncipitQuery(),
+                'numberOfResults' => $searchQuery->getNumOfResults()]);
         return $response;
 
     })->setName("results");

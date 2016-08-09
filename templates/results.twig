@@ -63,7 +63,7 @@
     <div class="container">
 
         <h1>Gefundene Werke</h1>
-        <b>XX Ergebnisse für das Incipit "{{ searchString }}"</b>
+        <b>{{ numberOfResults }} Ergebnisse für das Incipit "{{ searchString }}"</b><br>
         <b><a href="/">Zurück zur Suche</a></b>
 
         <br><hr><br>
@@ -73,6 +73,7 @@
 
             <div class="result">
                 <h3>{{ catalogEntry.title }}</h3>
+                <h4>{{ catalogEntry.subTitle }}</h4>
                 <b>{{ catalogEntry.composer }}</b><br>
                 <b>{{ catalogEntry.year }}</b>
 

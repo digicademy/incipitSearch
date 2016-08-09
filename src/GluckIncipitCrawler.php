@@ -75,12 +75,9 @@ class GluckIncipitCrawler extends IncipitCrawler
             $this->addLog("catalogEntryFromWork > $workTitle $partTitle\n" .
                 "$incipitClef $incipitAccidentals $incipitTime $incipitNotes");
 
-
-            $fullTitle = $workTitle . " " . $partTitle;
-
             $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
             $catalogEntry = new CatalogEntry($incipit, "Gluck-Gesamtausgabe", $workIdentifier, $dataURL, $workDetailUrl,
-                $composer, $fullTitle, "");
+                $composer, $workTitle, $partTitle, "");
 
             return $catalogEntry;
         }

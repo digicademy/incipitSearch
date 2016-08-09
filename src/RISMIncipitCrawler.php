@@ -76,11 +76,10 @@ class RISMIncipitCrawler extends IncipitCrawler
             "/record/datafield[@tag='260']/subfield[@code='c']");
 
         $detailURL = "https://opac.rism.info/search?id=" . $catalogItemID;
-        $fullTitle = $title . " " . $subtitle;
 
         $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
         $catalogEntry = new CatalogEntry($incipit, "RISM", $catalogItemID, $dataURL, $detailURL,
-            $composer, $fullTitle, $year);
+            $composer, $title, $subtitle, $year);
 
         return $catalogEntry;
     }

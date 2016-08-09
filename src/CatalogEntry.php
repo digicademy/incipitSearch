@@ -35,6 +35,7 @@ class CatalogEntry
     protected $incipit;
     protected $composer;
     protected $title;
+    protected $subTitle;
     protected $year;
 
     /**
@@ -47,11 +48,13 @@ class CatalogEntry
      * @param string|null $detailURL will be set to empty if null
      * @param string|null $composer will be set to empty if null
      * @param string|null $title will be set to empty if null
+     * @param string|null $subTitle will be set to empty if null
      * @param string|null $year will be set to empty if null
      */
     public function __construct(Incipit $incipit = null, string $catalog = null, string $catalogItemID = null,
                                 string $dataURL = null, string $detailURL = null,
-                                string $composer = null, string $title = null, string $year = null)
+                                string $composer = null, string $title = null, string $subTitle = null,
+                                string $year = null)
     {
         if ($incipit == null) {
             echo "CatalogEntry > construct > incipit is null";
@@ -68,6 +71,7 @@ class CatalogEntry
         $this->detailURL = $detailURL ?? "";
         $this->composer = $composer ?? "";
         $this->title = $title ?? "";
+        $this->subTitle = $subTitle ?? "";
         $this->year = $year ?? "";
 
     }
@@ -78,7 +82,7 @@ class CatalogEntry
      *
      * The array has the following keys: "catalog", "catalogItemID", "dataURL",
      * "detailURL", "incipit" (embedded JSON array itself), "composer",
-     * "title", "year"
+     * "title", "subTitle", "year"
      *
      * @return Array of string
      */
@@ -90,6 +94,7 @@ class CatalogEntry
             'incipit' => $this->getIncipit()->getJSONArray(),
             'composer' => $this->getComposer(),
             'title' => $this->getTitle(),
+            'subTitle' => $this->getSubTitle(),
             'year' => $this->getYear()
         ];
         return $array;
@@ -100,7 +105,7 @@ class CatalogEntry
      *
      * The array must have the following keys: "catalog", "catalogItemID", "dataURL",
      * "detailURL", "incipit" (embedded JSON array itself), "composer",
-     * "title", "year"
+     * "title", "subTitle", "year"
      *
      * @param array $json
      * @return CatalogEntry
@@ -108,10 +113,11 @@ class CatalogEntry
     public static function catalogEntryFromJSONArray(array $jsonArray): CatalogEntry
     {
         $incipit = Incipit::incipitFromJSONArray($jsonArray["incipit"]);
-        $catalogEntry = new CatalogEntry($incipit, $jsonArray["catalog"],
-            $jsonArray["catalogItemID"],
-            $jsonArray["dataURL"],
-            $jsonArray["detailURL"], $jsonArray["composer"], $jsonArray["title"], $jsonArray["year"]);
+        $catalogEntry = new CatalogEntry($incipit,
+            $jsonArray["catalog"], $jsonArray["catalogItemID"],
+            $jsonArray["dataURL"], $jsonArray["detailURL"],
+            $jsonArray["composer"],
+            $jsonArray["title"], $jsonArray["subTitle"], $jsonArray["year"]);
         return $catalogEntry;
     }
 
@@ -186,6 +192,16 @@ class CatalogEntry
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    /**
+     * Gets subtitle of work.
+     * E.g. part of work.
+     * @return null|string
+     */
+    public function getSubTitle()
+    {
+        return $this->subTitle;
     }
 
     /**
