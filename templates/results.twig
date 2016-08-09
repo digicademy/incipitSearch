@@ -29,20 +29,21 @@
                 data += "@keysig:" + result.find('.incipitAccidentals').text() + "\n";
                 data += "@timesig:" + result.find('.incipitTime').text() + "\n";
                 data += "@data:" + result.find('.incipitNotes').text();
+                //console.log("incipit data " + data);
 
-                var windowWidth = $(window).width();
-                console.log("Window Width: " + windowWidth);
-                var scale = 50;
-                if (windowWidth < 1000) {
-                    scale = 30;
-                } else if (windowWidth < 500) {
+                var containerWidth = $(".container").width();
+                var scale = 40;
+                if (containerWidth < 500) {
                     scale = 15;
                 }
+                //the output will be pageWidth * scale/100
+                //to get constant size we multiply with the inverse
+                var pageWidth = containerWidth * (100 / scale)
 
-                options = JSON.stringify({
+                var options = JSON.stringify({
                     inputFormat: 'pae',
                     pageHeight: 500,
-                    pageWidth: windowWidth * (1 / scale),
+                    pageWidth: pageWidth,
                     ignoreLayout: 1,
                     border: 0,
                     scale: scale,

@@ -13,3 +13,10 @@
 .container {
     margin-top: 40px;
 }
+
+
+/* We override this Skeleton style because it breaks
+   SVG display in Firefox */
+svg:not(:root) {
+	overflow: visible; /* Skeleton defines hidden */
+}
