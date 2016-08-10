@@ -102,10 +102,13 @@
     /**
      * Route for crawler control center.
      */
-    $app->get('/crawler[/]', function (Request $request, Response $response) use ($adminPassword) {
+    $app->get('/crawler[/]', function (Request $request, Response $response) use ($app, $adminPassword, $jsonConfig) {
 
         $this->logger->addInfo("Get: /crawler");
 
+        if ($jsonConfig->security->enableBrowserIndexManagement == false) {
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
         $password = $request->getParam('password');
         if ($adminPassword != $password) {
             $password = Null;
@@ -121,15 +124,19 @@
     /**
      * Route to reset elastic search index.
      */
-    $app->get('/crawler/reset', function (Request $request, Response $response) use ($adminPassword) {
+    $app->get('/crawler/reset', function (Request $request, Response $response) use ($app, $adminPassword, $jsonConfig) {
 
         $this->logger->addInfo("Get: /crawler/reset");
+
+        if ($jsonConfig->security->enableBrowserIndexManagement == false) {
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
 
         $password = $request->getParam('password');
         if ($adminPassword != $password) {
             $password = Null;
             sleep(2);
-            redirect("/");
+            return $response->withStatus(302)->withHeader('Location', '/');
         }
         $crawler = new IncipitCrawler();
         $crawler->resetIndex();
@@ -143,15 +150,19 @@
     /**
      * Route to re-index RISM catalog.
      */
-    $app->get('/crawler/index/RISM', function (Request $request, Response $response) use ($adminPassword) {
+    $app->get('/crawler/index/RISM', function (Request $request, Response $response) use ($app, $adminPassword, $jsonConfig) {
 
         $this->logger->addInfo("Get: /crawler/index/RISM");
+
+        if ($jsonConfig->security->enableBrowserIndexManagement == false) {
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
 
         $password = $request->getParam('password');
         if ($adminPassword != $password) {
             $password = Null;
             sleep(2);
-            redirect("/");
+            return $response->withStatus(302)->withHeader('Location', '/');
         }
 
         $crawler = new RISMIncipitCrawler();
@@ -169,15 +180,19 @@
     /**
      * Route to re-index Gluck Gesamtausgabe catalog.
      */
-    $app->get('/crawler/index/gluck', function (Request $request, Response $response) use ($adminPassword) {
+    $app->get('/crawler/index/gluck', function (Request $request, Response $response) use ($app, $adminPassword, $jsonConfig) {
 
         $this->logger->addInfo("Get: /crawler/index/gluck");
+
+        if ($jsonConfig->security->enableBrowserIndexManagement == false) {
+            return $response->withStatus(302)->withHeader('Location', '/');
+        }
 
         $password = $request->getParam('password');
         if ($adminPassword != $password) {
             $password = Null;
             sleep(2);
-            redirect("/");
+            return $response->withStatus(302)->withHeader('Location', '/');
         }
 
         $crawler = new GluckIncipitCrawler();
