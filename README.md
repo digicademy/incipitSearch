@@ -41,7 +41,7 @@ You can setup the configuration in the `config.json file. It looks like this:
 ```JSON
 {
     "elasticSearch": {
-        "host": "http://10.0.0.1" //IP of your ES instance
+        "host": "http://10.0.0.1"
     },
     "security": {
     "enableBrowserIndexManagement": true,
@@ -106,7 +106,7 @@ We use the Plaine & Easie Code (PAE) to store the incipits.
 The entire format is documented on the PAE-project site: 
 http://www.iaml.info/plaine-easie-code
 
-#### Incipit data structure
+### Incipit data structure
 To be easily usable with the Verovio-Tookit and be more flexible in search requests the Incipit data structure is more fine grained than just the Plaine & Easie code.
 
 ```PHP
@@ -117,7 +117,7 @@ protected $notes;
 ```
 
 
-#### Incipit normalization
+### Incipit normalization
 Musical notation is ambiguous. When searching for Incipits the user might not know the exact notation.
 
 Our users are expected to use a virtual keyboard to search for incipits. In that case, the user will just hit certain keyboard-keys and has no option (or intention) to enter rhythmic values, key signature or clef.
@@ -147,10 +147,10 @@ this returns
 `''bD''A''A''bD''bD''xF''A''xF`
 
 
-
-
 ## Known Issues
 The IncipitSearch website does not render well on small screens.
+
+
 
 # License and Contribution
 IncipitSearch was developed by Anna Neovesky and 
