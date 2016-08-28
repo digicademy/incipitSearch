@@ -5,6 +5,7 @@ This project was developed to index the incipits of the Gluck-Gesamtausgabe cata
 
 Even though it was developed to be used on the Gluck-Gesamtausgabe it is build very modularly and can easily be adjusted to crawl and index any other musical catalog for incipits.
 
+
 # Dependecies
 To make use of the IncipitSearch you need two things:
 * An [Elastic Search](https://www.elastic.co) instance
@@ -16,6 +17,11 @@ To display notes on the website, IncipitSearch makes use of the  [Verovio Toolki
 
 
 # Usage
+
+## Structure
+
+![Diagram of architecture](architecture.png "Diagram of architecture")
+
 ## Requirements
 The search web-interface works on any recent browser (for Internet Explorer version 10 is required).
 
