@@ -112,7 +112,7 @@ class RISMIncipitCrawler extends IncipitCrawler
     {
 
         $startID = 400110660;
-        $endID =   400110862;
+        $endID =   400110999;
 
         for ($i = $startID; $i < $endID; $i++) {
             $url = "https://opac.rism.info/id/rismid/" . $i . "?format=marc";
