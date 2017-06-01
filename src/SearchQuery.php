@@ -1,7 +1,7 @@
 <?php
 namespace ADWLM\IncipitSearch;
 
-require 'vendor/autoload.php';
+// require '../vendor/autoload.php';
 
 use Elasticsearch\ClientBuilder;
 
@@ -47,7 +47,7 @@ class SearchQuery
     public function __construct()
     {
 
-        $jsonConfig = json_decode(file_get_contents("config.json"));
+        $jsonConfig = json_decode(file_get_contents('../config.json'));
         $elasticHost = $jsonConfig->elasticSearch->host;
         if (empty($elasticHost)) {
             $elasticHost = "127.0.0.1";

@@ -68,8 +68,9 @@ class IncipitCrawler
     public function __construct()
     {
 
-        $jsonConfig = json_decode(file_get_contents("config.json"));
+        $jsonConfig = json_decode(file_get_contents("../config.json"));
         $elasticHost = $jsonConfig->elasticSearch->host;
+
         if (empty($elasticHost)) {
             $elasticHost = "127.0.0.1";
         }

@@ -1,31 +1,28 @@
 <?php
-    namespace ADWLM\IncipitSearch;
+namespace ADWLM\IncipitSearch;
 
-    /**
-     * Copyright notice
-     *
-     * (c) 2016
-     * Anna Neovesky Anna.Neovesky@adwmainz.de
-     * Gabriel Reimers g.a.reimers@gmail.com
-     *
-     * Digital Academy www.digitale-akademie.de
-     * Academy of Sciences and Literatur | Mainz www.adwmainz.de
-     *
-     * Licensed under The MIT License (MIT)
-     */
+/**
+ * Copyright notice
+ *
+ * (c) 2016
+ * Anna Neovesky Anna.Neovesky@adwmainz.de
+ * Gabriel Reimers g.a.reimers@gmail.com
+ *
+ * Digital Academy www.digitale-akademie.de
+ * Academy of Sciences and Literatur | Mainz www.adwmainz.de
+ *
+ * Licensed under The MIT License (MIT)
+ */
 
-    require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
-    use \Psr\Http\Message\ServerRequestInterface as Request;
-    use \Psr\Http\Message\ResponseInterface as Response;
-    use Monolog\Logger;
-    use Monolog\Handler\BrowserConsoleHandler;
-    use Slim\Container as Container;
-    use Slim\App as App;
-    Use Slim\Views as Views;
-
-
-
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
+use Monolog\Logger;
+use Monolog\Handler\BrowserConsoleHandler;
+use Slim\Container as Container;
+use Slim\App as App;
+Use Slim\Views as Views;
 
     $configuration = [
         'settings' => [
@@ -39,7 +36,7 @@
 
     // Register component on container
     $container['view'] = function ($container) {
-        $view = new Views\Twig('templates', [
+        $view = new Views\Twig('../templates', [
             'cache' => false
         ]);
         $view->addExtension(new Views\TwigExtension(
@@ -63,7 +60,7 @@
     ////////////////////////////////////////////////////
     ////////////////////////////////////////////////////
 
-    $jsonConfig = json_decode(file_get_contents("config.json"));
+    $jsonConfig = json_decode(file_get_contents("../config.json"));
     $adminPassword = $jsonConfig->security->adminPassword;
 
 
