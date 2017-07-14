@@ -1,0 +1,122 @@
+/* header */
+
+header {
+  font-family: "Lato", sans-serif;
+}
+
+header a {
+  text-decoration: none;
+}
+
+
+/* footer */
+
+footer {
+  padding: 2em 0;
+}
+
+footer a {
+  text-decoration: none;
+}
+
+footer .fa {
+  margin-right: 0.3em;
+}
+footer p {
+    margin: 0 auto;
+    width: 16em;
+}
+
+@media (min-width: 646px) {
+	footer p {
+		margin: 0.3em 0;
+		width: auto;
+	}
+}
+
+@media (min-width: 1093px) {
+	footer p {
+	  margin: 0.5em 0;
+	}
+}
+
+
+/* nav */
+
+nav#nav {
+  float: right;
+}
+
+nav#nav>ul {
+  list-style: none;
+}
+
+nav#nav>ul>li {
+  display: inline-block;
+  float: left;
+  padding: 2em 0 0 2em;
+}
+
+/* svgNotesContainer */
+#svgNotesContainer {
+	height: 126px;
+}
+
+/* img */
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* logo */
+.logo {
+  height: 10em;
+	margin: 0 auto;
+}
+
+@media (min-width: 646px) {
+	.logo {
+		float: right;
+	}
+}
+
+/* adress */
+.adress {
+	margin: 2em auto;
+}
+@media (min-width: 550px) {
+	.adress {
+		margin: 0;
+		padding: 0 1em;
+	}
+}
+@media (min-width: 1093px) {
+	.adress {
+	  padding: 0.5em 1em;
+	}
+}
+
+/* general */
+.hidden {
+  display: none;
+}
+
+.center {
+  display: block;
+  text-align: center;
+}
+
+.container {
+  margin-top: 40px;
+}
+
+
+/* We override this Skeleton style because it breaks
+   SVG display in Firefox */
+
+svg:not(:root) {
+  overflow: visible;
+  /* Skeleton defines hidden */
+}
