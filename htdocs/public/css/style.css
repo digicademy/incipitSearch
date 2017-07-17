@@ -8,6 +8,16 @@ header a {
   text-decoration: none;
 }
 
+header h1 {
+	display: inline-block;
+	font-size: 2em;
+	margin-bottom: 0.4em;
+}
+@media (min-width: 550px) {
+	header h1 {
+		font-size: 5.0rem;
+	}
+}
 
 /* footer */
 
@@ -43,19 +53,58 @@ footer p {
 
 /* nav */
 
-nav#nav {
-  float: right;
+#nav {
+	display: none;
 }
 
 nav#nav>ul {
-  list-style: none;
+	list-style: none;
+	border-bottom: solid 1px #dcdcdc;
 }
 
 nav#nav>ul>li {
-  display: inline-block;
-  float: left;
-  padding: 2em 0 0 2em;
+	border-top: solid 1px #dcdcdc;
+	margin: 0;
 }
+nav#nav>ul>li>a {
+	display: block;
+	text-align: center;
+	padding: 0.5em;
+}
+#nav-button {
+	float: right;
+	font-size: 1.5em;
+	color: #333;
+	padding-top: 0.2em;
+	line-height: 1.2;
+	cursor: pointer;
+}
+
+@media (min-width: 550px) {
+	#nav {
+		display: inline;
+	}
+	nav#nav>ul, nav#nav>ul>li {
+		border: none;
+	}
+	nav#nav {
+		float: right;
+	}
+	nav#nav>ul>li>a {
+		display: inline;
+		text-align: left;
+		padding: 0;
+	}
+	nav#nav>ul>li {
+		display: inline-block;
+		float: left;
+		padding: 2em 0 0 2em;
+	}
+	#nav-button {
+		display: none;
+	}
+}
+
 
 /* svgNotesContainer */
 #svgNotesContainer {
