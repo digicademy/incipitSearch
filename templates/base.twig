@@ -45,14 +45,14 @@
 <header id="header">
     <div class="container">
         <div class="one-third column">
-            <a href="#"><h1>MusicSearch</h1></a>
+            <a href="{{ path_for('index') }}"><h1>MusicSearch</h1></a>
             <i id="nav-button" class="fa fa-bars" aria-hidden="true"></i>
         </div>
         <div class="two-thirds column">
             <nav id="nav" >
                 <ul>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Impressum</a></li>
+                    <li><a href="{{ path_for('about') }}">About</a></li>
+                    <li><a href="{{ path_for('impressum') }}">Impressum</a></li>
                 </ul>
             </nav>
         </div>
@@ -81,12 +81,12 @@
 <footer id="footer">
     <div class="container">
         <div class="one-half column">
-            <a href="http://www.adwmainz.de/"><img class="logo" src="/public/img/LogoAdW.png" alt="Logo ADW"/></a>
+            <a href="http://www.adwmainz.de/" target="_blank"><img class="logo" src="/public/img/LogoAdW.png" alt="Logo ADW"/></a>
         </div>
         <div class="one-half column adress">
-            <p><a href="http://www.adwmainz.de/">Akademie der Wissenschaften und der Literatur | Mainz</a></p>
-            <p><a href="https://www.google.de/maps/place/Akademie+der+Wissenschaften+und+der+Literatur/@49.9785891,8.2590733,13z/">Geschwister-Scholl-Straße 2<br/>55131 Mainz</a></p>
-            <p><a href="https://twitter.com/digicademy"><i class="fa fa-twitter"></i></a><a href="https://github.com/digicademy"><i class="fa fa-github"></i></a><a href="http://www.digitale-akademie.de/">Digitale Akademie</a></p>
+            <p><a href="http://www.adwmainz.de/" target="_blank">Akademie der Wissenschaften und der Literatur | Mainz</a></p>
+            <p><a href="https://www.google.de/maps/place/Akademie+der+Wissenschaften+und+der+Literatur/@49.9785891,8.2590733,13z/" target="_blank">Geschwister-Scholl-Straße 2<br/>55131 Mainz</a></p>
+            <p><a href="https://twitter.com/digicademy"><i class="fa fa-twitter"></i></a><a href="https://github.com/digicademy" target="_blank"><i class="fa fa-github"></i></a><a href="http://www.digitale-akademie.de/" target="_blank">Digitale Akademie</a></p>
         </div>
     </div>
     </div>

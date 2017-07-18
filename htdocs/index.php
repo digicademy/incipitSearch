@@ -60,7 +60,7 @@ Use Slim\Views as Views;
     ////////////////////////////////////////////////////
     ////////////////////////////////////////////////////
 
-    $jsonConfig = json_decode(file_get_contents("../config.json"));
+    $jsonConfig = json_decode(file_get_contents('../config.json'));
     $adminPassword = $jsonConfig->security->adminPassword;
 
 
@@ -68,23 +68,23 @@ Use Slim\Views as Views;
      * Route for index / start page.
      */
     $app->get('/', function (Request $request, Response $response) {
-        $this->logger->addInfo("Get: /");
+        $this->logger->addInfo('Get: /');
 
         return $this->view->render($response, 'index.twig', []);
-    });
+    })->setName('index');
 
 
     /**
      * Route for search results.
      */
     $app->get('/results/', function (Request $request, Response $response) {
-        $this->logger->addInfo("Get: /results/");
+        $this->logger->addInfo('Get: /results/');
 
         $incipit = $request->getParam('incipit');
 
         $searchQuery = new SearchQuery();
         $searchQuery->setIncipitQuery($incipit);
-        $this->logger->addInfo("query: {$searchQuery->getIncipitQuery()}");
+        $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
 
         $catalogEntries = $searchQuery->performSearchQuery();
 
@@ -93,7 +93,7 @@ Use Slim\Views as Views;
                 'numberOfResults' => $searchQuery->getNumOfResults()]);
         return $response;
 
-    })->setName("results");
+    })->setName('results');
 
 
     /**
@@ -101,7 +101,7 @@ Use Slim\Views as Views;
      */
     $app->get('/crawler[/]', function (Request $request, Response $response) use ($app, $adminPassword, $jsonConfig) {
 
-        $this->logger->addInfo("Get: /crawler");
+        $this->logger->addInfo('Get: /crawler');
 
         if ($jsonConfig->security->enableBrowserIndexManagement == false) {
             return $response->withStatus(302)->withHeader('Location', '/');
@@ -115,7 +115,7 @@ Use Slim\Views as Views;
         $response = $this->view->render($response, 'crawler.twig', ['password' => $password]);
         return $response;
 
-    })->setName("crawler");
+    })->setName('crawler');
 
 
     /**
@@ -123,7 +123,7 @@ Use Slim\Views as Views;
      */
     $app->get('/crawler/reset', function (Request $request, Response $response) use ($app, $adminPassword, $jsonConfig) {
 
-        $this->logger->addInfo("Get: /crawler/reset");
+        $this->logger->addInfo('Get: /crawler/reset');
 
         if ($jsonConfig->security->enableBrowserIndexManagement == false) {
             return $response->withStatus(302)->withHeader('Location', '/');
@@ -138,10 +138,10 @@ Use Slim\Views as Views;
         $crawler = new IncipitCrawler();
         $crawler->resetIndex();
 
-        $response = $this->view->render($response, 'crawler.twig', ["password" => $password]);
+        $response = $this->view->render($response, 'crawler.twig', ['password' => $password]);
         return $response;
 
-    })->setName("crawler_resetIndex");
+    })->setName('crawler_resetIndex');
 
 
     /**
@@ -149,7 +149,7 @@ Use Slim\Views as Views;
      */
     $app->get('/crawler/index/RISM', function (Request $request, Response $response) use ($app, $adminPassword, $jsonConfig) {
 
-        $this->logger->addInfo("Get: /crawler/index/RISM");
+        $this->logger->addInfo('Get: /crawler/index/RISM');
 
         if ($jsonConfig->security->enableBrowserIndexManagement == false) {
             return $response->withStatus(302)->withHeader('Location', '/');
@@ -171,7 +171,7 @@ Use Slim\Views as Views;
         $response = $this->view->render($response, 'operationResults.twig', ['logs' => $logs]);
         return $response;
 
-    })->setName("crawler_index_RISM");
+    })->setName('crawler_index_RISM');
 
 
     /**
@@ -179,7 +179,7 @@ Use Slim\Views as Views;
      */
     $app->get('/crawler/index/gluck', function (Request $request, Response $response) use ($app, $adminPassword, $jsonConfig) {
 
-        $this->logger->addInfo("Get: /crawler/index/gluck");
+        $this->logger->addInfo('Get: /crawler/index/gluck');
 
         if ($jsonConfig->security->enableBrowserIndexManagement == false) {
             return $response->withStatus(302)->withHeader('Location', '/');
@@ -200,7 +200,33 @@ Use Slim\Views as Views;
         $response = $this->view->render($response, 'operationResults.twig', ['logs' => $logs]);
         return $response;
 
-    })->setName("crawler_index_gluck");
+    })->setName('crawler_index_gluck');
 
 
-    $app->run();
+	/**
+	 * Route to Impressum.
+	 */
+	$app->get('/impressum[/]', function (Request $request, Response $response) {
+
+		$this->logger->addInfo('Get: /impressum');
+
+		$response = $this->view->render($response, 'impressum.twig');
+		return $response;
+
+	})->setName('impressum');
+
+
+	/**
+	 * Route to About.
+	 */
+	$app->get('/about[/]', function (Request $request, Response $response) {
+
+		$this->logger->addInfo('Get: /about');
+
+		$response = $this->view->render($response, 'about.twig');
+		return $response;
+
+	})->setName('about');
+
+
+	$app->run();
