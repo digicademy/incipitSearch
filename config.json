@@ -1,9 +1,5 @@
 {
   "elasticSearch": {
-    "host": "http://10.0.13.42"
+    "host": "__ELASTICSEARCHHOST__"
   },
-  "security": {
-    "enableBrowserIndexManagement": true,
-    "adminPassword": "ostrich-sara-pint-riot"
-  }
 }
