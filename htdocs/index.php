@@ -14,7 +14,7 @@ namespace ADWLM\IncipitSearch;
  * Licensed under The MIT License (MIT)
  */
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -60,7 +60,7 @@ Use Slim\Views as Views;
     ////////////////////////////////////////////////////
     ////////////////////////////////////////////////////
 
-    $jsonConfig = json_decode(file_get_contents('../config.json'));
+    $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../config.json'));
     $adminPassword = $jsonConfig->security->adminPassword;
 
 

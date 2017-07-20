@@ -1,7 +1,7 @@
 <?php
 namespace ADWLM\IncipitSearch;
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
 
 /**
