@@ -58,10 +58,6 @@ $container['logger'] = function ($c) {
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 
-$jsonConfig = json_decode(file_get_contents(__DIR__ . '/../config.json'));
-$adminPassword = $jsonConfig->security->adminPassword;
-
-
 /**
  * Route for index / start page.
  */
