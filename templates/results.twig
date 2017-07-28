@@ -60,7 +60,9 @@
     </script>
 
 
-    <div class="container">
+<div class="wrapper style1">
+    <section id="main" class="container">
+        <div class="box">
 
         <h1>Gefundene Werke</h1>
         <b>{{ numberOfResults }} Ergebnisse für das Incipit "{{ searchString }}"</b><br>
@@ -86,14 +88,16 @@
 
                 <div class="incipitSVG"></div>
                 <!-- end notes displaying -->
-                <b><a href="{{ catalogEntry.detailURL }}">Detail-Seite in {{ catalogEntry.catalog }} </a></b>
+                <b><a target="_blank" href="{{ catalogEntry.detailURL }}">Detail-Seite in {{ catalogEntry.catalog }} </a></b>
                 <hr>
             </div><!--end result-->
             <br/>
 
         {% endfor %}
 
-    </div><!-- end container -->
+        </div>
+    </section>
+</div><!-- end container -->
 
 {% endblock %} {# end pageContent #}
 

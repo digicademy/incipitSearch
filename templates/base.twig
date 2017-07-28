@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 
     {% block head %}
@@ -14,87 +14,75 @@
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <!-- Scripts
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+        <!--[if lte IE 8]><!--<script src="/public/js/ie/html5shiv.js"></script><![endif]-->
+        <script src="/public/js/jquery.min.js"></script>
+        <script src="/public/js/jquery.dropotron.min.js"></script>
+        <script src="/public/js/jquery.scrollgress.min.js"></script>
+        <script src="/public/js/skel.min.js"></script>
+        <script src="/public/js/util.js"></script>
+        <!--[if lte IE 8]><script src="/public/js/ie/respond.min.js"></script><![endif]-->
+        <script src="/public/js/main.js"></script>
+
         <!-- FONT
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600|Lato" rel="stylesheet" type="text/css">
         <link href="/public/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
         <!-- CSS
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <link rel="stylesheet" href="/public/css/normalize.css">
-        <link rel="stylesheet" href="/public/css/skeleton.css">
-        <link rel="stylesheet" href="/public/css/style.css">
+        <link rel="stylesheet" href="/public/css/main.css" />
+        <!--[if lte IE 8]><link rel="stylesheet" href="/public/css/ie8.css" /><![endif]-->
 
         <!-- Favicon
         –––––––––––––––––––––––––––––––––––––––––––––––––– -->
         <link rel="icon" type="image/png" href="/public/img/favicon.png">
-
-        <!-- Scripts
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-        <script src="/public/js/common.js"></script>
 
     {% endblock %}
 
 </head>
 
 <body>
-
+<section id="page-wrapper">
 <!--Header
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <header id="header">
-    <div class="container">
-        <div class="one-third column">
-            <a href="{{ path_for('index') }}"><h1>IncipitSearch</h1></a>
-            <i id="nav-button" class="fa fa-bars" aria-hidden="true"></i>
-        </div>
-        <div class="two-thirds column">
-            <nav id="nav" >
-                <ul>
-                    <li><a href="{{ path_for('about') }}">About</a></li>
-                    <li><a href="{{ path_for('impressum') }}">Impressum</a></li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-    </div>
+    <h1><a href="{{ path_for('index') }}">IncipitSearch</a></h1>
+    <nav id="nav">
+        <ul>
+        <li><a href="{{ path_for('index') }}">Home</a></li>
+        <li><a href="{{ path_for('about') }}">About</a></li>
+        <li><a href="{{ path_for('impressum') }}">Impressum</a></li>
+        </ul>
+    </nav>
 </header>
 
 <!-- Primary Page Layout
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 {% block pageContent %}
-    <div class="container">
-        <div class="row">
-            <div class="one-half column" style="margin-top: 25%">
+        <section id="content" class="box">
                 <h4>Basic Page</h4>
                 <p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to
                     add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton
                         documentation</a>.</p>
-            </div>
-        </div>
-    </div>
+        </section>
 {% endblock %}
 
 
 <!--Footer
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <footer id="footer">
-    <div class="container">
-        <div class="one-half column">
-            <a href="http://www.adwmainz.de/" target="_blank"><img class="logo" src="/public/img/LogoAdW.png" alt="Logo ADW"/></a>
-        </div>
-        <div class="one-half column adress">
-            <p><a href="http://www.adwmainz.de/" target="_blank">Akademie der Wissenschaften und der Literatur | Mainz</a></p>
-            <p><a href="https://www.google.de/maps/place/Akademie+der+Wissenschaften+und+der+Literatur/@49.9785891,8.2590733,13z/" target="_blank">Geschwister-Scholl-Straße 2<br/>55131 Mainz</a></p>
-            <p><a href="https://twitter.com/digicademy"><i class="fa fa-twitter"></i></a><a href="https://github.com/digicademy" target="_blank"><i class="fa fa-github"></i></a><a href="http://www.digitale-akademie.de/" target="_blank">Digitale Akademie</a></p>
-        </div>
-    </div>
+        <a target="_blank" href="http://www.adwmainz.de/"><img src="/public/img/LogoAdW.png" alt="Logo ADW"/></a>
+    <div class="copyright">
+            <a href="http://www.adwmainz.de/" target="_blank">Akademie der Wissenschaften und der Literatur | Mainz</a>
+            <br/><a href="https://www.google.de/maps/place/Akademie+der+Wissenschaften+und+der+Literatur/@49.9785891,8.2590733,13z/" target="_blank">Geschwister-Scholl-Straße 2
+            <br/>55131 Mainz</a>
+            <br/><a href="https://twitter.com/digicademy"><i class="fa fa-twitter"></i></a><a href="https://github.com/digicademy" target="_blank"><i class="fa fa-github"></i></a><a href="http://www.digitale-akademie.de/" target="_blank">Digitale Akademie</a>
     </div>
 </footer>
 
-
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-
+</div>
 </body>
 </html>

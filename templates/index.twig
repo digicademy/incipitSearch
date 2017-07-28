@@ -6,75 +6,84 @@
 
 {% block title %}Incipit Search{% endblock %}
 {% block head %}
-    {{ parent() }}
-    <link rel="stylesheet" href="/public/piano/piano_style.css">
-    <script src="/public/js/verovio-toolkit.js"></script>
-    <script src="/public/piano/piano.js"></script>
+	{{ parent() }}
+	<link rel="stylesheet" href="/public/piano/piano_style.css">
+	<script src="/public/js/verovio-toolkit.js"></script>
+	<script src="/public/piano/piano.js"></script>
 {% endblock %}
 
 
 {% block pageContent %}
 
-    <script type="text/javascript">
+	<script type="text/javascript">
 
-        $(document).ready(function () {
-            //create piano with 1 octave, starting at C4 (lowest key)
-            //shows labels and octave shift buttons
-            var keyboardHTML = htmlForKeyboardWithOctaves(1, octaves.C4, true, false, false, false)
-            //render the keyboard in the div
-            $("#keyboardContainer").html(keyboardHTML)
-            //when keys are pressed updatePreview() is called
-            bindKeysToFunction(updatePreviewWithNote)
-            //set the default clef to G4
-            setSelectedClef(clefs.G4)
-            $("#backspaceButton").click(deleteLast)
+		$(document).ready(function () {
+			//create piano with 1 octave, starting at C4 (lowest key)
+			//shows labels and octave shift buttons
+			var keyboardHTML = htmlForKeyboardWithOctaves(1, octaves.C4, true, false, false, false)
+			//render the keyboard in the div
+			$("#keyboardContainer").html(keyboardHTML)
+			//when keys are pressed updatePreview() is called
+			bindKeysToFunction(updatePreviewWithNote)
+			//set the default clef to G4
+			setSelectedClef(clefs.G4)
+			$("#backspaceButton").click(deleteLast)
 
-        })
+		})
 
-        //this stores all keyboard input
-        var plaineEasieCodes = []
-        var selectedClef = clefs.G4
+		//this stores all keyboard input
+		var plaineEasieCodes = []
+		var selectedClef = clefs.G4
 
-        //this is called whenever a piano key is pressed
-        function updatePreviewWithNote(sender, paeNote) {
-            console.log("key pressed is " + paeNote)
-            plaineEasieCodes.push(paeNote)
-            updateNotesSVG()
-        }
+		//this is called whenever a piano key is pressed
+		function updatePreviewWithNote(sender, paeNote) {
+			console.log("key pressed is " + paeNote)
+			plaineEasieCodes.push(paeNote)
+			updateNotesSVG()
+		}
 
-        //delete last input
-        function deleteLast() {
-            plaineEasieCodes.pop()
-            updateNotesSVG()
-        }
+		//delete last input
+		function deleteLast() {
+			plaineEasieCodes.pop()
+			updateNotesSVG()
+		}
 
-        function updateNotesSVG() {
-            $('#search').val(plaineEasieCodes.join(""))
-            //render the notes to an SVG using the Verovio tookit
-            //width of the svg is 800px and note scaling 50%
-            var notesSVG = svgNotesForPlaineEasieCode(plaineEasieCodes.join(""), selectedClef, 800, 50)
-            //insert thes SVG code in our div
-            var svgContainerDiv = $('#svgNotesContainer')
-            svgContainerDiv.html(notesSVG)
-        }
+		function updateNotesSVG() {
+			$('#search').val(plaineEasieCodes.join(""))
+			//render the notes to an SVG using the Verovio tookit
+			//width of the svg is 800px and note scaling 50%
+			var notesSVG = svgNotesForPlaineEasieCode(plaineEasieCodes.join(""), selectedClef, 800, 50)
+			//insert thes SVG code in our div
+			var svgContainerDiv = $('#svgNotesContainer')
+			svgContainerDiv.html(notesSVG)
+		}
 
 
-    </script>
+	</script>
 
-    <div class="container">
+	<div class="wrapper style1">
+		<section class="container 75%">
+			<div class="box">
+				<h2>Geben Sie über die virtuelle Klaviatur eine kurze Melodie ein, um nach Werken zu suchen.</h2>
+				<form action="{{ path_for('results') }}" method="GET">
+					<div class="row uniform">
+						<div class="7u 12u(normal)">
+							<input name="incipit" type="text" id="search" placeholder="Plaine & Easie Code" required>
+						</div>
+						<div class="5u 12u(normal)">
+							<ul class="actions">
+								<li><input type="button" value="Löschen" id="backspaceButton" class="alt"></li>
+								<li><input type="submit" value="Suchen" id="submit"></li>
+							</ul>
+						</div>
+					</div>
+				</form>
 
-        <h4>Geben Sie über die virtuelle Tastatur eine kurze Melodie ein, um nach Werken zu suchen.</h4>
-        <div class="center">
-            <form class="" action="{{ path_for('results') }}" method="GET">
-                <input name="incipit" type="text" id="search" placeholder="Plaine & Easie Code" required>
-                <button type="button" id="backspaceButton">Löschen</button>
-                <input type="submit" class="button-primary" value="Suchen" id="submit">
-            </form>
+				<div class="align-center" id="keyboardContainer"></div><!-- this will hold the keyboard -->
+				<div id="svgNotesContainer"></div><!-- this will hold the SVG with rendered notes -->
 
-            <div id="keyboardContainer"></div><!-- this will hold the keyboard -->
-            <div id="svgNotesContainer"></div><!-- this will hold the SVG with rendered notes -->
-        </div><!-- end center -->
-
-    </div><!-- end container -->
+			</div>
+		</section>
+	</div><!-- end container -->
 
 {% endblock %} {# end pageContent #}

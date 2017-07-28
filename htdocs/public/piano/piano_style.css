@@ -14,6 +14,7 @@ ul.DA-PianoKeyboard {
 }
 
 ul.DA-PianoKeyboard li {
+    box-sizing: content-box;
     position: relative;
     float: left;
     border-style: solid;
@@ -22,6 +23,7 @@ ul.DA-PianoKeyboard li {
     border-radius: 0 0 4px 4px;
     color: #ccc;
     text-align: center;
+    padding: 0;
 }
 
 .whiteKey>p {
