@@ -1,0 +1,23 @@
+{#
+    This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+ #}
+
+{% extends "base.twig" %}
+
+{% block pageContent %}
+
+<div class="wrapper style1">
+	<section id="main" class="container">
+		<div class="box">
+			<h2>Mitwirkung</h2>
+			<p>Digitale Werkverzeichnisse, Editionen und sämtliche andere Formen digitaler Notenrepositorien, die ihr Material in einem standardisierten Format bereitstellt, können an IncipitSearch angeschlossen werden.
+				Wenn Sie Ihr Repositorium an IncipitSearch anbinden möchten, kontaktieren Sie uns.</p>
+		</div>
+
+		{% include "contact-partial.twig" %}
+
+	</section>
+
+</div>
+
+{% endblock %} {# end pageContent #}

@@ -24,7 +24,7 @@
 					( (typeof href !== 'undefined' && href != '') ? ' href="' + href + '"' : '') +
 				'>' +
 					'<span class="indent-' + indent + '"></span>' +
-					$this.text() +
+					$this.html() +
 				'</a>'
 			);
 

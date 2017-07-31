@@ -1,0 +1,35 @@
+{% block pageContent %}
+		<div class="box">
+			<h2>Kontakt</h2>
+			<h3>Form</h3>
+			<form method="post" action="#">
+				<div class="row uniform 50%">
+					<div class="6u 12u(narrower)">
+						<input type="text" name="name" id="name" value="" placeholder="Name" />
+					</div>
+					<div class="6u 12u(narrower)">
+						<input type="email" name="email" id="email" value="" placeholder="Email" />
+					</div>
+				</div>
+				<div class="row uniform 50%">
+					<div class="6u 12u(narrower)">
+						<input type="checkbox" id="copy" name="copy">
+						<label for="copy">Mailen Sie mir eine Kopie dieser Nachricht</label>
+					</div>
+				</div>
+				<div class="row uniform 50%">
+					<div class="12u">
+						<textarea name="message" id="message" placeholder="Enter your message" rows="6"></textarea>
+					</div>
+				</div>
+				<div class="row uniform">
+					<div class="12u">
+						<ul class="actions">
+							<li><input type="submit" value="Senden" /></li>
+							<li><input type="reset" value="Zurücksetzen" class="alt" /></li>
+						</ul>
+					</div>
+				</div>
+			</form>
+		</div>
+{% endblock %} {# end pageContent #}

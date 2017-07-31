@@ -93,6 +93,58 @@ $app->get('/results/', function (Request $request, Response $response) {
 
 })->setName('results');
 
+/**
+ * Route to About.
+ */
+$app->get('/about[/]', function (Request $request, Response $response) {
+
+	$this->logger->addInfo('Get: /about');
+
+	$response = $this->view->render($response, 'about.twig');
+
+	return $response;
+
+})->setName('about');
+
+/**
+ * Route to Repositories.
+ */
+$app->get('/repositories[/]', function (Request $request, Response $response) {
+
+	$this->logger->addInfo('Get: /repositories');
+
+	$response = $this->view->render($response, 'repositories.twig');
+
+	return $response;
+
+})->setName('repositories');
+
+/**
+ * Route to participation.
+ */
+$app->get('/participation[/]', function (Request $request, Response $response) {
+
+	$this->logger->addInfo('Get: /participation');
+
+	$response = $this->view->render($response, 'participation.twig');
+
+	return $response;
+
+})->setName('participation');
+
+
+/**
+ * Route to Contact.
+ */
+$app->get('/contact[/]', function (Request $request, Response $response) {
+
+	$this->logger->addInfo('Get: /contact');
+
+	$response = $this->view->render($response, 'contact.twig');
+
+	return $response;
+
+})->setName('contact');
 
 /**
  * Route to Impressum.
@@ -106,20 +158,6 @@ $app->get('/impressum[/]', function (Request $request, Response $response) {
     return $response;
 
 })->setName('impressum');
-
-
-/**
- * Route to About.
- */
-$app->get('/about[/]', function (Request $request, Response $response) {
-
-    $this->logger->addInfo('Get: /about');
-
-    $response = $this->view->render($response, 'about.twig');
-
-    return $response;
-
-})->setName('about');
 
 
 $app->run();

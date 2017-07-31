@@ -2,87 +2,101 @@
 <html lang="de">
 <head>
 
-    {% block head %}
-        <!-- Basic Page Needs
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <meta charset="utf-8">
-        <title>IncipitSearch</title>
-        <meta name="description" content="">
-        <meta name="author" content="">
+	{% block head %}
+		<!-- Basic Page Needs
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta charset="utf-8">
+		<title>IncipitSearch</title>
+		<meta name="description" content="">
+		<meta name="author" content="">
 
-        <!-- Mobile Specific Metas
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Mobile Specific Metas
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- Scripts
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <!--[if lte IE 8]><!--<script src="/public/js/ie/html5shiv.js"></script><![endif]-->
-        <script src="/public/js/jquery.min.js"></script>
-        <script src="/public/js/jquery.dropotron.min.js"></script>
-        <script src="/public/js/jquery.scrollgress.min.js"></script>
-        <script src="/public/js/skel.min.js"></script>
-        <script src="/public/js/util.js"></script>
-        <!--[if lte IE 8]><script src="/public/js/ie/respond.min.js"></script><![endif]-->
-        <script src="/public/js/main.js"></script>
+		<!-- Scripts
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<!--[if lte IE 8]><!--<script src="/public/js/ie/html5shiv.js"></script><![endif]-->
+		<script src="/public/js/jquery.min.js"></script>
+		<script src="/public/js/jquery.dropotron.min.js"></script>
+		<script src="/public/js/jquery.scrollgress.min.js"></script>
+		<script src="/public/js/skel.min.js"></script>
+		<script src="/public/js/util.js"></script>
+		<!--[if lte IE 8]>
+		<script src="/public/js/ie/respond.min.js"></script><![endif]-->
+		<script src="/public/js/main.js"></script>
 
-        <!-- FONT
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <link href="/public/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+		<!-- FONT
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link href="/public/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-        <!-- CSS
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <link rel="stylesheet" href="/public/css/main.css" />
-        <!--[if lte IE 8]><link rel="stylesheet" href="/public/css/ie8.css" /><![endif]-->
+		<!-- CSS
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link rel="stylesheet" href="/public/css/main.css"/>
+		<!--[if lte IE 8]>
+		<link rel="stylesheet" href="/public/css/ie8.css"/><![endif]-->
 
-        <!-- Favicon
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <link rel="icon" type="image/png" href="/public/img/favicon.png">
+		<!-- Favicon
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link rel="icon" type="image/png" href="/public/img/favicon.png">
 
-    {% endblock %}
+	{% endblock %}
 
 </head>
 
 <body>
 <section id="page-wrapper">
-<!--Header
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<header id="header">
-    <h1><a href="{{ path_for('index') }}">IncipitSearch</a></h1>
-    <nav id="nav">
-        <ul>
-        <li><a href="{{ path_for('index') }}">Home</a></li>
-        <li><a href="{{ path_for('about') }}">About</a></li>
-        <li><a href="{{ path_for('impressum') }}">Impressum</a></li>
-        </ul>
-    </nav>
-</header>
+	<!--Header
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<header id="header">
+		<h1><a href="{{ path_for('index') }}">IncipitSearch</a></h1>
+		<nav id="nav">
+			<ul>
+				<li><a href="{{ path_for('index') }}">Home</a></li>
+				<li><a href="{{ path_for('about') }}">About</a></li>
+				<li><a href="{{ path_for('repositories') }}">Repositorien</a></li>
+				<li><a href="{{ path_for('participation') }}">Mitwirkung</a></li>
+				<li><a href="https://github.com/digicademy/incipitSearch" target="_blank"><span class="fa fa-github"
+																								aria-hidden="true"></span></a>
+				</li>
+			</ul>
+		</nav>
+	</header>
 
-<!-- Primary Page Layout
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-{% block pageContent %}
-        <section id="content" class="box">
-                <h4>Basic Page</h4>
-                <p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to
-                    add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton
-                        documentation</a>.</p>
-        </section>
-{% endblock %}
+	<!-- Primary Page Layout
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	{% block pageContent %}
+		<section id="content" class="box">
+			<h4>Basic Page</h4>
+			<p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to
+				add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton
+					documentation</a>.</p>
+		</section>
+	{% endblock %}
 
 
-<!--Footer
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<footer id="footer">
-        <a target="_blank" href="http://www.adwmainz.de/"><img src="/public/img/LogoAdW.png" alt="Logo ADW"/></a>
-    <div class="copyright">
-            <a href="http://www.adwmainz.de/" target="_blank">Akademie der Wissenschaften und der Literatur | Mainz</a>
-            <br/><a href="https://www.google.de/maps/place/Akademie+der+Wissenschaften+und+der+Literatur/@49.9785891,8.2590733,13z/" target="_blank">Geschwister-Scholl-Straße 2
-            <br/>55131 Mainz</a>
-            <br/><a href="https://twitter.com/digicademy"><i class="fa fa-twitter"></i></a><a href="https://github.com/digicademy" target="_blank"><i class="fa fa-github"></i></a><a href="http://www.digitale-akademie.de/" target="_blank">Digitale Akademie</a>
-    </div>
-</footer>
+	<!--Footer
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<footer id="footer">
+		<ul class="menu">
+			<li><a href="{{ path_for('contact') }}">Kontakt</a></li>
+			<li><a href="{{ path_for('impressum') }}">Impressum</a></li>
+		</ul>
+		<a target="_blank" href="http://www.adwmainz.de/"><img width="100px" src="/public/img/adwlogo.svg"
+															   alt="Logo ADW"/></a>
+		<div class="copyright">
+			<a href="http://www.adwmainz.de/" target="_blank">Akademie der Wissenschaften und der Literatur | Mainz</a>
+			<br/><a href="https://www.google.de/maps/place/Akademie+der+Wissenschaften+und+der+Literatur/@49.9785891,8.2590733,13z/"
+					target="_blank">Geschwister-Scholl-Straße 2
+				<br/>55131 Mainz</a>
+			<br/><a href="https://twitter.com/digicademy"><i class="fa fa-twitter"></i></a>&nbsp;<a
+					href="https://github.com/digicademy" target="_blank"><i class="fa fa-github"></i></a>&nbsp;<a
+					href="http://www.digitale-akademie.de/" target="_blank">Digitale Akademie</a>
+		</div>
+	</footer>
 
-<!-- End Document
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-</div>
+	<!-- End Document
+	  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	</div>
 </body>
 </html>
