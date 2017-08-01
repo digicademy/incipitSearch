@@ -1,5 +1,0 @@
-{
-  "elasticSearch": {
-    "host": "__ELASTICSEARCHHOST__"
-  }
-}

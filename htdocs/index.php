@@ -132,20 +132,6 @@ $app->get('/participation[/]', function (Request $request, Response $response) {
 
 })->setName('participation');
 
-
-/**
- * Route to Contact.
- */
-$app->get('/contact[/]', function (Request $request, Response $response) {
-
-	$this->logger->addInfo('Get: /contact');
-
-	$response = $this->view->render($response, 'contact.twig');
-
-	return $response;
-
-})->setName('contact');
-
 /**
  * Route to Impressum.
  */

@@ -118,8 +118,9 @@ function svgNotesForPlaineEasieCode(paeCode, clef, width, scalePercent) {
         pageHeight: 500,
         pageWidth: pageWidth,
         ignoreLayout: 1,
+		noLayout: 1,
         border: 0,
-        scale: scalePercent,
+        scale: 50,
         adjustPageHeight: 1
     })
     console.log("svgNotesForPlaineEasieCode > options: \n" + options)
