@@ -57,6 +57,8 @@
 			//insert thes SVG code in our div
 			var svgContainerDiv = $('#svgNotesContainer')
 			svgContainerDiv.html(notesSVG)
+			$('#svgNotesContainer > svg').checkSvgWidth()
+			svgContainerDiv.scrollLeft($('#svgNotesContainer > svg').width())
 		}
 
 
