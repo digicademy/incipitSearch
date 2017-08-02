@@ -101,7 +101,7 @@
 
 jQuery.fn.extend({
 
-	checkSvgWidth: function() { //incipits will be scrollable on small screens or if they are very long
+	incipitScroll: function() { //incipits will be scrollable on small screens or if they are very long
 	$(this).each(function () {  // iterate svg elements
 			if ($(this).width() > $('.box').width()) { // check their width
 				$(this).parent('div').css('overflow', 'scroll'); // add new class to their parent div
