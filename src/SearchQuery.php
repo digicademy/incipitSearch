@@ -104,6 +104,9 @@ class SearchQuery
                         'filter' => $this->getFilterArray() //there might be multiple filter set or not
                     ]
 
+                ],
+                'sort' => [
+                    'title.raw'
                 ]
             ],
             "from" => $this->page,
@@ -124,11 +127,13 @@ class SearchQuery
         $filter = [];
 
         if (!empty($this->getCatalogFilter())) {
+
             $filter[] = [
                 'term' =>
+                //TODO: elasticserach documentation says, that array can be added here, but it does not work;
                     ['catalog' => $this->getCatalogFilter()]
             ];
-        }
+       }
         return $filter;
     }
 
@@ -136,7 +141,7 @@ class SearchQuery
      * Performs the actual search for the set query and filters
      * and returns the matching results as an array of CatalogEntry.
      *
-     * @return array matching CatalogEntrys, emtpy if noen
+     * @return array matching CatalogEntrys, emtpy if none
      */
     public function performSearchQuery(): array
     {
@@ -201,9 +206,9 @@ class SearchQuery
 
     /**
      * Sets the catalog filter.
-     * @param string|null $catalogFilter
+     * @param array|null $catalogFilter
      */
-    public function setCatalogFilter(string $catalogFilter = null)
+    public function setCatalogFilter(array $catalogFilter = null)
     {
         $this->catalogFilter = $catalogFilter;
     }

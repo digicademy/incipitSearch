@@ -1,14 +1,6 @@
 <?php
 namespace ADWLM\IncipitSearch;
 
-/**
- * Created by PhpStorm.
- * User: gaby
- * Date: 29/06/16
- * Time: 10:39
- */
-
-
 use SimpleXMLElement;
 
 use GuzzleHttp\Client;

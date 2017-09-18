@@ -75,15 +75,19 @@ $app->get('/results/', function (Request $request, Response $response) {
     $this->logger->addInfo('Get: /results/');
 
     $incipit = $request->getParam('incipit');
+    $repository = $request->getParam('repository');
+
 
     $searchQuery = new SearchQuery();
     $searchQuery->setIncipitQuery($incipit);
+  //  $searchQuery->setCatalogFilter($repository);
     $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
 
     $catalogEntries = $searchQuery->performSearchQuery();
 
     $response = $this->view->render($response, 'results.twig',
         [
+            //TODO: selection of catalogue entries does nor work, because only last element from array will be used
             'catalogEntries' => $catalogEntries,
             'searchString' => $searchQuery->getIncipitQuery(),
             'numberOfResults' => $searchQuery->getNumOfResults()

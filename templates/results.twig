@@ -69,8 +69,11 @@
         <div class="box">
 
         <h1>Gefundene Werke</h1>
-        <b>{{ numberOfResults }} Ergebnisse für das Incipit "{{ searchString }}"</b><br>
-        <b><a href="/">Zurück zur Suche</a></b>
+            <div>
+                <strong>{{ numberOfResults }} Ergebnisse für das Incipit "{{ searchString }}"</strong><br>
+         Alphabetische Sortierung
+            <p><strong><a href="/">Zurück zur Suche</a></strong></p>
+            </div>
 
         <br><hr><br>
 
@@ -79,11 +82,12 @@
 
             <div class="result">
                 <h3>{{ catalogEntry.title }}</h3>
-                <h4>{{ catalogEntry.subTitle }}</h4>
-                <b>{{ catalogEntry.composer }}</b><br>
-                <b>{{ catalogEntry.year }}</b>
+                <strong>{{ catalogEntry.subTitle }}</strong><br>
+                <strong>{{ catalogEntry.composer }}</strong><br>
+                {{ catalogEntry.year }}
 
                 <!-- Display the rendered notes -->
+                <span>Plaine & Easie Code: </span>
                 <span class="incipitNotes hidden">{{ catalogEntry.incipit.notes }}</span>
                 <span class="incipitClef hidden">{{ catalogEntry.incipit.clef }}</span>
                 <span class="incipitAccidentals hidden">{{ catalogEntry.incipit.accidentals }}</span>

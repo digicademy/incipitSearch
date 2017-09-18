@@ -1,14 +1,6 @@
 <?php
 namespace ADWLM\IncipitSearch;
 
-/**
- * Created by PhpStorm.
- * User: gaby
- * Date: 29/06/16
- * Time: 10:37
- */
-
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 
@@ -40,7 +32,6 @@ use ADWLM\IncipitSearch\CatalogEntry;
 class IncipitCrawler
 {
 
-
     protected $elasticClient;
     protected $catalogClient;
 
@@ -67,7 +58,7 @@ class IncipitCrawler
      */
     public function __construct()
     {
-
+        print(__DIR__);
         $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../config.json'));
         $elasticHost = $jsonConfig->elasticSearch->host;
 
@@ -171,6 +162,17 @@ class IncipitCrawler
             'index' => 'not_analyzed'
         ];
 
+        // fields need to be defined as raw when they should be sorted alphabetically
+        $rawType = [
+            'type' => 'string',
+            'fields' => [
+                'raw' => [
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ]
+            ]
+        ];
+
         $params = [
             'index' => $this->indexName,
             'body' => [
@@ -186,7 +188,7 @@ class IncipitCrawler
                             'dataURL' => $notAnalyzedStringType,
                             'detailURL' => $notAnalyzedStringType,
                             'composer' => ["type" => "string"],
-                            'title' => ["type" => "string"],
+                            'title' => $rawType,
                             'subTitle' => ["type" => "string"],
                             'year' => ["type" => "string"],
 
@@ -203,7 +205,7 @@ class IncipitCrawler
                                 ]
                             ]
 
-                        ] //proerties
+                        ] //properties
                     ] //incipit
                 ] //mappings
             ] //body
