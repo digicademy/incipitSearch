@@ -76,10 +76,14 @@ $app->get('/results/', function (Request $request, Response $response) {
 
     $incipit = $request->getParam('incipit');
     $repository = $request->getParam('repository');
+    $page = $request->getParam('page');
 
 
     $searchQuery = new SearchQuery();
     $searchQuery->setIncipitQuery($incipit);
+    if ($page > 0) {
+        $searchQuery->setPage($page);
+    }
   //  $searchQuery->setCatalogFilter($repository);
     $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
 

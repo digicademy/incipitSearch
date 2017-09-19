@@ -38,7 +38,7 @@ class SearchQuery
     private $elasticClient;
 
     private $page = 0;
-    private $pageSize = 100;
+    private $pageSize = 50;
 
 
     /**
@@ -109,7 +109,7 @@ class SearchQuery
                     'title.raw'
                 ]
             ],
-            "from" => $this->page,
+            "from" => $this->page * $this->pageSize,
             "size" => $this->pageSize
         ];
 
