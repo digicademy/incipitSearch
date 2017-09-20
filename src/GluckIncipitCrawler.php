@@ -60,12 +60,12 @@ class GluckIncipitCrawler extends IncipitCrawler
         $work = $parentXMLElement->xpath("/rdf:RDF/skos:Concept")[0];
         $workIdentifier = $this->contentOfXMLPath($work, "dc:identifier");
         $workTitle = $this->contentOfXMLPath($work, "dc:title");
-        $workDetailUrl = $work->attributes()["about"];
+        //$workDetailUrl = $work->attributes()["about"];
 
         $parts = $parentXMLElement->xpath("/rdf:RDF/skos:Concept/skos:relatedMatch/skos:Concept");
         foreach ($parts as $part) {
             $partTitle = $this->contentOfXMLPath($part, "dc:title");
-
+            $workDetailUrl = $part->attributes()["about"];
             $incipitClef = $this->contentOfXMLPath($part,
                 "skos:relatedMatch/skos:Concept/bsbmo:incipitClef");
             $incipitAccidentals = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/bsbmo:incipitKeysig");
@@ -109,8 +109,9 @@ class GluckIncipitCrawler extends IncipitCrawler
      */
     public function crawlCatalog()
     {
-
-
+        //local
+        // $url = "http://gluck-gesamtausgabe.local/rdf/collection/works/";
+        //live
         $url = "http://www.gluck-gesamtausgabe.de/rdf/collection/works/";
         $xml = $this->contentOfURL($url);
 
