@@ -84,6 +84,7 @@ $app->get('/results/', function (Request $request, Response $response) {
     if ($page > 0) {
         $searchQuery->setPage($page);
     }
+    // "query does not support array of values"
   //  $searchQuery->setCatalogFilter($repository);
     $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
 

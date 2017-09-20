@@ -37,6 +37,7 @@ class SearchQuery
     private $numOfResults = 0;
     private $elasticClient;
 
+    // maybe for future version: option for user to select between varying page Sizes
     private $page = 0;
     private $pageSize = 50;
 
@@ -109,6 +110,7 @@ class SearchQuery
                     'title.raw'
                 ]
             ],
+            // page refers to one single item, while pageSize is the amount of item to be displayed
             "from" => $this->page * $this->pageSize,
             "size" => $this->pageSize
         ];
