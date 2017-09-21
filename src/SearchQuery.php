@@ -99,7 +99,8 @@ class SearchQuery
                     'bool' => [
                         'must' => [
                             'wildcard' => [
-                                "incipit.normalizedToSingleOctave" => "*" . $this->incipitQuery . "*"
+                                // settings for search: only search from beginning (otherwise: ass "*" to beginning)
+                                "incipit.normalizedToSingleOctave" =>  $this->incipitQuery . "*"
                             ]
                         ],
                         'filter' => $this->getFilterArray() //there might be multiple filter set or not
