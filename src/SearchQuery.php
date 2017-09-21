@@ -41,6 +41,10 @@ class SearchQuery
     private $page = 0;
     private $pageSize = 50;
 
+    // default settings for search
+    private $isTransposed = false;
+    private $isPrefixSearch = false;
+
 
     /**
      * SearchQuery constructor.
@@ -99,8 +103,7 @@ class SearchQuery
                     'bool' => [
                         'must' => [
                             'wildcard' => [
-                                // settings for search: only search from beginning (otherwise: ass "*" to beginning)
-                                "incipit.normalizedToSingleOctave" =>  $this->incipitQuery . "*"
+                                "incipit.normalizedToSingleOctave" =>  "*" . $this->incipitQuery . "*"
                             ]
                         ],
                         'filter' => $this->getFilterArray() //there might be multiple filter set or not
@@ -115,6 +118,14 @@ class SearchQuery
             "from" => $this->page * $this->pageSize,
             "size" => $this->pageSize
         ];
+
+        // if only searching from beginning from incipit
+        if($this->isPrefixSearch)
+        {
+            $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.normalizedToSingleOctave" =>  $this->incipitQuery . "*"];
+
+        }
+
 
         return $searchParams;
 
@@ -260,6 +271,49 @@ class SearchQuery
     {
         $this->pageSize = $pageSize;
     }
+
+
+    /**
+     * Get if seraching for transposed incipit
+     *
+     * @return bool
+     */
+    public function getIsTransposed(): bool
+    {
+        return $this->isTransposed;
+    }
+
+    /**
+     * Set if searching for transposed incipit
+     *
+     * @param bool $isTransposed
+     */
+    public function setIsTransposed(bool $isTransposed)
+    {
+        $this->isTransposed = $isTransposed;
+    }
+
+
+    /**
+     * Get if searching for prefix
+     *
+     * @return bool $isPrefixSearch
+     */
+    public function getIsPrefixSearch(): bool
+    {
+        return $this->isPrefixSearch;
+    }
+
+    /**
+     * Set if searching for prefix
+     *
+     * @param bool $isPrefixSearch
+     */
+    public function setIsPrefixSearch(bool $isPrefixSearch)
+    {
+        $this->isPrefixSearch = $isPrefixSearch;
+    }
+
 
 
     /////////////////////

@@ -77,6 +77,7 @@ $app->get('/results/', function (Request $request, Response $response) {
     $incipit = $request->getParam('incipit');
     $repository = $request->getParam('repository');
     $page = $request->getParam('page');
+    $isPrefixSearch = $request->getParam('prefix') != null;
 
 
     $searchQuery = new SearchQuery();
@@ -86,6 +87,11 @@ $app->get('/results/', function (Request $request, Response $response) {
     }
     // "query does not support array of values"
   //  $searchQuery->setCatalogFilter($repository);
+
+    $searchQuery->setIsPrefixSearch($isPrefixSearch);
+
+
+
     $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
 
     $catalogEntries = $searchQuery->performSearchQuery();

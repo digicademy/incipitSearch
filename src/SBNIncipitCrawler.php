@@ -45,6 +45,14 @@ class SBNIncipitCrawler extends IncipitCrawler
         $catalogHTML = new DOMDocument();
         $catalogHTML->loadHTML($html);
 
+        // $catalogHTML->validateOnParse = true;
+        $catalogHTML->strictErrorChecking = false;
+        $HTMLstring =  $catalogHTML->saveXML();
+        print "volles HTML: $HTMLstring";
+        $dirtyIncipit = $catalogHTML->getElementsByTagName('div')->item(1)->nodeValue;
+        //print "schmutziger Text: $dirtyIncipit \n" ;
+
+
         $catalogItemID = $itemID;
         $incipitClef = "incipit chiave";
         $incipitAccidentals = "alterazioni:";

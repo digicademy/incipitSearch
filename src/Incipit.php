@@ -35,7 +35,7 @@ class Incipit
     protected $completeIncipit;
     protected $notesNormalized;
     protected $notesNormalizedToPitch;
-    protected $notesToTransposition;
+    protected $transposedNotes;
 
     /**
      * Incipit constructor.
@@ -105,6 +105,7 @@ class Incipit
      */
     public function getNotesNormalizedToPitch(): string
     {
+        // cached variable
         if (!empty($this->notesNormalizedToPitch)) {
             return $this->notesNormalizedToPitch;
         }
@@ -118,13 +119,19 @@ class Incipit
     /**
      * Creates incipit string containing proportional information on up and down pitch only (transposition)
      *
+     * Starting point is  getNotesNormalizedToPitch, as it contains a normalized incipit with accidentals marked at each note
      * E.g.
      *
      * @return string string containing transposition only
      */
-    public function getNotesToTransposition(): string
+    public function getTransposedNotes(): string
     {
-        return $this->notesToTransposition;
+        if(!empty($this->transposedNotes)){
+            return $this->transposedNotes;
+        }
+        $this->transposedNotes = IncipitTransposer::transposeNormilizedNotes($this->getNotesNormalizedToPitch());
+
+        return $this->transposedNotes;
     }
 
 
