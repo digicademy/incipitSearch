@@ -145,12 +145,13 @@ function htmlForKeyboardWithOctaves(numberOfOctaves, startOctave, showLabels, wi
 
     var currentOctave = _startOctave
 
+    //use <p>C' + (currentOctave + 1) + '</p> for outputing the current octave on the keyboard
     var keyhoardHTML = '\
         <ul class="DA-PianoKeyboard">\n'
     for (var i = 0; i < _displayedOctaves; i++) {
         if (showLabels) {
             keyhoardHTML += '\
-            <li class="whiteKey"><p>C' + (currentOctave + 1) + '</p></li>\n\
+            <li class="whiteKey"></li>\n\
             <li class="blackKeySharp"><p>♯</p></li>\n\
             <li class="blackKeyFlat"><p>♭</p></li>\n'
         } else {
