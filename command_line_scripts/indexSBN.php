@@ -5,7 +5,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 
 /**
- * This is to be called from command line to index the Gluck Gesamtausgabe catalog.
+ * This is to be called from command line to index the SBN catalog.
  * ATTENTION: this must be called from the same directory as index.php
  * or paths will be wrong
  *
@@ -14,7 +14,6 @@ require __DIR__ . '/../vendor/autoload.php';
  *
  * (c) 2016
  * Anna Neovesky  Anna.Neovesky@adwmainz.de
- * Gabriel Reimers g.a.reimers@gmail.com
  *
  * Digital Academy www.digitale-akademie.de
  * Academy of Sciences and Literatur | Mainz www.adwmainz.de

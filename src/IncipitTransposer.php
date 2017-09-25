@@ -51,7 +51,7 @@ class IncipitTransposer
     "''''" => 36,
     "'''''" => 48
     ];
-    
+
 
     /**
      * Creates an incipit with transposition
@@ -89,13 +89,14 @@ class IncipitTransposer
          * 3) viell. http://php.net/manual/de/function.preg-match-all.php
          */
 		$notes = preg_split('/([A-Z])/', $notesNormalizedToPitch, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        print "Notes array: ";
+        /**  print "Notes array: ";
         $i = 0;
 		foreach ($notes as $note){
             print  $notes[$i] . ' | ';
             $i++;
         }
 
+         */
 
 		/**
 		 * FV: Hier soll also aus ["''A", "''B", "''xC", "'xF"] "21, 22, 13, 06" werden.
