@@ -33,7 +33,6 @@ use ADWLM\IncipitSearch\CatalogEntry;
 class GluckIncipitCrawler extends IncipitCrawler
 {
 
-
     /**
      * Creates a CatalogEntry with Incipit from the data at the given URL.
      *
