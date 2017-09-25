@@ -22,7 +22,9 @@ namespace ADWLM\IncipitSearch;
  */
 class IncipitTransposer
 {
+    // array of chords with numerical values representing the pitch
     public static $chords = [
+
     "C" => 0,
     "xC" => 1,
     "D" => 2,
@@ -37,6 +39,7 @@ class IncipitTransposer
     "B" => 11
     ];
 
+    // numerical values assigned
     public static $octave = [
     ",,,," => -48,
     ",,," => -36,
@@ -48,8 +51,7 @@ class IncipitTransposer
     "''''" => 36,
     "'''''" => 48
     ];
-
-
+    
 
     /**
      * Creates an incipit with transposition
@@ -72,11 +74,28 @@ class IncipitTransposer
 		 * Aus ''A''B''xC'xF soll ["''A", "''B", "''xC", "'xF"] werden.
 		 * Mein Ziel war es aus bspw. ''A im Ergebnis 12 + 9, also den Wert 21 zu bilden.
 		 */
-        print "to pitch:" . $notesNormalizedToPitch . "\n";
 
 
+        /*
+         * AN: delimiter wird herausgelöscht, es muss PREG_SPLIT_DELIM_CAPTURE gesetzt werden
+         * => nun stehen die Noten aber immer in einem eigenen Eintrag im Array
+         * und müssen dann erst wieder zusammengebracht werden und je nachdem ob es eine
+         *
+         * andere Möglichkeiten:
+         * 1) ausgehend von dem jetzigen Stand (oder vielleicht doch so splitten, dass auch die Vorzeichen nochal extra sind)
+         *  durchgehen udn dann die Berechnung anstellen
+         * 2) Array durchiterieren und die Oktave jeweils "hochzählen" und dann den Wert setzen, dann chord ermitteln, dann Wert berechnen
+         *      => wahrscheinlich die sinnvollste Lösung
+         * 3) viell. http://php.net/manual/de/function.preg-match-all.php
+         */
 		$notes = preg_split('/([A-Z])/', $notesNormalizedToPitch, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        print "Notes array" . $notes[0] ."\n";
+        print "Notes array: ";
+        $i = 0;
+		foreach ($notes as $note){
+            print  $notes[$i] . ' | ';
+            $i++;
+        }
+
 
 		/**
 		 * FV: Hier soll also aus ["''A", "''B", "''xC", "'xF"] "21, 22, 13, 06" werden.
@@ -90,7 +109,7 @@ class IncipitTransposer
 		/**
 		 * dann für jeden danach folgende Note berechnen, wie der unetrschied zu der vorherigen ist und speichern
 		 * string zurückgeben
-		 * FV: Sorry, hier hat mir Google auf die Schnelle nicht weitergeholen. Jetzt müsste aus "21, 22, 13, 6" "1, 9, 7" werden. Dann hätten wir m.E. das gewünschte Ergebnis.
+		 * vorerst wird ein Teststring übergeben
 		 */
 		return "0,2,4,4,6";
 
