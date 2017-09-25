@@ -22,34 +22,28 @@ namespace ADWLM\IncipitSearch;
  */
 class IncipitTransposer
 {
-    // array of chords with numerical values representing the pitch
-    public static $chords = [
-
-    "C" => 0,
-    "xC" => 1,
-    "D" => 2,
-    "xD" => 3,
-    "E" => 4,
-    "F" => 5,
-    "xF" => 6,
-    "G" => 7,
-    "xG" => 8,
-    "A" => 9,
-    "xA" => 10,
-    "B" => 11
-    ];
-
-    // numerical values assigned
-    public static $octave = [
-    ",,,," => -48,
-    ",,," => -36,
-    ",," => -24,
-    "," => -12,
-    "'" => 0,
-    "''" => 12,
-    "'''" => 24,
-    "''''" => 36,
-    "'''''" => 48
+    public static $notes = [
+        "bC" => 11,
+        "C" => 0,
+        "xC" => 1,
+        "bD" => 1,
+        "D" => 2,
+        "xD" => 3,
+        "bE" => 3,
+        "E" => 4,
+        "xE" => 5,
+        "bF" => 4,
+        "F" => 5,
+        "xF" => 6,
+        "bG" => 6,
+        "G" => 7,
+        "xG" => 8,
+        "bA" => 8,
+        "A" => 9,
+        "xA" => 10,
+        "bB" => 10,
+        "B" => 11,
+        "xB" => 0,
     ];
 
 
@@ -60,60 +54,93 @@ class IncipitTransposer
      *
      * @return string incipit with transposition
      */
-    public static function transposeNormalizedNotes(string $notesNormalizedToPitch) : string
+    public static function transposeNormalizedNotes(string $notesNormalizedToPitch): string
     {
-        if(empty($notesNormalizedToPitch)){
+        if (empty($notesNormalizedToPitch)) {
             return '';
         }
+        echo "NORMALIZED STRING: " . $notesNormalizedToPitch . "\n";
 
-		/**
-         * dann den incipit string durchgehen und den Wert der ersten Note angeben */
+        $highOctaveValue = 0;
+        $lowOctaveValue = 0;
+        $accidentalValue = "";
+        $pitchValues = array();
 
-		/**
-		 * FV: Ich versuche hier das Incipit in einzelne Informationseinheiten aufzusplitten.
-		 * Aus ''A''B''xC'xF soll ["''A", "''B", "''xC", "'xF"] werden.
-		 * Mein Ziel war es aus bspw. ''A im Ergebnis 12 + 9, also den Wert 21 zu bilden.
-		 */
-
-
-        /*
-         * AN: delimiter wird herausgelöscht, es muss PREG_SPLIT_DELIM_CAPTURE gesetzt werden
-         * => nun stehen die Noten aber immer in einem eigenen Eintrag im Array
-         * und müssen dann erst wieder zusammengebracht werden und je nachdem ob es eine
-         *
-         * andere Möglichkeiten:
-         * 1) ausgehend von dem jetzigen Stand (oder vielleicht doch so splitten, dass auch die Vorzeichen nochal extra sind)
-         *  durchgehen udn dann die Berechnung anstellen
-         * 2) Array durchiterieren und die Oktave jeweils "hochzählen" und dann den Wert setzen, dann chord ermitteln, dann Wert berechnen
-         *      => wahrscheinlich die sinnvollste Lösung
-         * 3) viell. http://php.net/manual/de/function.preg-match-all.php
-         */
-		$notes = preg_split('/([A-Z])/', $notesNormalizedToPitch, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        /**  print "Notes array: ";
-        $i = 0;
-		foreach ($notes as $note){
-            print  $notes[$i] . ' | ';
-            $i++;
+        foreach (str_split($notesNormalizedToPitch) as $token) {
+            echo "TOKEN: " . $token . "\n";
+            switch ($token) {
+                case ",":
+                    $lowOctaveValue += 1;
+                    break;
+                case "'":
+                    $highOctaveValue += 1;
+                    break;
+                case preg_match('/x/', $token):
+                    $accidentalValue = $token;
+                    break;
+                case 'b':
+                    $accidentalValue = $token;
+                    echo "IM IN B /n";
+                    break;
+                case preg_match('/[A-G]/', $token):
+                    // must be added in this order
+                    $noteString = $token . $accidentalValue;
+                    echo "NOTE STRING: " . $noteString . "\n";
+                    array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
+                    $accidentalValue = "";
+                    $lowOctaveValue = 0;
+                    $highOctaveValue = 0;
+                    break;
+                default:
+                    echo 'Invalid Incipit';
+                    break;
+            }
         }
 
-         */
+        return IncipitTransposer::calculateIntervals($pitchValues);
+    }
 
-		/**
-		 * FV: Hier soll also aus ["''A", "''B", "''xC", "'xF"] "21, 22, 13, 06" werden.
-		 */
+    /**
+     * @param $lowOctaveValue
+     * @param $highOctaveValue
+     * @param $noteValue
+     */
+    public static function calculatePitch($lowOctaveValue, $highOctaveValue, $noteString): int
+    {
+        $noteValue = IncipitTransposer::$notes[$noteString];
+        echo "NOTE STRING 2: " . $noteString . "\n";
 
-		foreach ($notes as $note) {
-			//$notes[$note] = strtr($notes, array_sum(IncipitTransposer::$chords, IncipitTransposer::$octave));
+        if ($lowOctaveValue) {
+            return (-12 * $lowOctaveValue) + $noteValue;
+        } elseif ($highOctaveValue > 0) {
+            return (12 * $highOctaveValue) + $noteValue;
+        }
 
-		}
+        return $noteValue;
 
-		/**
-		 * dann für jeden danach folgende Note berechnen, wie der unetrschied zu der vorherigen ist und speichern
-		 * string zurückgeben
-		 * vorerst wird ein Teststring übergeben
-		 */
-		return "0,2,4,4,6";
+    }
 
+    /**
+     * @param $pitchValues
+     *
+     * @return string
+     */
+    public static function calculateIntervals($pitchValues): string
+    {
+        $calculatedIntervals = "";
+        $currentPitch = current($pitchValues);
+        while(next($pitchValues) !== false)
+        {
+            $nextPitch = current($pitchValues);
+            $intervalValue = $nextPitch - $currentPitch;
+            echo "INTERVALVALUE: " . $intervalValue . "\n";
+            $interval = (string) $intervalValue;
+            echo "INTERVAL: " . $interval . "\n";
+            $calculatedIntervals = $calculatedIntervals. " " .$interval;
+            $currentPitch = current($pitchValues);
+        }
+        echo "ERGEBNIS: " . $calculatedIntervals . "\n";
+        return $calculatedIntervals;
 
     }
 

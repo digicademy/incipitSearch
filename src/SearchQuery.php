@@ -139,8 +139,6 @@ class SearchQuery
             $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->userInput);
             $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.transposedNotes" => $transposedNotes . "*"];
         }
-
-
         return $searchParams;
 
     }
