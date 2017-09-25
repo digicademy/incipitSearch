@@ -78,17 +78,19 @@ $app->get('/results/', function (Request $request, Response $response) {
     $repository = $request->getParam('repository');
     $page = $request->getParam('page');
     $isPrefixSearch = $request->getParam('prefix') != null;
+    $isTransposed = $request->getParam('transposition') != null;
 
 
     $searchQuery = new SearchQuery();
-    $searchQuery->setIncipitQuery($incipit);
+    $searchQuery->setUserInput($incipit);
     if ($page > 0) {
         $searchQuery->setPage($page);
     }
     // "query does not support array of values"
-  //  $searchQuery->setCatalogFilter($repository);
+   $searchQuery->setCatalogFilter($repository);
 
     $searchQuery->setIsPrefixSearch($isPrefixSearch);
+    $searchQuery->setisTransposed($isTransposed);
 
 
 
@@ -100,7 +102,7 @@ $app->get('/results/', function (Request $request, Response $response) {
         [
             //TODO: selection of catalogue entries does nor work, because only last element from array will be used
             'catalogEntries' => $catalogEntries,
-            'searchString' => $searchQuery->getIncipitQuery(),
+            'searchString' => $searchQuery->getSingleOctaveQuery(),
             'numberOfResults' => $searchQuery->getNumOfResults()
         ]);
 

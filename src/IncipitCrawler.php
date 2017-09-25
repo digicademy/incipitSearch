@@ -145,6 +145,7 @@ class IncipitCrawler
 
     /**
      * Creates a new catalog_entries index in the elastic search instance.
+     *
      * Does nothing if index already exists.
      */
     public function createIndex()
@@ -201,7 +202,8 @@ class IncipitCrawler
                                     'time' => $notAnalyzedStringType,
                                     'completeIncipit' => $notAnalyzedStringType,
                                     'normalizedToPitch' => $notAnalyzedStringType,
-                                    'normalizedToSingleOctave' => $notAnalyzedStringType
+                                    'normalizedToSingleOctave' => $notAnalyzedStringType,
+                                    'transposedNotes' => $notAnalyzedStringType
                                 ]
                             ]
 

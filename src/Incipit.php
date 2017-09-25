@@ -129,7 +129,7 @@ class Incipit
         if(!empty($this->transposedNotes)){
             return $this->transposedNotes;
         }
-        $this->transposedNotes = IncipitTransposer::transposeNormilizedNotes($this->getNotesNormalizedToPitch());
+        $this->transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->getNotesNormalizedToPitch());
 
         return $this->transposedNotes;
     }
@@ -164,7 +164,8 @@ class Incipit
             'time' => $this->getTime(),
             'completeIncipit' => $this->getCompleteIncipit(),
             'normalizedToSingleOctave' => $this->getNotesNormalizedToSingleOctave(),
-            'normalizedToPitch' => $this->getNotesNormalizedToPitch()
+            'normalizedToPitch' => $this->getNotesNormalizedToPitch(),
+            'transposedNotes' => $this->getTransposedNotes()
         ];
 
         return $json;
