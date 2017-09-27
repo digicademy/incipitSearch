@@ -44,7 +44,7 @@ class SearchQuery
 
     // default settings for search
     private $isTransposed = false;
-    private $isPrefixSearch = true;
+    private $isPrefixSearch = false;
 
 
     /**
@@ -120,25 +120,24 @@ class SearchQuery
             "from" => $this->page * $this->pageSize,
             "size" => $this->pageSize
         ];
+        //TODO: cleanup setting of filters for transposition and prefix
 
-        /**
-         *
-         * Currently no need for prefixed search
+        // if only searching from beginning of incipit
+        //maybe there is a better solution for setting of prefix search in query (see "prefix"): https://www.elastic.co/guide/en/elasticsearch/reference/current/term-level-queries.html
+        if($this->isPrefixSearch)
+        {
+            $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"];
 
-                 //if only searching from beginning of incipit
-                 //maybe there is a better solution for setting of prefix search in query (see "prefix"): https://www.elastic.co/guide/en/elasticsearch/reference/current/term-level-queries.html
-                 if($this->isPrefixSearch)
-                {
-                    $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"];
+        }
 
-                }
-         */
-
+        //TODO: seems like userInput is not getting transposed
         if($this->isTransposed)
         {
             $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->userInput);
             $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.transposedNotes" => $transposedNotes . "*"];
         }
+
+
         return $searchParams;
 
     }

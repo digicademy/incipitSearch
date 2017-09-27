@@ -93,7 +93,6 @@ $app->get('/results/', function (Request $request, Response $response) {
     $searchQuery->setisTransposed($isTransposed);
 
 
-
     $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
 
     $catalogEntries = $searchQuery->performSearchQuery();

@@ -22,6 +22,7 @@ namespace ADWLM\IncipitSearch;
  */
 class IncipitTransposer
 {
+    // notes with value assigned to each semitone
     public static $notes = [
         "bC" => 11,
         "C" => 0,
@@ -46,9 +47,11 @@ class IncipitTransposer
         "xB" => 0,
     ];
 
+    public static $pitchValues = array();
+
 
     /**
-     * Creates an incipit with transposition
+     * Creates an incipit with transposition (relative distance between two pitches)
      *
      * @param string $notesNormalizedToPitch incipit normalized to note values expanded accidentals(''A''B''xC'xF)
      *
@@ -59,47 +62,19 @@ class IncipitTransposer
         if (empty($notesNormalizedToPitch)) {
             return '';
         }
-        echo "NORMALIZED STRING: " . $notesNormalizedToPitch . "\n";
 
-        $highOctaveValue = 0;
-        $lowOctaveValue = 0;
-        $accidentalValue = "";
-        $pitchValues = array();
+        // default values
+        $highOctaveValue = 0; // can be bewteen 0-4
+        $lowOctaveValue = 0; // can be bewteen 0-4
+        $accidentalValue = ""; // x or b
+        $noteWasParsed = false;
 
         /**
-         * foreach (str_split($notesNormalizedToPitch) as $token) {
-        echo "TOKEN: " . $token . "\n";
-        if($token = ",")
-        {
-        $lowOctaveValue += 1;
-        }
-        elseif($token = "'")
-        {
-        $highOctaveValue += 1;
-        }
-        elseif(preg_match('/(x|b)/', $token, $matches))
-        {
-        $accidentalValue = implode($matches);
-        echo "IM IN B" . $accidentalValue. "\n";
-        }
-        elseif(preg_match('/[A-G]/', $token))
-        {
-        // must be added in this order
-        $noteString = $token . $accidentalValue;
-        echo "NOTE STRING: " . $noteString . "\n";
-        array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
-        $accidentalValue = "";
-        $lowOctaveValue = 0;
-        $highOctaveValue = 0;
-        }
-        else
-        {
-        echo 'Invalid Incipit';
-        }
+         * go through string token by token and identify notes by checking each token, saving value, composing
+         * full note out of the values and saving to array
          */
-
-            foreach (str_split($notesNormalizedToPitch) as $token) {
-            echo "TOKEN: " . $token . "\n";
+         foreach (str_split($notesNormalizedToPitch) as $token) {
+             // this looks so ugly, because  swiitch does not alloe regex; maybe rewrite as if /else
             switch ($token) {
                 case ",":
                     $lowOctaveValue += 1;
@@ -109,157 +84,113 @@ class IncipitTransposer
                     break;
                 case "x":
                     $accidentalValue = "x";
-                    echo "IM IN X" . $accidentalValue. "\n";
                     break;
                 case "b":
                     $accidentalValue = "b";
-                    echo "IM IN B" . $accidentalValue. "\n";
                     break;
                 case "A":
-                    // must be added in this order
-                    $noteString = $token . $accidentalValue;
-                    echo "NOTE STRING A: " . $noteString . "\n";
-                    array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
-                    $accidentalValue = "";
-                    $lowOctaveValue = 0;
-                    $highOctaveValue = 0;
+                   IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
+                    $noteWasParsed = true;
                     break;
                 case "B":
-                    // must be added in this order
-                    $noteString = $token . $accidentalValue;
-                    echo "NOTE STRING: " . $noteString . "\n";
-                    array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
-                    $accidentalValue = "";
-                    $lowOctaveValue = 0;
-                    $highOctaveValue = 0;
+                    IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
+                    $noteWasParsed = true;
                     break;
                 case "C":
-                    // must be added in this order
-                    $noteString = $token . $accidentalValue;
-                    echo "NOTE STRING: " . $noteString . "\n";
-                    array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
-                    $accidentalValue = "";
-                    $lowOctaveValue = 0;
-                    $highOctaveValue = 0;
+                    IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
+                    $noteWasParsed = true;
                     break;
                 case "D":
-                    // must be added in this order
-                    $noteString = $token . $accidentalValue;
-                    echo "NOTE STRING: " . $noteString . "\n";
-                    array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
-                    $accidentalValue = "";
-                    $lowOctaveValue = 0;
-                    $highOctaveValue = 0;
+                    IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
+                    $noteWasParsed = true;
                     break;
                 case "E":
-                    // must be added in this order
-                    $noteString = $token . $accidentalValue;
-                    echo "NOTE STRING: " . $noteString . "\n";
-                    array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
-                    $accidentalValue = "";
-                    $lowOctaveValue = 0;
-                    $highOctaveValue = 0;
+                    IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
+                    $noteWasParsed = true;
                     break;
                 case "F":
-                    // must be added in this order
-                    $noteString = $token . $accidentalValue;
-                    echo "NOTE STRING: " . $noteString . "\n";
-                    array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
-                    $accidentalValue = "";
-                    $lowOctaveValue = 0;
-                    $highOctaveValue = 0;
+                    IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
+                    $noteWasParsed = true;
                     break;
                 case "G":
-                    // must be added in this order
-                    $noteString = $token . $accidentalValue;
-                    echo "NOTE STRING: " . $noteString . "\n";
-                    array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
-                    $accidentalValue = "";
-                    $lowOctaveValue = 0;
-                    $highOctaveValue = 0;
+                    IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
+                    $noteWasParsed = true;
                     break;
-                case "H":
-                    // must be added in this order
-                    $noteString = $token . $accidentalValue;
-                    echo "NOTE STRING: " . $noteString . "\n";
-                    array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
-                    $accidentalValue = "";
-                    $lowOctaveValue = 0;
-                    $highOctaveValue = 0;
+                case "B":
+                    IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
+                    $noteWasParsed = true;
                     break;
                 default:
                     echo 'Invalid Incipit';
                     break;
             }
-
-/**
- *
-switch ($token) {
-case ",":
-$lowOctaveValue += 1;
-break;
-case "'":
-$highOctaveValue += 1;
-break;
-case preg_match('/(x|b)/', $token, $matches):
-$accidentalValue = implode($matches);
-echo "IM IN B" . $accidentalValue. "\n";
-break;
-case preg_match('/[A-G]/', $token):
-// must be added in this order
-$noteString = $token . $accidentalValue;
-echo "NOTE STRING: " . $noteString . "\n";
-array_push($pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
-$accidentalValue = "";
-$lowOctaveValue = 0;
-$highOctaveValue = 0;
-break;
-default:
-echo 'Invalid Incipit';
-break;
-}
- */
+            if($noteWasParsed){
+                $accidentalValue = "";
+                $lowOctaveValue = 0;
+                $highOctaveValue = 0;
+                $noteWasParsed = false;
+            }
         }
 
-        return IncipitTransposer::calculateIntervals($pitchValues);
+        return IncipitTransposer::calculateIntervals();
     }
 
     /**
-     * @param $lowOctaveValue
-     * @param $highOctaveValue
-     * @param $noteValue
+     * Calculates numeric value of each note that represents its pitch
+     *
+     * @param $lowOctaveValue value of low octave
+     * @param $highOctaveValue value of high octave
+     * @param $noteValue value of note
+     *
      */
     public static function calculatePitch($lowOctaveValue, $highOctaveValue, $noteString): int
     {
+        // assign numeric value to each note
         $noteValue = IncipitTransposer::$notes[$noteString];
-        echo "NOTE STRING 2: " . $noteString . "\n";
-
         if ($lowOctaveValue) {
             return (-12 * $lowOctaveValue) + $noteValue;
-        } elseif ($highOctaveValue > 0) {
+            // > 1, because '-Octave is just the note value
+        } elseif ($highOctaveValue > 1) {
             return (12 * $highOctaveValue) + $noteValue;
         }
-
         return $noteValue;
 
     }
 
+
     /**
-     * @param $pitchValues
+     * Sets values and pushes them to notes array
+     *
+     * @param $token
+     * @param $accidentalValue
+     * @param $lowOctaveValue
+     * @param $highOctaveValue
+     */
+    public static function pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue)
+    {
+        $noteString = $accidentalValue .$token;
+        array_push(IncipitTransposer::$pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
+    }
+
+    /**
+     *  Calculates difference between two pitches
+     *
+     * @param $pitchValues Array containing all pitch values
      *
      * @return string
      */
-    public static function calculateIntervals($pitchValues): string
+    public static function calculateIntervals(): string
     {
         $calculatedIntervals = "";
-        $currentPitch = current($pitchValues);
-        while(next($pitchValues) !== false)
+        $currentPitch = current(IncipitTransposer::$pitchValues);
+        // go though pitches and suvtect nect from current
+        while(next(IncipitTransposer::$pitchValues) !== false)
         {
-            $nextPitch = current($pitchValues);
+            $nextPitch = current(IncipitTransposer::$pitchValues);
             $intervalValue = $nextPitch - $currentPitch;
             $interval = (string) $intervalValue;
             $calculatedIntervals = $calculatedIntervals. " " .$interval;
-            $currentPitch = current($pitchValues);
+            $currentPitch = current(IncipitTransposer::$pitchValues);
         }
         echo "ERGEBNIS: " . $calculatedIntervals . "\n";
         return $calculatedIntervals;
