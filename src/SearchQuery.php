@@ -74,28 +74,6 @@ class SearchQuery
     private function generateSearchParams(): array
     {
 
-        /* original REST query looks like this:
-
-        {
-            "query": {
-                "bool": {
-                    "must": {
-                        "wildcard" : {
-                            "incipit.normalizedToPitch" :  "*F*"
-                        }
-                    },
-                    "filter": {
-                        "term": {
-                            "catalog": "Gluck-Gesamtausgabe"
-                        }
-                    }
-                }
-            }
-
-        }
-
-        */
-
         $searchParams = [
             'index' => 'catalog_entries',
             'type' => 'catalogEntry',
@@ -134,9 +112,8 @@ class SearchQuery
         {
             $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->userInput);
             $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.transposedNotes" => $transposedNotes . "*"];
-            var_dump($searchParams);
+            //var_dump($searchParams);
         }
-
 
         return $searchParams;
 

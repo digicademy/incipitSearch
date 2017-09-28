@@ -34,16 +34,19 @@ class GluckIncipitCrawler extends IncipitCrawler
 {
 
     /**
-     * Creates a CatalogEntry with Incipit from the data at the given URL.
+     * Creates an Array  with Incipit from the data at the given URL.
      *
      * @param string $dataURL url of data in catalog
-     * @return CatalogEntry null in case of error
+     *                        is: http://www.gluck-gesamtausgabe.de/rdf/collection/works/
+     *
+     * @return CatalogEntries Array of catalog entries
      */
     public function catalogEntriesFromWork(string $dataURL) //can return null
     {
 
         $xml = $this->contentOfURL($dataURL);
 
+        // retrun null when emoty or invalid
         if ($xml == null || strlen($xml) == 0) {
             $this->addLog("error: catalogEntryFromWork > not found at {$dataURL}");
             return;
@@ -62,17 +65,18 @@ class GluckIncipitCrawler extends IncipitCrawler
         $workTitle = $this->contentOfXMLPath($work, "dc:title");
         //$workDetailUrl = $work->attributes()["about"];
 
-        // get all incipits in one part
-
+        // Array with urls to parts, e.g. http://www.gluck-gesamtausgabe.de/id/1-20-00-0#parts&456
         $parts = $parentXMLElement->xpath("/rdf:RDF/skos:Concept/skos:relatedMatch/skos:Concept");
-
+        // all incipits will be pushed in this array
         $catalogEntries = [];
 
+        // go through all parts
         foreach ($parts as $part) {
             $incipitNotes = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/bsbmo:incipitScore");
             if(empty($incipitNotes)){
                 continue;
             }
+
             $partTitle = $this->contentOfXMLPath($part, "dc:title");
             $workDetailUrl = $part->attributes()["about"];
             $incipitClef = $this->contentOfXMLPath($part,
@@ -80,8 +84,10 @@ class GluckIncipitCrawler extends IncipitCrawler
             $incipitAccidentals = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/bsbmo:incipitKeysig");
             $incipitTime = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/bsbmo:incipitTimesig");
             $composer = "Christoph Willibald Gluck";
-            $this->addLog("catalogEntryFromWork > $workTitle $partTitle\n" .
-                "$incipitClef $incipitAccidentals $incipitTime $incipitNotes");
+
+            //Logger output
+           // $this->addLog("catalogEntryFromWork >" . " " . $workTitle . " " . $partTitle . "\n" .
+            //    $incipitClef . " " . $incipitAccidentals . " " . $incipitTime . " " . $incipitNotes);
 
             $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
             $catalogEntry = new CatalogEntry($incipit, "GluckWV-online", $workIdentifier, $dataURL, $workDetailUrl,
@@ -90,7 +96,10 @@ class GluckIncipitCrawler extends IncipitCrawler
             array_push($catalogEntries, $catalogEntry);
         }
         return $catalogEntries;
+        echo "ALL ENTRIES: ";
+        print_r($catalogEntries);
     }
+
 
     /**
      * Extracts the string content of an XML element at the given xpath.
@@ -115,6 +124,7 @@ class GluckIncipitCrawler extends IncipitCrawler
 
     /**
      * Crawls catalog and adds found CatalogEntries to ElasticSearch.
+     *
      * This operation might take quite some time to complete.
      */
     public function crawlCatalog()
@@ -141,6 +151,7 @@ class GluckIncipitCrawler extends IncipitCrawler
         }
 
         $matchingElements = $parentXMLElement->xpath("/collection/resources/resource");
+
         foreach ($matchingElements as $resource) {
             $title = (string)$resource->xpath("title")[0];
             $workUrl = (string)$resource->attributes()["target"];

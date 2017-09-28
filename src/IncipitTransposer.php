@@ -192,7 +192,7 @@ class IncipitTransposer
             $calculatedIntervals = $calculatedIntervals. " " .$interval;
             $currentPitch = current(IncipitTransposer::$pitchValues);
         }
-        echo "ERGEBNIS: " . $calculatedIntervals . "\n";
+        //echo "ERGEBNIS: " . $calculatedIntervals . "\n";
         return $calculatedIntervals;
 
     }
