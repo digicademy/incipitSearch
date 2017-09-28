@@ -74,7 +74,7 @@ class IncipitTransposer
          * full note out of the values and saving to array
          */
          foreach (str_split($notesNormalizedToPitch) as $token) {
-             // this looks so ugly, because  swiitch does not alloe regex; maybe rewrite as if /else
+             // this looks so ugly, because  switch does not alloe regex; maybe rewrite as if /else
             switch ($token) {
                 case ",":
                     $lowOctaveValue += 1;

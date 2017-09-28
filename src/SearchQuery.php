@@ -40,7 +40,7 @@ class SearchQuery
 
     // maybe for future version: option for user to select between varying page Sizes
     private $page = 0;
-    private $pageSize = 50;
+    private $pageSize = 100;
 
     // default settings for search
     private $isTransposed = false;
@@ -130,11 +130,11 @@ class SearchQuery
 
         }
 
-        //TODO: seems like userInput is not getting transposed
         if($this->isTransposed)
         {
             $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->userInput);
             $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.transposedNotes" => $transposedNotes . "*"];
+            var_dump($searchParams);
         }
 
 
