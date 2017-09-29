@@ -105,7 +105,7 @@ class IncipitCrawler
             return;
         }
 
-        $esId = $catalogEntry->getCatalog() . $catalogEntry->getCatalogItemID();
+        $esId = $catalogEntry->getCatalog() . "-" . $catalogEntry->getCatalogItemID();
         $params = [
             'index' => $this->indexName,
             'type' => 'catalogEntry',

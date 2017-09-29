@@ -37,6 +37,7 @@ class SBNIncipitCrawler extends IncipitCrawler
         protected $subtitle = "";
         protected $year = "Nicht angegeben";
 
+
     /**
      * Creates a CatalogEntry with Incipit from the data at the given URL.
      *
@@ -64,18 +65,40 @@ class SBNIncipitCrawler extends IncipitCrawler
         $catalogHTML = new DOMDocument();
         $catalogHTML->loadHTML($html);
 
+        //TODO: this doesn't work because it always gets full HTML;
+        // check how to sav ethe HTML as string or as DOM
+
         // get and save content of body-tag
-        $body =$catalogHTML->getElementsByTagName('body');
+        $body = $catalogHTML->getElementsByTagName('body');
         // maybe check if is existing
             $body = $body->item(0);
             $bodyHTML = $catalogHTML->saveHTML($body);
-            //echo $bodyHTML;
+            echo "BODY: " . $bodyHTML;
+
+        $tbody  = $catalogHTML->getElementsByTagName('tbody');
+        $tbody = $tbody->item(0);
+            $tbodyHTML = $catalogHTML->saveHTML($tbody);
+            echo "TBODY" . $tbodyHTML;
+
+
+        //use regex to get encoded incipits: search for text in between var "incipit_1_1" and "</script>
+        //TODO: find regex that gets each occurence splitted; this grabs the text until last occurence of regex
+        $incipitRegex = '/incipit_1_[0-9][\\s|\\S]+load_data/';
+        preg_match($incipitRegex, $bodyHTML, $matches);
+        echo "MATCHES:" . print_r($matches);
+
+        foreach ($matches as $match){
+            echo "Match: " . $match;
+            $this->createIncipitEntry($match, $itemID);
+        }
 
 
         /**
          * Autor und Titel stehen in diesen Feldern:
          *
          * die "abbr" und die nummer weisen dabei immer auf das jeweilige Objekt hin
+         *
+         * th abbr=number > td class= detail value
          *
          * <th scope="col" abbr="700"/>
             <td class="detail_key">
@@ -110,20 +133,13 @@ class SBNIncipitCrawler extends IncipitCrawler
          */
 
 
+
+
+
         /*
          * man könnte vorher hier noch die script tags, in denen die incipits stehen rausholen und dann
          * nur in denen suchen
          */
-
-
-        //use regex to get encoded incipits
-        // search for text in between var "incipit_1_1" and "</script>"
-        $regex = '/incipit_1_[0-9][\\s\\S]+load_data/';
-        preg_match($regex, $bodyHTML, $matches);
-        foreach ($matches as $match){
-            echo "Match: " . $match;
-            $this->createIncipitEntry($match, $itemID);
-        }
     }
 
 
