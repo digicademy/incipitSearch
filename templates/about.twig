@@ -1,0 +1,25 @@
+{#
+    This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+ #}
+
+{% extends "base.twig" %}
+
+{% block pageContent %}
+<div class="wrapper style1">
+	<section id="main" class="container">
+		<div class="box">
+			<h2>Über IncipitSearch</h2>
+				<p>IncipitSearch ist eine Suchmaschine für Musik-Incipits. Bei Incipits handelt es sich um einen pragmatischen Ansatz zur Katalogisierung von notierter Musik, indem jeweils wenige Takte einer Partitur transkribiert werden. Gleichzeitig lassen sich bisweilen auch Aussagen über melodische Charakteristika der Musik anhand dieser kurzen Bruchstücke treffen. In erster Linie versteht sich IncipitSearch jedoch als ein Pendant zu konventionellen thematisch-bibliographischen Katalogen und Werkverzeichnissen, wie sie in gedruckter Form schon seit langem vorgelegt werden.</p>
+				<p>Aktuell können die Incipits des Werkverzeichnisses der <a href="http://www.gluck-gesamtausgabe.de" title="Gluck-Gesamtausgabe" target="_blank">Gluck-Gesamtausgabe</a> durchsucht werden. Langfristig kann die Anbindung weiterer Repositorien eine übergreifende Suche nach Notenmaterial aus Quellen, Werkverzeichnissen und Editionen ermöglichen.</p>
+
+			<h3>Suche</h3>
+				<p>Mittels der angezeigten Bildschirm-Klaviatur können Suchabfragen in das Suchfeld eingegeben werden. <a
+							href="http://www.iaml.info/plaine-easie-code" title="Plaine & Easie Code" target="_blank">Plaine & Easie Code</a> kommt als Standardsyntax zur Notenkodierung zum Einsatz und kann auch direkt in das Suchfeld eingegeben werden. Die Ergebnisliste liefert neben den gefundenen Incipits auch verlinkte Rückverweise zu den  Einträgen im jeweiligen Werkverzeichnis.</p>
+
+			<h3>Lizenz</h3>
+				<p>IncipitSearch wurde an der <a href="http://www.digitale-akademie.de/" title="Digitale Akademie" target="_blank">Digitalen Akademie</a> der
+					<a href="http://www.adwmainz.de" title="Akademie der Wissenschaften und der Literatur | Mainz" target="_blank">Akademie der Wissenschaften und der Literatur | Mainz</a> entwickelt und steht unter der MIT Lizenz.</p>
+		</div>
+	</section>
+</div>
+{% endblock %} {# end pageContent #}

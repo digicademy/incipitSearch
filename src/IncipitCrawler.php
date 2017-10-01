@@ -1,14 +1,6 @@
 <?php
 namespace ADWLM\IncipitSearch;
 
-/**
- * Created by PhpStorm.
- * User: gaby
- * Date: 29/06/16
- * Time: 10:37
- */
-
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 
@@ -40,7 +32,6 @@ use ADWLM\IncipitSearch\CatalogEntry;
 class IncipitCrawler
 {
 
-
     protected $elasticClient;
     protected $catalogClient;
 
@@ -67,9 +58,10 @@ class IncipitCrawler
      */
     public function __construct()
     {
-
-        $jsonConfig = json_decode(file_get_contents("config.json"));
+        print(__DIR__);
+        $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../config.json'));
         $elasticHost = $jsonConfig->elasticSearch->host;
+
         if (empty($elasticHost)) {
             $elasticHost = "127.0.0.1";
         }
@@ -113,7 +105,7 @@ class IncipitCrawler
             return;
         }
 
-        $esId = $catalogEntry->getCatalog() . $catalogEntry->getCatalogItemID();
+        $esId = $catalogEntry->getCatalog() . "-" . $catalogEntry->getCatalogItemID();
         $params = [
             'index' => $this->indexName,
             'type' => 'catalogEntry',
@@ -153,6 +145,7 @@ class IncipitCrawler
 
     /**
      * Creates a new catalog_entries index in the elastic search instance.
+     *
      * Does nothing if index already exists.
      */
     public function createIndex()
@@ -170,6 +163,17 @@ class IncipitCrawler
             'index' => 'not_analyzed'
         ];
 
+        // fields need to be defined as raw when they should be sorted alphabetically
+        $rawType = [
+            'type' => 'string',
+            'fields' => [
+                'raw' => [
+                    'type' => 'string',
+                    'index' => 'not_analyzed'
+                ]
+            ]
+        ];
+
         $params = [
             'index' => $this->indexName,
             'body' => [
@@ -185,7 +189,7 @@ class IncipitCrawler
                             'dataURL' => $notAnalyzedStringType,
                             'detailURL' => $notAnalyzedStringType,
                             'composer' => ["type" => "string"],
-                            'title' => ["type" => "string"],
+                            'title' => $rawType,
                             'subTitle' => ["type" => "string"],
                             'year' => ["type" => "string"],
 
@@ -198,11 +202,12 @@ class IncipitCrawler
                                     'time' => $notAnalyzedStringType,
                                     'completeIncipit' => $notAnalyzedStringType,
                                     'normalizedToPitch' => $notAnalyzedStringType,
-                                    'normalizedToSingleOctave' => $notAnalyzedStringType
+                                    'normalizedToSingleOctave' => $notAnalyzedStringType,
+                                    'transposedNotes' => $notAnalyzedStringType
                                 ]
                             ]
 
-                        ] //proerties
+                        ] //properties
                     ] //incipit
                 ] //mappings
             ] //body

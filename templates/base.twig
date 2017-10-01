@@ -1,58 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 
-    {% block head %}
-        <!-- Basic Page Needs
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <meta charset="utf-8">
-        <title>Gluck Incipit Suche</title>
-        <meta name="description" content="">
-        <meta name="author" content="">
+	{% block head %}
+		<!-- Basic Page Needs
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta charset="utf-8">
+		<title>IncipitSearch</title>
+		<meta name="description" content="">
+		<meta name="author" content="">
 
-        <!-- Mobile Specific Metas
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Mobile Specific Metas
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- FONT
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+		<!-- Scripts
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<!--[if lte IE 8]><!--<script src="/public/js/ie/html5shiv.js"></script><![endif]-->
+		<script src="/public/js/jquery.min.js"></script>
+		<script src="/public/js/jquery.dropotron.min.js"></script>
+		<script src="/public/js/jquery.scrollgress.min.js"></script>
+		<script src="/public/js/skel.min.js"></script>
+		<script src="/public/js/util.js"></script>
+		<!--[if lte IE 8]>
+		<script src="/public/js/ie/respond.min.js"></script><![endif]-->
+		<script src="/public/js/main.js"></script>
 
-        <!-- CSS
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <link rel="stylesheet" href="/public/normalize.css">
-        <link rel="stylesheet" href="/public/skeleton.css">
-        <link rel="stylesheet" href="/public/style.css">
+		<!-- FONT
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link href="/public/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-        <!-- Favicon
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <link rel="icon" type="image/png" href="/public/favicon.png">
+		<!-- CSS
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link rel="stylesheet" href="/public/css/main.css"/>
+		<!--[if lte IE 8]>
+		<link rel="stylesheet" href="/public/css/ie8.css"/><![endif]-->
 
-        <!-- Scripts
-        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+		<!-- Favicon
+		–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+		<link rel="icon" type="image/png" href="/public/img/favicon.png">
 
-    {% endblock %}
+	{% endblock %}
 
 </head>
+
 <body>
+<section id="page-wrapper">
+	<!--Header
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<header id="header">
+		<h1><a href="{{ path_for('index') }}">IncipitSearch</a></h1>
+		<nav id="nav">
+			<ul>
+				<li><a href="{{ path_for('index') }}">Suchen</a></li>
+				<li><a href="{{ path_for('about') }}">About</a></li>
+				<li><a href="{{ path_for('repositories') }}">Repositorien</a></li>
+				<li><a href="{{ path_for('participation') }}">Mitwirkung</a></li>
+				<li><a href="https://github.com/digicademy/incipitSearch" target="_blank"><span class="fa fa-github"
+																								aria-hidden="true"></span> Github</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
 
-<!-- Primary Page Layout
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-{% block pageContent %}
-    <div class="container">
-        <div class="row">
-            <div class="one-half column" style="margin-top: 25%">
-                <h4>Basic Page</h4>
-                <p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to
-                    add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton
-                        documentation</a>.</p>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+	<!-- Primary Page Layout
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	{% block pageContent %}
+		<section id="content" class="box">
+			<h4>Basic Page</h4>
+			<p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to
+				add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton
+					documentation</a>.</p>
+		</section>
+	{% endblock %}
 
-<!-- End Document
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+	<!--Footer
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<footer id="footer">
+		<ul class="menu">
+			<li><a href="{{ path_for('participation') }}">Kontakt</a></li>
+			<li><a href="{{ path_for('impressum') }}">Impressum</a></li>
+		</ul>
+		<a target="_blank" href="http://www.adwmainz.de/"><img width="200px" src="/public/img/adwlogo.svg"
+															   alt="Logo ADW"/></a>
+		<div class="copyright">
+			<p>Entwickelt von der <a href="http://www.digitale-akademie.de/" target="_blank">Digitalen Akademie</a>.</p>
+			<p><a href="https://twitter.com/digicademy"><i class="fa fa-twitter fa-2x"></i></a>&nbsp;<a href="https://github.com/digicademy" target="_blank"><i class="fa fa-github fa-2x"></i></a></p>
+		</div>
+	</footer>
+
+	<!-- End Document
+	  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	</div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <?php
 namespace ADWLM\IncipitSearch;
 
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Elasticsearch\ClientBuilder;
 
@@ -30,15 +30,21 @@ use ADWLM\IncipitSearch\CatalogEntry;
 class SearchQuery
 {
 
-    private $incipitQuery = "";
+    private $singleOctaveQuery = "";
+    private $userInput = "";
     private $catalogFilter = null;
 
 
     private $numOfResults = 0;
     private $elasticClient;
 
+    // maybe for future version: option for user to select between varying page Sizes
     private $page = 0;
     private $pageSize = 100;
+
+    // default settings for search
+    private $isTransposed = false;
+    private $isPrefixSearch = false;
 
 
     /**
@@ -47,7 +53,7 @@ class SearchQuery
     public function __construct()
     {
 
-        $jsonConfig = json_decode(file_get_contents("config.json"));
+        $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../config.json'));
         $elasticHost = $jsonConfig->elasticSearch->host;
         if (empty($elasticHost)) {
             $elasticHost = "127.0.0.1";
@@ -68,28 +74,6 @@ class SearchQuery
     private function generateSearchParams(): array
     {
 
-        /* original REST query looks like this:
-
-        {
-            "query": {
-                "bool": {
-                    "must": {
-                        "wildcard" : {
-                            "incipit.normalizedToPitch" :  "*F*"
-                        }
-                    },
-                    "filter": {
-                        "term": {
-                            "catalog": "Gluck-Gesamtausgabe"
-                        }
-                    }
-                }
-            }
-
-        }
-
-        */
-
         $searchParams = [
             'index' => 'catalog_entries',
             'type' => 'catalogEntry',
@@ -98,17 +82,38 @@ class SearchQuery
                     'bool' => [
                         'must' => [
                             'wildcard' => [
-                                "incipit.normalizedToSingleOctave" => "*" . $this->incipitQuery . "*"
+                                "incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"
                             ]
                         ],
                         'filter' => $this->getFilterArray() //there might be multiple filter set or not
                     ]
 
+                ],
+                'sort' => [
+                    'title.raw'
                 ]
             ],
-            "from" => $this->page,
+
+            // page refers to one single item, while pageSize is the amount of item to be displayed
+            "from" => $this->page * $this->pageSize,
             "size" => $this->pageSize
         ];
+        //TODO: cleanup setting of filters for transposition and prefix
+
+        // if only searching from beginning of incipit
+        //maybe there is a better solution for setting of prefix search in query (see "prefix"): https://www.elastic.co/guide/en/elasticsearch/reference/current/term-level-queries.html
+        if($this->isPrefixSearch)
+        {
+            $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"];
+
+        }
+
+        if($this->isTransposed)
+        {
+            $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->userInput);
+            $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.transposedNotes" => $transposedNotes . "*"];
+            //var_dump($searchParams);
+        }
 
         return $searchParams;
 
@@ -124,11 +129,13 @@ class SearchQuery
         $filter = [];
 
         if (!empty($this->getCatalogFilter())) {
+
             $filter[] = [
                 'term' =>
+                //TODO: elasticserach documentation says, that array can be added here, but it does not work;
                     ['catalog' => $this->getCatalogFilter()]
             ];
-        }
+       }
         return $filter;
     }
 
@@ -136,7 +143,7 @@ class SearchQuery
      * Performs the actual search for the set query and filters
      * and returns the matching results as an array of CatalogEntry.
      *
-     * @return array matching CatalogEntrys, emtpy if noen
+     * @return array matching CatalogEntrys, emtpy if none
      */
     public function performSearchQuery(): array
     {
@@ -175,19 +182,21 @@ class SearchQuery
      * Sets the incipit search query.
      * @param string $userInput
      */
-    public function setIncipitQuery(string $userInput)
+    public function setUserInput(string $userInput)
     {
-        $this->incipitQuery = IncipitNormalizer::normalizeToSingleOctave($userInput);
-        $this->addLog("SearchQuery > set query to: " . $this->incipitQuery);
+        $this->userInput = $userInput;
+        $this->addLog("SearchQuery > set query to: " . $this->singleOctaveQuery);
+        $this->singleOctaveQuery = IncipitNormalizer::normalizeToSingleOctave($userInput);
+        $this->addLog("SearchQuery > set query to: " . $this->singleOctaveQuery);
     }
 
     /**
      * Gets the currently set incipitQuery string
      * @return mixed
      */
-    public function getIncipitQuery(): string
+    public function getSingleOctaveQuery(): string
     {
-        return $this->incipitQuery;
+        return $this->singleOctaveQuery;
     }
 
     /**
@@ -201,9 +210,9 @@ class SearchQuery
 
     /**
      * Sets the catalog filter.
-     * @param string|null $catalogFilter
+     * @param array|null $catalogFilter
      */
-    public function setCatalogFilter(string $catalogFilter = null)
+    public function setCatalogFilter(array $catalogFilter = null)
     {
         $this->catalogFilter = $catalogFilter;
     }
@@ -252,6 +261,49 @@ class SearchQuery
     {
         $this->pageSize = $pageSize;
     }
+
+
+    /**
+     * Get if seraching for transposed incipit
+     *
+     * @return bool
+     */
+    public function getIsTransposed(): bool
+    {
+        return $this->isTransposed;
+    }
+
+    /**
+     * Set if searching for transposed incipit
+     *
+     * @param bool $isTransposed
+     */
+    public function setIsTransposed(bool $isTransposed)
+    {
+        $this->isTransposed = $isTransposed;
+    }
+
+
+    /**
+     * Get if searching for prefix
+     *
+     * @return bool $isPrefixSearch
+     */
+    public function getIsPrefixSearch(): bool
+    {
+        return $this->isPrefixSearch;
+    }
+
+    /**
+     * Set if searching for prefix
+     *
+     * @param bool $isPrefixSearch
+     */
+    public function setIsPrefixSearch(bool $isPrefixSearch)
+    {
+        $this->isPrefixSearch = $isPrefixSearch;
+    }
+
 
 
     /////////////////////

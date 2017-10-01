@@ -4,11 +4,11 @@
 
 {% extends "base.twig" %}
 
-{% block title %}Such Ergebnisse - Gluck Incipit Suche{% endblock %}
+{% block title %}Such-Ergebnisse - IncipitSuche{% endblock %}
 {% block head %}
     {{ parent() }}
     <link rel="stylesheet" href="/public/piano/piano_style.css">
-    <script src="http://www.verovio.org/javascript/latest/verovio-toolkit.js"></script> <!--Only needed for notes display-->
+    <script src="/public/js/verovio-toolkit.js"></script>
     <script src="/public/piano/piano.js"></script>
 {% endblock %}
 
@@ -45,8 +45,9 @@
                     pageHeight: 500,
                     pageWidth: pageWidth,
                     ignoreLayout: 1,
+					noLayout: 1,
                     border: 0,
-                    scale: scale,
+                    scale: 40,
                     adjustPageHeight: 1
                 });
 
@@ -55,16 +56,24 @@
                 svgContainerDiv.html(notesSVG);
 
             });//end for each result
+
+			$('.incipitSVG > svg').incipitScroll();
+
         });//end doc ready
 
     </script>
 
 
-    <div class="container">
+<div class="wrapper style1">
+    <section id="main" class="container">
+        <div class="box">
 
         <h1>Gefundene Werke</h1>
-        <b>{{ numberOfResults }} Ergebnisse für das Incipit "{{ searchString }}"</b><br>
-        <b><a href="/">Zurück zur Suche</a></b>
+            <div>
+                <strong>{{ numberOfResults }} Ergebnisse für das Incipit "{{ searchString }}"</strong><br>
+         Alphabetische Sortierung
+            <p><strong><a href="/">Zurück zur Suche</a></strong></p>
+            </div>
 
         <br><hr><br>
 
@@ -73,11 +82,12 @@
 
             <div class="result">
                 <h3>{{ catalogEntry.title }}</h3>
-                <h4>{{ catalogEntry.subTitle }}</h4>
-                <b>{{ catalogEntry.composer }}</b><br>
-                <b>{{ catalogEntry.year }}</b>
+                <strong>{{ catalogEntry.subTitle }}</strong><br>
+                <strong>{{ catalogEntry.composer }}</strong><br>
+                {{ catalogEntry.year }}
 
                 <!-- Display the rendered notes -->
+                <span>Plaine & Easie Code: </span>
                 <span class="incipitNotes hidden">{{ catalogEntry.incipit.notes }}</span>
                 <span class="incipitClef hidden">{{ catalogEntry.incipit.clef }}</span>
                 <span class="incipitAccidentals hidden">{{ catalogEntry.incipit.accidentals }}</span>
@@ -86,14 +96,16 @@
 
                 <div class="incipitSVG"></div>
                 <!-- end notes displaying -->
-                <b><a href="{{ catalogEntry.detailURL }}">Detail-Seite in {{ catalogEntry.catalog }} </a></b>
+                <b><a target="_blank" href="{{ catalogEntry.detailURL }}">Detail-Seite in {{ catalogEntry.catalog }} </a></b>
                 <hr>
             </div><!--end result-->
             <br/>
 
         {% endfor %}
 
-    </div><!-- end container -->
+        </div>
+    </section>
+</div><!-- end container -->
 
 {% endblock %} {# end pageContent #}
 

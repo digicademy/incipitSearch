@@ -3,3 +3,5 @@ vendor
 cache
 coverage
 logs
+.DS_Store
+config.json

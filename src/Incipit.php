@@ -35,18 +35,22 @@ class Incipit
     protected $completeIncipit;
     protected $notesNormalized;
     protected $notesNormalizedToPitch;
+    protected $transposedNotes;
 
     /**
      * Incipit constructor.
      *
-     * @param string $notes
-     * @param string|null $clef will be set to empty if null
+     * @param string      $notes
+     * @param string|null $clef        will be set to empty if null
      * @param string|null $accidentals will be set to empty if null
-     * @param string|null $time will be set to empty if null
+     * @param string|null $time        will be set to empty if null
      */
-    public function __construct(string $notes, string $clef = null,
-                                string $accidentals = null, string $time = null)
-    {
+    public function __construct(
+        string $notes,
+        string $clef = null,
+        string $accidentals = null,
+        string $time = null
+    ) {
         $this->notes = $notes;
         $this->clef = $clef ?? "";
         $this->accidentals = $accidentals ?? "";
@@ -55,6 +59,7 @@ class Incipit
 
     /**
      * Creates a single incipit string by combining clef, accidentals, time and notes.
+     *
      * @return string
      */
     public function getCompleteIncipit(): string
@@ -63,6 +68,7 @@ class Incipit
             $this->completeIncipit = '%' . $this->clef . '$' . $this->accidentals .
                 '@' . $this->time . $this->notes;
         }
+
         return $this->completeIncipit;
     }
 
@@ -80,8 +86,9 @@ class Incipit
         if (empty($this->notesNormalized)) {
             //we don't call the IncipitNormalizer function here
             //because normalizedToPitch has to be called anyway and is buffered here
-            $this->notesNormalized = str_replace(["'",","], '', $this->getNotesNormalizedToPitch());
+            $this->notesNormalized = str_replace(["'", ","], '', $this->getNotesNormalizedToPitch());
         }
+
         return $this->notesNormalized;
     }
 
@@ -98,13 +105,33 @@ class Incipit
      */
     public function getNotesNormalizedToPitch(): string
     {
+        // cached variable
         if (!empty($this->notesNormalizedToPitch)) {
             return $this->notesNormalizedToPitch;
         }
 
-        $this->notesNormalizedToPitch = IncipitNormalizer::normalizeToPitch($this->notes, $this->getSharpAccidentals(), $this->getFlatAccidentals());
+        $this->notesNormalizedToPitch = IncipitNormalizer::normalizeToPitch($this->notes, $this->getSharpAccidentals(),
+            $this->getFlatAccidentals());
 
         return $this->notesNormalizedToPitch;
+    }
+
+    /**
+     * Creates incipit string containing proportional information on up and down pitch only (transposition)
+     *
+     * Starting point is  getNotesNormalizedToPitch, as it contains a normalized incipit with accidentals marked at each note
+     * E.g.
+     *
+     * @return string string containing transposition only
+     */
+    public function getTransposedNotes(): string
+    {
+        if(!empty($this->transposedNotes)){
+            return $this->transposedNotes;
+        }
+        $this->transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->getNotesNormalizedToPitch());
+
+        return $this->transposedNotes;
     }
 
 
@@ -112,9 +139,10 @@ class Incipit
      * Creates a string that only contain valid PAE characters.
      *
      * @param string $dirtyString the string to sanatize
+     *
      * @return string
      */
-    public static function getSanitizedIncipitString(string $dirtyString) : string
+    public static function getSanitizedIncipitString(string $dirtyString): string
     {
         return preg_replace('/[^\',cbfgnoqrtxA-Z\d\{\}\/\-=()\.:\+;!%$@\^\?]|\s/', '', $dirtyString);
     }
@@ -124,17 +152,22 @@ class Incipit
      *
      * The array has the following keys: "notes", "clef", "accidentals",
      * "time", "completeIncipit", "normalizedIncipit"
+     *
      * @return Array of string
      */
-    public function getJSONArray(): Array {
-        $json = ['notes' => $this->getNotes(),
+    public function getJSONArray(): Array
+    {
+        $json = [
+            'notes' => $this->getNotes(),
             'clef' => $this->getClef(),
             'accidentals' => $this->getAccidentals(),
             'time' => $this->getTime(),
             'completeIncipit' => $this->getCompleteIncipit(),
             'normalizedToSingleOctave' => $this->getNotesNormalizedToSingleOctave(),
-            'normalizedToPitch' => $this->getNotesNormalizedToPitch()
+            'normalizedToPitch' => $this->getNotesNormalizedToPitch(),
+            'transposedNotes' => $this->getTransposedNotes()
         ];
+
         return $json;
     }
 
@@ -143,11 +176,15 @@ class Incipit
      *
      * The array must have the following keys: "notes"
      * The following keys are optional: "clef", "accidentals", "time"
+     *
      * @param array $json
+     *
      * @return Incipit
      */
-    public static function incipitFromJSONArray(array $json): Incipit {
-        $incipit = new Incipit( $json["notes"],$json["clef"], $json["accidentals"],$json["time"]);
+    public static function incipitFromJSONArray(array $json): Incipit
+    {
+        $incipit = new Incipit($json["notes"], $json["clef"], $json["accidentals"], $json["time"]);
+
         return $incipit;
     }
 
@@ -156,9 +193,11 @@ class Incipit
      * Returns the note values of all sharp accidentals.
      *
      * E.g. for 'xFC' accidentals this returns ['F', 'C']
+     *
      * @return array of strings with note values of sharp accidentals; empty if none
      */
-    public function getSharpAccidentals() : Array {
+    public function getSharpAccidentals(): Array
+    {
         if (strlen($this->getAccidentals()) < 2) {
             return [];
         }
@@ -169,6 +208,7 @@ class Incipit
         for ($i = 1; $i < strlen($this->getAccidentals()); $i++) {
             array_push($sharpAccidentals, $this->getAccidentals()[$i]);
         }
+
         return $sharpAccidentals;
     }
 
@@ -176,9 +216,11 @@ class Incipit
      * Returns the note values of all flat accidentals.
      *
      * E.g. for 'bBE' accidentals this returns ['B', 'E']
+     *
      * @return array of strings with note values of sharp accidentals; empty if none
      */
-    public function getFlatAccidentals() : Array {
+    public function getFlatAccidentals(): Array
+    {
         if (strlen($this->getAccidentals()) < 2) {
             return [];
         }
@@ -189,6 +231,7 @@ class Incipit
         for ($i = 1; $i < strlen($this->getAccidentals()); $i++) {
             array_push($flatAccidentals, $this->getAccidentals()[$i]);
         }
+
         return $flatAccidentals;
     }
 
@@ -200,6 +243,7 @@ class Incipit
      * The clef.
      *
      * Usually looks like 'G-2'
+     *
      * @return string empty if none
      */
     public function getClef()
@@ -211,6 +255,7 @@ class Incipit
      * The accidentals.
      *
      * Usually looks like 'xFC' or ''
+     *
      * @return string empty if none
      */
     public function getAccidentals()
@@ -222,6 +267,7 @@ class Incipit
      * The time signature.
      *
      * This is usually a fraction like '2/4' but can also be 'c' for commom time.
+     *
      * @return string empty if none
      */
     public function getTime()
