@@ -1,6 +1,6 @@
 # IncipitSearch - Search engine for music incipits
 
-IncipitSearch is a web platform and search engine for music incipits. The Beta version can be found [here](https://incipitsearch.adwmainz.net/) 
+IncipitSearch is a web platform and search engine for music incipits.
 
 Incipits are an initial sequence of notes that represent the melodic characteristics of a composition.
 
@@ -12,7 +12,16 @@ You can search the catalogues using the virtual keyboard. [Plaine & Easie Code](
 
 IncipitSearch is licensed under MIT License.
 
-The underlying software for crawling and search was developed by Anna Neovesky and Gabriel Reimers at the [Digital Academy](https://www.digitale-akademie.de) of the [Academy of Sciences and Literatur | Mainz](https://www.adwmainz.de). See [here](https://github.com/annaneo/incipitSearch) for the documentation of the standalone framework.
+IncipitSearch is developed at the [Digital Academy](https://www.digitale-akademie.de) of the [Academy of Sciences and Literatur | Mainz](https://www.adwmainz.de). 
+
+# Contributors
+
+[Anna Neovesky](http://www.adwmainz.de/mitarbeiter/profil/anna-neovesky.html), Gabriel Reimers (Idea, Concept, Application Development) 
+[Frederic von Vlahovits](http://www.adwmainz.de/mitarbeiter/profil/frederic-von-vlahovits.html) (Frontend Development, Design, Documentation)
+[Torsten Schrade](http://www.adwmainz.de/mitarbeiter/profil/prof-torsten-schrade.html) (Metadata schema, LOD, DevOps)
+
+
+# Used Software and Standards
 
 The [Verovio JavaScript Toolkit](http://www.verovio.org/javascript.xhtml) is used for rendering the incipits. Verovio is developed by [Swiss RISM Office](http://rism-ch.org/) with the support of the Swiss National Science Foundation. The source code is available on [GitHub](https://github.com/rism-ch/verovio)  under the LGPLv3 license. 
 
