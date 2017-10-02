@@ -1,4 +1,4 @@
-[screenshot]: https://github.com/digicademy/incipitSearch/images/IncipitSearch_search_engine_for_annotated_music.png
+[screenshot]: https://raw.githubusercontent.com/digicademy/incipitSearch/master/images/IncipitSearch_search_engine_for_annotated_music.png
 
 
 # IncipitSearch - Search engine for music incipits
