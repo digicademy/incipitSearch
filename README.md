@@ -1,3 +1,6 @@
+[screenshot]: https://github.com/digicademy/incipitSearch/images/IncipitSearch_search_engine_for_annotated_music.png
+
+
 # IncipitSearch - Search engine for music incipits
 
 IncipitSearch is a web platform and search engine for music incipits.
@@ -8,6 +11,9 @@ Incipits are a pragmatic approach for the categorization of notated music, in wh
 
 You can search the catalogues using the virtual keyboard. [Plaine & Easie Code](http://www.iaml.info/plaine-easie-code) is used as standard syntax for the encoding of the music incipits. The Plaine & Easie Code can be also entered directly in the search field.
 
+
+![Screenshot of music incipit search engine and platform IncipitSearch][screenshot]
+
 # License and Contribution
 
 IncipitSearch is licensed under MIT License.
@@ -16,8 +22,10 @@ IncipitSearch is developed at the [Digital Academy](https://www.digitale-akademi
 
 # Contributors
 
-[Anna Neovesky](http://www.adwmainz.de/mitarbeiter/profil/anna-neovesky.html), Gabriel Reimers (Idea, Concept, Application Development) 
+[Anna Neovesky](http://www.adwmainz.de/mitarbeiter/profil/anna-neovesky.html) and Gabriel Reimers (Idea, Concept, Application Development) 
+
 [Frederic von Vlahovits](http://www.adwmainz.de/mitarbeiter/profil/frederic-von-vlahovits.html) (Frontend Development, Design, Documentation)
+
 [Torsten Schrade](http://www.adwmainz.de/mitarbeiter/profil/prof-torsten-schrade.html) (Metadata schema, LOD, DevOps)
 
 
