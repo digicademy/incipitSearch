@@ -37,16 +37,120 @@ class SBNIncipitCrawler extends IncipitCrawler
         protected $subtitle = "";
         protected $year = "Nicht angegeben";
 
-
     /**
      * Creates a CatalogEntry with Incipit from the data at the given URL.
      *
-     * @param string $dataURL url of data in catalog
-     * @param string $xml the xml data to parse
-     * @return CatalogEntry null in case of error
+     * @param string $catalogEntryUrl url of data in catalog
+     * @param string string $catalogEntryID ID of the entry
+     * @return CatalogEntries Array of catalog entries
      */
-    public function catalogEntryFromHTML(string $dataURL, string $html, string $itemID) //can return null
+    public function catalogEntriesFromHTML(string $catalogEntryUrl, string $catalogEntryID) //can return null
     {
+
+        // GET HTML AND SAVE AS DOM
+        $html = $this->contentOfURL($catalogEntryUrl);
+        $catalogEntryHTML = new DOMDocument();
+        $catalogEntryHTML->loadHTML($html);
+
+        //TODO: this doesn't work because it always gets full HTML;
+        // TODO: and now tehre is a new exception
+        // check how to save the HTML as string or as DOM
+
+        // EXTRACT BODY: get and save content of body-tag
+        $body = $catalogEntryHTML->getElementsByTagName('body');
+        // maybe check if tag is existing
+            $body = $body->item(0)->nodeValue;
+            $bodyHTML = $catalogEntryHTML->saveHTML($body);
+            echo "BODY: " . $bodyHTML;
+
+        //TODO: extract tbody, this can be used to get the works information
+
+        /**
+         * Autor und Titel stehen in diesen Feldern:
+         *
+         * die "abbr" und die nummer weisen dabei immer auf das jeweilige Objekt hin
+         *
+         * th abbr=number > td class= detail value
+         *
+         * <th scope="col" abbr="700"/>
+        <td class="detail_key">
+        Autore principale
+        </td>
+        <td class="detail_value"> Barilli, Bruno</td>
+        </tr>
+        <tr>
+        <th scope="col" abbr="200"/>
+        <td class="detail_key">
+        Titolo
+        </td>
+        <td class="detail_value">
+        <strong> Emiral</strong>
+        </td>
+        </tr>
+        <tr>
+        <th scope="col" abbr="208"/>
+        <td class="detail_key">
+        Presentazione
+        </td>
+        <td class="detail_value">partitura e parti</td>
+        </tr>
+        <tr>
+        <th scope="col" abbr="210"/>
+        <td class="detail_key">
+        Pubblicazione
+        </td>
+        <td class="detail_value"> : autografo in parte, 1915<br/>
+        </td>
+         *
+         */
+
+        // GET WORK INFORMATION
+        // the information is the same for all incipits of the work
+        $composer = "";
+        $title = "";
+        $subtitle = "";
+        $year = "";
+
+
+
+        // GET INCIPITS
+        //use regex to get encoded incipits: search for text in between var "incipit_1_1" and "</script>
+        //TODO: find regex that gets each occurence splitted; this grabs the text until last occurence of regex
+        $incipitRegex = '/incipit_1_[0-9][\\s|\\S]+load_data/';
+        preg_match($incipitRegex, $bodyHTML, $matches);
+        echo "MATCHES:" . print_r($matches);
+
+        $incipitEntryID = 0;
+        $catalogEntries = [];
+        foreach ($matches as $incipitPAE){
+            $incipitUID = $catalogEntryID . "-" . $incipitEntryID ;
+            $catalogEntry = createCatalogEntry($incipitPAE, $catalogEntryUrl, $incipitUID, $composer, $title, $subtitle, $year);
+            $incipitEntryID++;
+            array_push($catalogEntries, $catalogEntry);
+
+        }
+
+        return $catalogEntries;
+    }
+
+
+
+
+    /**
+     * @param $match
+     * @param $dataURL
+     * @param $catalogEntry
+     * @param $composer
+     * @param $title
+     * @param $subtitle
+     * @param $year
+     *
+     * @return \ADWLM\IncipitSearch\CatalogEntry
+     */
+    public function createCatalogEntry($incipitPAE, $dataURL, $incipitUID , $composer, $title, $subtitle, $year){
+
+        //TODO add functionality to grab incipit encoding using regex
+
         /**
          * The incipits in each entry are stored as:
          *  <script type="text/javascript">
@@ -61,110 +165,15 @@ class SBNIncipitCrawler extends IncipitCrawler
          * end with "</script>"
          */
 
-
-        $catalogHTML = new DOMDocument();
-        $catalogHTML->loadHTML($html);
-
-        //TODO: this doesn't work because it always gets full HTML;
-        // check how to sav ethe HTML as string or as DOM
-
-        // get and save content of body-tag
-        $body = $catalogHTML->getElementsByTagName('body');
-        // maybe check if is existing
-            $body = $body->item(0);
-            $bodyHTML = $catalogHTML->saveHTML($body);
-            echo "BODY: " . $bodyHTML;
-
-        $tbody  = $catalogHTML->getElementsByTagName('tbody');
-        $tbody = $tbody->item(0);
-            $tbodyHTML = $catalogHTML->saveHTML($tbody);
-            echo "TBODY" . $tbodyHTML;
-
-
-        //use regex to get encoded incipits: search for text in between var "incipit_1_1" and "</script>
-        //TODO: find regex that gets each occurence splitted; this grabs the text until last occurence of regex
-        $incipitRegex = '/incipit_1_[0-9][\\s|\\S]+load_data/';
-        preg_match($incipitRegex, $bodyHTML, $matches);
-        echo "MATCHES:" . print_r($matches);
-
-        foreach ($matches as $match){
-            echo "Match: " . $match;
-            $this->createIncipitEntry($match, $itemID);
-        }
-
-
-        /**
-         * Autor und Titel stehen in diesen Feldern:
-         *
-         * die "abbr" und die nummer weisen dabei immer auf das jeweilige Objekt hin
-         *
-         * th abbr=number > td class= detail value
-         *
-         * <th scope="col" abbr="700"/>
-            <td class="detail_key">
-            Autore principale
-            </td>
-            <td class="detail_value"> Barilli, Bruno</td>
-            </tr>
-            <tr>
-            <th scope="col" abbr="200"/>
-            <td class="detail_key">
-            Titolo
-            </td>
-            <td class="detail_value">
-            <strong> Emiral</strong>
-            </td>
-            </tr>
-            <tr>
-            <th scope="col" abbr="208"/>
-            <td class="detail_key">
-            Presentazione
-            </td>
-            <td class="detail_value">partitura e parti</td>
-            </tr>
-            <tr>
-            <th scope="col" abbr="210"/>
-            <td class="detail_key">
-            Pubblicazione
-            </td>
-            <td class="detail_value"> : autografo in parte, 1915<br/>
-            </td>
-         *
-         */
-
-
-
-
-
-        /*
-         * man könnte vorher hier noch die script tags, in denen die incipits stehen rausholen und dann
-         * nur in denen suchen
-         */
-    }
-
-
-    /**
-     * @param $match
-     * @param $dataURL
-     * @param $itemID
-     * @param $composer
-     * @param $title
-     * @param $subtitle
-     * @param $year
-     *
-     * @return \ADWLM\IncipitSearch\CatalogEntry
-     */
-    public function createIncipitEntry($match, $dataURL, $itemID, $composer, $title, $subtitle, $year){
-        $catalogItemID = $itemID;
         $incipitClef = "incipit chiave";
         $incipitAccidentals = "alterazioni:";
         $incipitTime = "misura";
         $incipitNotes = "contesto musicale";
 
+        // create incipit an catalog entry
         $detailURL = $dataURL;
-
         $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
-        $catalogEntry = new CatalogEntry($incipit, "SBN", $catalogItemID, $dataURL, $detailURL,
+        $catalogEntry = new CatalogEntry($incipit, "SBN", $incipitUID, $dataURL, $detailURL,
             $composer, $title, $subtitle, $year);
 
         return $catalogEntry;
@@ -178,21 +187,24 @@ class SBNIncipitCrawler extends IncipitCrawler
      */
     public function crawlCatalog()
     {
-
         $startID = 1; // 0000001
         $endID =   3; // 0000003
+        // real endID is 0178310
 
         for ($i = $startID; $i < $endID; $i++) {
-            $url = "http://opac.sbn.it/bid/MSM" . $i;
-            $html = $this->contentOfURL($url);
+            $catalogEntryUrl = "http://opac.sbn.it/bid/MSM" . $i;
+            $html = $this->contentOfURL($catalogEntryUrl);
             if ($html == null || strlen($html) == 0) {
-                echo "error: crawlCatalog > not found at {$url}<br>\n";
+                echo "error: crawlCatalog > not found at {catalogEntryUrl}<br>\n";
                 continue;
             }
             // create 8 digit number
-            $itemID = sprintf('%07d', $i);
-            $catalogEntry = $this->catalogEntryFromHTML($url, $html, $itemID);
+            $catalogEntryID = sprintf('%07d', $i);
+            $catalogEntries = $this->catalogEntriesFromHTML($catalogEntryUrl, $catalogEntryID);
+            foreach ($catalogEntries as $catalogEntry)
+            {
             $this->addCatalogEntryToElasticSearchIndex($catalogEntry);
+            }
         }
 
     }
