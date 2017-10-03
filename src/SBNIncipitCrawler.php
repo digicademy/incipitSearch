@@ -49,21 +49,20 @@ class SBNIncipitCrawler extends IncipitCrawler
 
         // GET HTML AND SAVE AS DOM
         $html = $this->contentOfURL($catalogEntryUrl);
-        $catalogEntryHTML = new DOMDocument();
-        $catalogEntryHTML->loadHTML($html);
+        $catalogEntryDOM = new DOMDocument();
+        $catalogEntryDOM->loadHTML($html);
 
-        //TODO: this doesn't work because it always gets full HTML;
-        // TODO: and now tehre is a new exception
-        // check how to save the HTML as string or as DOM
 
         // EXTRACT BODY: get and save content of body-tag
-        $body = $catalogEntryHTML->getElementsByTagName('body');
+        $body = $catalogEntryDOM->getElementsByTagName('body');
         // maybe check if tag is existing
-            $body = $body->item(0)->nodeValue;
-            $bodyHTML = $catalogEntryHTML->saveHTML($body);
-            echo "BODY: " . $bodyHTML;
+            $body = $body->item(0);
+            $bodyHTML = $catalogEntryDOM->saveHTML($body);
+        //TODO: this doesn't work because it always gets full HTML;
+        echo "BODY: " . $bodyHTML;
 
         //TODO: extract tbody, this can be used to get the works information
+        // $tbody  = $catalogHTML->getElementsByTagName('tbody');
 
         /**
          * Autor und Titel stehen in diesen Feldern:
@@ -110,8 +109,6 @@ class SBNIncipitCrawler extends IncipitCrawler
         $title = "";
         $subtitle = "";
         $year = "";
-
-
 
         // GET INCIPITS
         //use regex to get encoded incipits: search for text in between var "incipit_1_1" and "</script>
