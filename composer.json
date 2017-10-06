@@ -5,7 +5,8 @@
         "elasticsearch/elasticsearch": "^2.2.0",
         "slim/slim": "^3.5.0",
         "twig/twig": "~1.24.0",
-        "slim/twig-view": "^2.1"
+        "slim/twig-view": "^2.1",
+        "easyrdf/easyrdf": "*"
     },
 
     "autoload": {
