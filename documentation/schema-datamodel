@@ -1,0 +1,21 @@
+Datenschema schema.org und Entsprechung im Datenmodell CatalogEntry / Incpit
+============================================================
+
+// CatalogEntry class represents one database entry for the incipit collection in ElasticSearch
+// always contains one incipit
+CatalogEntry
+    $catalog            schema:name
+    $catalogItemID
+    $dataURL            schema:url
+    $detailUR           schema:image
+    $composer           schema:hasPart > schema:composer > schema:name
+    $title              schema:hasPart > schema:includedComposition > schema:name
+    $subTitle           schema:hasPart > schema:includedComposition > a schema:MusicIncipit schema:name
+    $year
+    Incipit
+
+Incipit
+    $notes              schema:hasPart > schema:includedComposition > a schema:MusicIncipit schema:incipitValue
+    $clef               schema:hasPart > schema:includedComposition > a schema:MusicIncipit schema:incipitClef
+    $accidentals        schema:hasPart > schema:includedComposition > a schema:MusicIncipit schema:incipitKeysig
+    $time               schema:hasPart > schema:includedComposition > a schema:MusicIncipit schema:incipitTimesid
