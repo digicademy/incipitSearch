@@ -52,8 +52,8 @@ class SchemaIncipitCrawler extends IncipitCrawler
         // QUICK FIX !!! EASYRDF only supports http => how to address?
         $url = 'http://www.gluck-gesamtausgabe.de/fileadmin/incipitsearch/Breitkopf_Catalogo_delle_Sinfonie.txt';
 
-        $schema = new EasyRdf_Graph($url);
-        $schema->load();
+        $schema = new EasyRdf_Graph();
+        $schema->load($url, 'turtle');
         echo "\n SCHEMA" . " " . $schema . "\n";
 
         if ($schema == null || strlen($schema) == 0) {
