@@ -22,7 +22,9 @@ IncipitSearch is developed at the [Digital Academy](https://www.digitale-akademi
 
 # Contributors
 
-[Anna Neovesky](http://www.adwmainz.de/mitarbeiter/profil/anna-neovesky.html) and Gabriel Reimers (Idea, Concept, Application Development) 
+[Anna Neovesky](http://www.adwmainz.de/mitarbeiter/profil/anna-neovesky.html) (Idea, Concept, Application Development, Data Processing) 
+
+Gabriel Reimers (Idea, Concept, Application Development)
 
 [Frederic von Vlahovits](http://www.adwmainz.de/mitarbeiter/profil/frederic-von-vlahovits.html) (Frontend Development, Design, Documentation)
 

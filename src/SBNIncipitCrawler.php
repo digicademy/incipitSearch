@@ -20,7 +20,7 @@ use ADWLM\IncipitSearch\CatalogEntry;
  *
  * Copyright notice
  *
- * (c) 2016
+ * (c) 2017
  * Anna Neovesky  Anna.Neovesky@adwmainz.de
  *
  * Digital Academy www.digitale-akademie.de
@@ -78,7 +78,7 @@ class SBNIncipitCrawler extends IncipitCrawler
         $composer = preg_replace('/Autore principale\s*<\/td>\s*<td class="detail_value">/', "", $matches[0]);
         $composer = preg_replace('/<\/td>/', "", $composer);
         $composer = trim($composer);
-        //remove
+        //cleanup
         $composer = str_replace("&lt;", "", $composer);
         $composer = str_replace("&gt;", "", $composer);
 
