@@ -1,32 +1,14 @@
 <?php
 namespace ADWLM\IncipitSearch;
 
-require __DIR__ . '/../vendor/autoload.php';
-
-
-use SimpleXMLElement;
-
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
-
-use EasyRdf_Collection;
-use EasyRdf_Graph;
-
-use Elasticsearch\ClientBuilder;
-
-use ADWLM\IncipitSearch\Incipit;
-use ADWLM\IncipitSearch\CatalogEntry;
-
-
 /**
- *  Schema Crawler: Crawles catalogues with data according to IncipitSearch - Standard
- *  first Version of the Crawler is adapted to Breitkopf Catalogo delle Sinfonie
- *  generic usage and configuration file will be added to easily add further catalogues
+ *  Schema Crawler: Crawles catalogues with data according to IncipitSearch schema.org RDF format
  *
  * Copyright notice
  *
- * (c) 2016
+ * (c) 2017
  * Anna Neovesky  Anna.Neovesky@adwmainz.de
+ * Torsten Schrade  Torsten.Schrade@adwmainz.de
  *
  * Digital Academy www.digitale-akademie.de
  * Academy of Sciences and Literatur | Mainz www.adwmainz.de
@@ -35,6 +17,18 @@ use ADWLM\IncipitSearch\CatalogEntry;
  *
  * @package ADWLM\IncipitSearch
  */
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use SimpleXMLElement;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
+use EasyRdf_Collection;
+use EasyRdf_Graph;
+use Elasticsearch\ClientBuilder;
+use ADWLM\IncipitSearch\Incipit;
+use ADWLM\IncipitSearch\CatalogEntry;
+
 class SchemaIncipitCrawler extends IncipitCrawler
 {
 
@@ -47,84 +41,111 @@ class SchemaIncipitCrawler extends IncipitCrawler
     public function crawlCatalog()
     {
 
-        //$url = __DIR__ . '/../catalogues/Breitkopf_Catalogo_delle_Sinfonie.txt';
+        // @TODO: QUICK FIX !!! EASYRDF only supports http => how to address?
+        $dataUrl = 'http://www.gluck-gesamtausgabe.de/fileadmin/incipitsearch/Breitkopf_Catalogo_delle_Sinfonie.txt';
 
-        // QUICK FIX !!! EASYRDF only supports http => how to address?
-        $url = 'http://www.gluck-gesamtausgabe.de/fileadmin/incipitsearch/Breitkopf_Catalogo_delle_Sinfonie.txt';
+        $graph = new EasyRdf_Graph();
 
-        $schema = new EasyRdf_Graph();
-        $schema->load($url, 'turtle');
-        echo "\n SCHEMA" . " " . $schema . "\n";
-
-        if ($schema == null || strlen($schema) == 0) {
-            array_push($this->logs, "error: crawlCatalog > not found at {$url}");
+        // try to load data from data source; if a parser error occurs, write error to log and return
+        try {
+            $graph->load($dataUrl, 'turtle');
+            echo "\n SCHEMA" . " " . $graph . "\n";
+        } catch (\Exception $e) {
+            array_push($this->logs, $e->getMessage());
             return;
         }
-        $this->addLog("read index xml: \n\n {$schema}");
 
-        // check for valid schema?
+        // get all resources of type schema:DataCatalog (top level)
+        $dataCatalogs = $graph->allOfType('schema:DataCatalog');
 
-        // set catalog information
+        // iterate through all data catalogs and fetch catalog identifier (uri) and name
+        foreach ($dataCatalogs as $dataCatalog) {
 
-        //TODO: how to read tag that is used just once
-        $catalog = $schema->resource($url, 'schema:name');
-        echo "CATALOG" . $catalog;
-        // find generic solution for ID
-        $catalogItemID = 'urn:nbn:de:bvb:12-bsb10624203-4';
-        $dataURL = $schema->resourcesMatching($url, 'schema:image');
+            $dataCatalogIdentifier = $dataCatalog->getUri();
+            $dataCatalogName = $graph->get($dataCatalogIdentifier, 'schema:name')->getValue();
 
+            // each catalog has 1:n datasets, each dataset equals a "work" and has 1:n composers
+            $dataSets = $graph->all($dataCatalogIdentifier, 'schema:hasPart');
 
-        //TODO: how to read tags that appear more than once and add to array
-        $parts =$schema->get($url, 'schema:hasPart');
-        // go through all parts
-        /* @var  $part foreach($parts as $part){
-            $composer = $part->get($url, 'schema:hasPart/schema:composer/schema:name');
-            $title =  $part->get($url, 'schema:hasPart/schema:includedComposition/schema:name');
-            echo "TITLE" . $title;
+            // iterate through each data set and get composer and incipits
+            foreach ($dataSets as $dataSet) {
+
+                $composer = $dataSet->get('schema:composer/schema:name')->getValue();
+                $detailUrl = $dataSet->get('schema:image')->getValue();
+
+                // each data set can have 1:n included compositions
+                $includedCompositions = $dataSet->all('schema:includedComposition');
+
+                foreach ($includedCompositions as $includedComposition) {
+
+                    $compositionTitle = $includedComposition->get('schema:name')->getValue();
+
+                    // each composition has 1:n incipits
+                    $compositionIncipits = $includedComposition->all('schema:includedComposition');
+
+                    foreach ($compositionIncipits as $musicIncipit) {
+
+                        // get incipit components
+                        $incipitName = $musicIncipit->get('schema:name')->getValue();
+                        $incipitValue = $musicIncipit->get('schema:incipitValue')->getValue();
+                        $incipitClef = $musicIncipit->get('schema:incipitClef')->getValue();
+                        $incipitKeysig = $musicIncipit->get('schema:incipitKeysig')->getValue();
+                        $incipitTimesig = $musicIncipit->get('schema:incipitTimesig')->getValue();
+
+                        // add log entry
+                        $this->addLog('catalogEntryFromSchema > ' . $dataCatalogName  . ' - ' . $compositionTitle . ' - ' . $incipitName . "\n" .
+                            $incipitClef . ' ' . $incipitKeysig . ' ' . $incipitTimesig . ' ' . $incipitValue);
+
+                        // create ADWLM\IncipitSearch\Incipit instance for catalog entry
+                        $incipit = new Incipit($incipitValue, $incipitClef, $incipitKeysig, $incipitTimesig);
+
+                        // generate XML conformant UUID for the elastic search catalog entry
+                        do {
+                            $uuid = $this->generateUUID();
+                        } while (preg_match('/^[a-z]/', $uuid) !== 1);
+                        $entryUuid = $uuid;
+
+                        // create new catalog entry
+                        $catalogEntry = new CatalogEntry(
+                            $incipit,
+                            $dataCatalogName,
+                            $entryUuid,
+                            $dataUrl,
+                            $detailUrl,
+                            $composer,
+                            $compositionTitle,
+                            $incipitName,
+                            ""
+                        );
+
+                        // add entry to search index
+                        $this->addCatalogEntryToElasticSearchIndex($catalogEntry);
+
+                    }
+
+                }
+            }
         }
-        */
+    }
 
-        // is this the way to access all
-        $incipitsInCatalog = $schema->get($url, 'schema:hasPart/schema:includedComposition/');
-
-/**
-        // go through all incipits within schema:includedComposition
-        foreach ($incipitsInCatalog as $incipit) {
-            $title = $schema->get('schema:hasPart/schema:includedComposition/schema:name');
-            $workUrl = $schema->get('schema:url');
-            $this->addLog("work: $title $workUrl ");
-            $work = $schema->get();
-            $workIdentifier = $schema->get();
-            $workTitle = $schema->get();
-            $workDetailUrl = $schema->get();
-            $composer = $schema->get();
-            $workDetailUrl = $schema->get();
-
-            $partTitle = $schema->get();
-            $incipitNotes = $schema->get();
-            $incipitClef = $schema->get();
-            $incipitAccidentals = $schema->get();
-            $incipitTime = $schema->get();
-
-
-            $this->addLog("catalogEntryFromWork >" . " " . $workTitle . " " . $partTitle . "\n" .
-                $incipitClef . " " . $incipitAccidentals . " " . $incipitTime . " " . $incipitNotes);
-
-            $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
-
-            $incipitUID = "";
-            $entryUID = "";
-            $catalogEntry = new CatalogEntry($incipit, "Breitkopf Catalogo delle Sinfonie", $entryUID, $dataURL, $workDetailUrl,
-                $composer, $workTitle, $partTitle, "");
-            // get all incipits entries
-            $catalogEntries = $this->catalogEntriesFromWork($url);
-
-            $this->addCatalogEntryToElasticSearchIndex($catalogEntry);
-
-        }
- **/
-
+    /**
+     * Generates a universally unique identifier (UUID) according to RFC 4122 v4.
+     * The algorithm used here, might not be completely random. Copied from the identity extension.
+     *
+     * @return string The universally unique id
+     * @author Unknown
+     */
+    private function generateUUID()
+    {
+        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff));
     }
 
 }
-
