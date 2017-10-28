@@ -40,7 +40,7 @@ class SearchQuery
 
     // maybe for future version: option for user to select between varying page Sizes
     private $page = 0;
-    private $pageSize = 100;
+    private $pageSize = 30;
 
     // default settings for search
     private $isTransposed = false;

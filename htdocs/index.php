@@ -83,8 +83,13 @@ $app->get('/results/', function (Request $request, Response $response) {
 
     $searchQuery = new SearchQuery();
     $searchQuery->setUserInput($incipit);
+    // SearchQuery's default page is 0,
+    // so we only set it if it is > 0
     if ($page > 0) {
-        $searchQuery->setPage($page);
+        // as ElasticSearch and SearchQuery starts counting pages from zero,
+        // we subtract 1
+        // for the user facing HTML and URL we start pages at 1, though
+        $searchQuery->setPage($page -1);
     }
     // "query does not support array of values"
    $searchQuery->setCatalogFilter($repository);
@@ -102,7 +107,11 @@ $app->get('/results/', function (Request $request, Response $response) {
             //TODO: selection of catalogue entries does nor work, because only last element from array will be used
             'catalogEntries' => $catalogEntries,
             'searchString' => $searchQuery->getSingleOctaveQuery(),
-            'numberOfResults' => $searchQuery->getNumOfResults()
+            'numberOfResults' => $searchQuery->getNumOfResults(),
+            'currentPage' => $request->getParam('page'),
+            'numberOfPages' => ceil($searchQuery->getNumOfResults() / $searchQuery->getPageSize()),
+            //url will be used as base for pagination; in results.twig, the page number will be added
+            'baseUrl' => "{$request->getUri()->getBasePath()}?incipit={$incipit}&prefix={$isPrefixSearch}&transposition={$isTransposed}"
         ]);
 
     return $response;
