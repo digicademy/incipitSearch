@@ -102,6 +102,21 @@ $app->get('/results/', function (Request $request, Response $response) {
 
     $catalogEntries = $searchQuery->performSearchQuery();
 
+    //construct baseUrl
+    $baseUrl = "{$request->getUri()->getBasePath()}?incipit={$incipit}";
+    if($repository != null)
+    {
+        $baseUrl .= "&repository={$repository}";
+    }
+    if($isPrefixSearch != null)
+    {
+        $baseUrl .= "&prefix={$isPrefixSearch}";
+    }
+    if($isTransposed != null)
+    {
+        $baseUrl .= "&transposition={$isTransposed}";
+    }
+
     $response = $this->view->render($response, 'results.twig',
         [
             //TODO: selection of catalogue entries does nor work, because only last element from array will be used
@@ -111,7 +126,7 @@ $app->get('/results/', function (Request $request, Response $response) {
             'currentPage' => $request->getParam('page'),
             'numberOfPages' => ceil($searchQuery->getNumOfResults() / $searchQuery->getPageSize()),
             //url will be used as base for pagination; in results.twig, the page number will be added
-            'baseUrl' => "{$request->getUri()->getBasePath()}?incipit={$incipit}&prefix={$isPrefixSearch}&transposition={$isTransposed}"
+            'baseUrl' => $baseUrl
         ]);
 
     return $response;

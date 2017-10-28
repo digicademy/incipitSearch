@@ -71,7 +71,7 @@
         <h1>Gefundene Werke</h1>
             <div>
                 <strong>{{ numberOfResults }} Ergebnisse für das Incipit "{{ searchString }}"</strong><br>
-                Sie sehen Seite {{ currentPage }}von {{ numberOfPages }} Ergebnisseiten<br>
+                Sie sehen Seite {{ currentPage }} von {{ numberOfPages }} Ergebnisseiten<br>
                 Alphabetische Sortierung
             <p><strong><a href="/">Zurück zur Suche</a></strong></p>
             </div>
@@ -87,6 +87,7 @@
 
                     <div>
                         <ul class="pagination">
+                            {#First Page will only be displayed when not visible as sourrounding page#}
                             {% if currentPage != 1 %}
                                 <li>
                                     <a href="{{ "#{baseUrl}&page=1" }}">Erste Seite</a>
@@ -105,6 +106,7 @@
                                     </li>
                                 {% endif %}
                             {% endfor %}
+                            {#Last Page will only be displayed when not visible as sourrounding page#}
                             {% if currentPage != numberOfPages %}
                                 <li>
                                     <a href="{{ "#{baseUrl}&page=#{numberOfPages}"}}">Letzte Seite</a>
