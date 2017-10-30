@@ -5,6 +5,7 @@
 	Elevation by Pixelarity
 	pixelarity.com | hello@pixelarity.com
 	License: pixelarity.com/license
+	modifications: Anna Neovesky
 */
 
 /* Reset */
@@ -2567,7 +2568,7 @@
 	input[type="submit"],
 	input[type="reset"],
 	input[type="button"],
-	.button, button {
+	.button, button, #pagination a {
 		-moz-appearance: none;
 		-webkit-appearance: none;
 		-ms-appearance: none;
@@ -3639,3 +3640,14 @@
 			}
 
 	}
+
+/* pagination */
+
+#pagination ul {
+	list-style: none;
+}
+#pagination li {
+	display: inline-block;
+	margin: 0em 2em 0.5em -1.5em;
+	font-size: 9pt;
+}
