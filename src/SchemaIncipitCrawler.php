@@ -99,17 +99,14 @@ class SchemaIncipitCrawler extends IncipitCrawler
                         // create ADWLM\IncipitSearch\Incipit instance for catalog entry
                         $incipit = new Incipit($incipitValue, $incipitClef, $incipitKeysig, $incipitTimesig);
 
-                        // generate XML conformant UUID for the elastic search catalog entry
-                        do {
-                            $uuid = $this->generateUUID();
-                        } while (preg_match('/^[a-z]/', $uuid) !== 1);
-                        $entryUuid = $uuid;
+                        // generate constant hash based uid on catalogue title and incipit name (both obligatory)
+                        $entryUid = hash('crc32', $dataCatalogName) . '-' . hash('md5', $incipitName);
 
                         // create new catalog entry
                         $catalogEntry = new CatalogEntry(
                             $incipit,
                             $dataCatalogName,
-                            $entryUuid,
+                            $entryUid,
                             $dataUrl,
                             $detailUrl,
                             $composer,
