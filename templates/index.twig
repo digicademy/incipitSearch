@@ -39,6 +39,29 @@
 		//this is called whenever a piano key is pressed
 		function updatePreviewWithNote(sender, paeNote) {
 			console.log("key pressed is " + paeNote)
+
+				// TODO: this is where we want to inert our naturals.
+				// Check for accidentals
+				//  - we need to iterate through the last bar of the plaineEasieCodes array and look if the pressed note has been there before, with or without accidentals
+				// Remove remaining accidentals 
+				//  - if there has been the same accidental before that has been pressed, it doesn't need to be ouputted again
+				// Insert naturals
+				//  - if the note is pressed withouth accidental, a natural has to be inserted
+
+				var uniqueNotes = [];
+				$.each(plaineEasieCodes, function (index, nt){
+					
+
+
+					if($.inArray(nt, uniqueNotes) === -1){
+						uniqueNotes.push(nt);
+					}
+					else{
+						uniqueNotes.push(nt.replace(/[x]|[b]|[n]/g, ""));
+					}
+				});
+				console.log(uniqueNotes);
+
 			plaineEasieCodes.push(paeNote)
 			updateNotesSVG()
 		}
