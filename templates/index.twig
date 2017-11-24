@@ -35,35 +35,57 @@
 		//this stores all keyboard input
 		var plaineEasieCodes = []
 		var selectedClef = clefs.G4
+		var naturalNotes = [] // this stores notes without their accidentals to remeber them
+		var accidentNotes = [] // this stores notes notes with their accidentals to remeber them in their distinct form
 
 		//this is called whenever a piano key is pressed
 		function updatePreviewWithNote(sender, paeNote) {
 			console.log("key pressed is " + paeNote)
 
-				// TODO: this is where we want to inert our naturals.
-				// Check for accidentals
-				//  - we need to iterate through the last bar of the plaineEasieCodes array and look if the pressed note has been there before, with or without accidentals
-				// Remove remaining accidentals 
-				//  - if there has been the same accidental before that has been pressed, it doesn't need to be ouputted again
-				// Insert naturals
-				//  - if the note is pressed withouth accidental, a natural has to be inserted
+			var naturalPae = paeNote.replace(/[']|[x]|[b]|[n]/g, "") // this converts every pressed not in a pure natural note what means that e.g. if 'x4D is pressed 4D is stored
 
-				var uniqueNotes = [];
-				$.each(plaineEasieCodes, function (index, nt){
+			// this checks if the pressed Note is as natural part of naturalNotes
+			// if not it will be remembered as natural and also unchanged in accidentNotes
+			if($.inArray(naturalPae, naturalNotes) === -1){ 
+				naturalNotes.push(naturalPae)
+				accidentNotes.push(paeNote)
+				plaineEasieCodes.push(paeNote)
+				updateNotesSVG()
+			}
+
+			// if we're here, the pressed Note is as natural part of naturalNotes
+			else{
+
+				// now let's check if the exact note has been there before what means it would be stored in accidentNotes
+				if($.inArray(paeNote, accidentNotes) === -1){
 					
+					// if not we first need remove it's sibbling from accidentNotes, e.g. if 'x4D is stored it must be replaced with the new pressed note 'b4D
+					accidentNotes = $.grep(accidentNotes, function(v) {
+						return v.replace(/[']|[x]|[b]|[n]/g, "") != naturalPae;
+					})
+					accidentNotes.push(paeNote)
 
-
-					if($.inArray(nt, uniqueNotes) === -1){
-						uniqueNotes.push(nt);
+					// second we check if the pressed note has x or b as accidental
+					// if not a natural must be set as accidental 
+					if(/[x]|[b]/.test(paeNote) === false){
+						paeNote = paeNote.replace(/[']|[x]|[b]|[n]/g, "")
+						plaineEasieCodes.push("'n" + paeNote)
+						updateNotesSVG()
 					}
+
+					// if the pressed note has x or b as accidental it's fine
 					else{
-						uniqueNotes.push(nt.replace(/[x]|[b]|[n]/g, ""));
+						plaineEasieCodes.push(paeNote)
+						updateNotesSVG()
 					}
-				});
-				console.log(uniqueNotes);
+				}
 
-			plaineEasieCodes.push(paeNote)
-			updateNotesSVG()
+				// we're here means the exact same note has been there before. Therefore all accidentals are still valid and don't need to be printed out again
+				else{
+					plaineEasieCodes.push(paeNote.replace(/[']|[x]|[b]|[n]/g, ""))
+					updateNotesSVG()
+				}
+			}	
 		}
 
 		//delete last input
