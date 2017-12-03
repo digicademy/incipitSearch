@@ -69,6 +69,8 @@ class SBNIncipitCrawler extends IncipitCrawler
         $titleRegEx = '/Titolo\s*<\/td>\s*<td class="detail_value">\s*<strong>(.*)<\/strong>/';
         $yearRegEx = '/Pubblicazione\s*<\/td>\s*<td class="detail_value">(.*)<br>/';
 
+
+        //TODO: undefined offest errors appear in lines 79,96,98
         /*
          * 1. get pattern
          * 2. remove regex before and after needed information
@@ -90,6 +92,7 @@ class SBNIncipitCrawler extends IncipitCrawler
         $title = trim($title, "\"");
 
         $subtitle = "";
+
 
         preg_match($yearRegEx, $bodyHTML, $matches);
         $year = preg_replace('/Pubblicazione\s*<\/td>\s*<td class="detail_value">/', "", $matches[0]);
