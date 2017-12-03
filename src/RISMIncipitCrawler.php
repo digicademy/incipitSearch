@@ -103,8 +103,8 @@ class RISMIncipitCrawler extends IncipitCrawler
     public function crawlCatalog()
     {
 
-        $startID = 400110660;
-        $endID =   400110999;
+        $startID = 400110160;
+        $endID =   400110863;
 
         for ($i = $startID; $i < $endID; $i++) {
             $url = "https://opac.rism.info/id/rismid/" . $i . "?format=marc";

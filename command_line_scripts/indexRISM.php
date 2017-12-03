@@ -25,15 +25,6 @@ require __DIR__ . '/../vendor/autoload.php';
  */
 
 
-/*
- *
- * ATTENTION:
- * This only crawls a small sample of RISM and is only for demo purposes
- *
- */
-
-echo "====================\nATTENTION\n=======================\nThe RISM crawler is only for demo purposes and only crawls a small subset of RISM.\nThis is not fit for production\n\n";
-
 $crawler = new RISMIncipitCrawler();
 
 $crawler->createIndex();
