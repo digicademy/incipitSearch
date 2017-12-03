@@ -180,7 +180,7 @@ class SBNIncipitCrawler extends IncipitCrawler
     public function crawlCatalog()
     {
         $startID = 1; // 0000001
-        $endID =   300; // 0000300
+        $endID =   2000; // 0000300
         // real endID is 0178310
 
         for ($i = $startID; $i <= $endID; $i++) {
