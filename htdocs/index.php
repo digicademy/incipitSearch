@@ -75,7 +75,10 @@ $app->get('/results/', function (Request $request, Response $response) {
     $this->logger->addInfo('Get: /results/');
 
     $incipit = $request->getParam('incipit');
-    $repository = $request->getParam('repository');
+    //TODO: less dirty solution for repository mapping
+    $repository = array_map('trim', array($request->getParam('repository1'), $request->getParam('repository2'), $request->getParam('repository3')));
+    // foreach repository get also repository name
+    $repositoryUrl = implode($repository);
     $page = $request->getParam('page');
     $isPrefixSearch = $request->getParam('prefix') != null;
     $isTransposed = $request->getParam('transposition') != null;
@@ -92,7 +95,7 @@ $app->get('/results/', function (Request $request, Response $response) {
         $searchQuery->setPage($page -1);
     }
     // "query does not support array of values"
-   $searchQuery->setCatalogFilter($repository);
+    $searchQuery->setCatalogFilter($repository);
 
     $searchQuery->setIsPrefixSearch($isPrefixSearch);
     $searchQuery->setisTransposed($isTransposed);
@@ -106,7 +109,7 @@ $app->get('/results/', function (Request $request, Response $response) {
     $baseUrl = "{$request->getUri()->getBasePath()}?incipit={$incipit}";
     if($repository != null)
     {
-        $baseUrl .= "&repository={$repository}";
+        $baseUrl .= $repositoryUrl;
     }
     if($isPrefixSearch != null)
     {
