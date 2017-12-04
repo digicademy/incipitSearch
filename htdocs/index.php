@@ -75,16 +75,14 @@ $app->get('/results/', function (Request $request, Response $response) {
     $this->logger->addInfo('Get: /results/');
 
     $incipit = $request->getParam('incipit');
-    //TODO: less dirty solution for repository mapping
-    $repository = array_map('trim', array($request->getParam('repository1'), $request->getParam('repository2'), $request->getParam('repository3')));
-    // foreach repository get also repository name
-    $repositoryUrl = implode($repository);
+    $repository = $request->getParam('repository');
     $page = $request->getParam('page');
     $isPrefixSearch = $request->getParam('prefix') != null;
     $isTransposed = $request->getParam('transposition') != null;
 
+    var_dump($repository);
 
-    $searchQuery = new SearchQuery();
+	$searchQuery = new SearchQuery();
     $searchQuery->setUserInput($incipit);
     // SearchQuery's default page is 0,
     // so we only set it if it is > 0
@@ -109,7 +107,9 @@ $app->get('/results/', function (Request $request, Response $response) {
     $baseUrl = "{$request->getUri()->getBasePath()}?incipit={$incipit}";
     if($repository != null)
     {
-        $baseUrl .= $repositoryUrl;
+    	foreach ($repository as $index => $entry) {
+			$baseUrl .= "&repository[]={$entry}";
+		}
     }
     if($isPrefixSearch != null)
     {
