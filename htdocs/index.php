@@ -83,6 +83,10 @@ $app->get('/results/', function (Request $request, Response $response) {
     var_dump($repository);
 
 	$searchQuery = new SearchQuery();
+
+	//TODO: check if at least two notes (or maybe 3) were entered
+    // use transposed string for stringlength eval, as it only contains notes (accidentals and octave removed)
+    // in HTML: set min input to same value, so request will not be triggered
     $searchQuery->setUserInput($incipit);
     // SearchQuery's default page is 0,
     // so we only set it if it is > 0
