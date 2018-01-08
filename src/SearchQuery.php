@@ -132,7 +132,6 @@ class SearchQuery
 
             $filter[] = [
                 'terms' =>
-                //TODO: elasticserach documentation says, that array can be added here, but it does not work;
                     ['catalog' => $this->getCatalogFilter()]
             ];
        }

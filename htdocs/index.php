@@ -46,6 +46,7 @@ $container['view'] = function ($container) {
     return $view;
 };
 
+// Set Logger
 $container['logger'] = function ($c) {
     $logger = new \Monolog\Logger('IncipitLog');
     $console_handler = new \Monolog\Handler\BrowserConsoleHandler();
@@ -126,7 +127,6 @@ $app->get('/results/', function (Request $request, Response $response) {
 
     $response = $this->view->render($response, 'results.twig',
         [
-            //TODO: selection of catalogue entries does nor work, because only last element from array will be used
             'catalogEntries' => $catalogEntries,
             'searchString' => $searchQuery->getSingleOctaveQuery(),
             'numberOfResults' => $searchQuery->getNumOfResults(),
