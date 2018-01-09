@@ -106,6 +106,7 @@
                                 {% endif %}
                             {% endfor %}
                             {#Last Page will only be displayed when not visible as sourrounding page#}
+                            {% if currentPage != numberOfPages %}
                                 <li>
                                     <a href="{{ "#{baseUrl}&page=#{numberOfPages}"}}">Letzte Seite</a>
                                 </li>
