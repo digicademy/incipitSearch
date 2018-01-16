@@ -72,30 +72,38 @@ class GluckIncipitCrawler extends IncipitCrawler
 
         // go through all parts
         foreach ($parts as $part) {
-            $incipitNotes = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/bsbmo:incipitScore");
-            if(empty($incipitNotes)){
+
+            foreach ($part->xpath(".//skos:relatedMatch/skos:Concept") as $item) {
+                $incipitNotes = $item->xpath(".//bsbmo:incipitScore");
+                if(empty($incipitNotes)){
+                    continue;
+                }
+                $partTitle = $this->contentOfXMLPath($part, "dc:title");
+                $workDetailUrl = $part->attributes()["about"];
+                $incipitClef = $item->xpath(".//bsbmo:incipitClef");
+                $incipitAccidentals = $item->xpath(".//bsbmo:incipitKeysig");
+                $incipitTime = $item->xpath(".//bsbmo:incipitTimesig");
+                $composer = "Christoph Willibald Gluck";
+                
+                var_dump($item,$incipitNotes,$partTitle,$workDetailUrl,$incipitClef);
+                die;
+
+                $this->addLog("catalogEntryFromWork >" . " " . $workTitle . " " . $partTitle . "\n" .
+                    $incipitClef . " " . $incipitAccidentals . " " . $incipitTime . " " . $incipitNotes);
+
+                $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
+
+                $incipitUID = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/dc:identifier");
+                $entryUID = $workIdentifier . "-" . $incipitUID;
+                $catalogEntry = new CatalogEntry($incipit, "GluckWV-online", $entryUID, $dataURL, $workDetailUrl,
+                    $composer, $workTitle, $partTitle, "");
+
+                var_dump($catalogEntry);
                 continue;
+
+                array_push($catalogEntries, $catalogEntry);
             }
 
-            $partTitle = $this->contentOfXMLPath($part, "dc:title");
-            $workDetailUrl = $part->attributes()["about"];
-            $incipitClef = $this->contentOfXMLPath($part,
-                "skos:relatedMatch/skos:Concept/bsbmo:incipitClef");
-            $incipitAccidentals = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/bsbmo:incipitKeysig");
-            $incipitTime = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/bsbmo:incipitTimesig");
-            $composer = "Christoph Willibald Gluck";
-
-            $this->addLog("catalogEntryFromWork >" . " " . $workTitle . " " . $partTitle . "\n" .
-               $incipitClef . " " . $incipitAccidentals . " " . $incipitTime . " " . $incipitNotes);
-
-            $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
-
-            $incipitUID = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/dc:identifier");
-            $entryUID = $workIdentifier . "-" . $incipitUID;
-            $catalogEntry = new CatalogEntry($incipit, "GluckWV-online", $entryUID, $dataURL, $workDetailUrl,
-                $composer, $workTitle, $partTitle, "");
-
-            array_push($catalogEntries, $catalogEntry);
         }
         //echo "ALL ENTRIES: ";
         //print_r($catalogEntries);
