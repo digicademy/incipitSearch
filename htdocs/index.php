@@ -80,9 +80,7 @@ $app->get('/results/', function (Request $request, Response $response) {
     $page = $request->getParam('page');
     $isPrefixSearch = $request->getParam('prefix') != null;
     $isTransposed = $request->getParam('transposition') != null;
-
-    var_dump($repository);
-
+    
 	$searchQuery = new SearchQuery();
 
 	//TODO: check if at least two notes (or maybe 3) were entered
