@@ -74,32 +74,27 @@ class GluckIncipitCrawler extends IncipitCrawler
         foreach ($parts as $part) {
 
             foreach ($part->xpath(".//skos:relatedMatch/skos:Concept") as $item) {
-                $incipitNotes = $item->xpath(".//bsbmo:incipitScore");
+                $incipitNotes = $this->contentOfXMLPath($item,"bsbmo:incipitScore");
                 if(empty($incipitNotes)){
                     continue;
                 }
                 $partTitle = $this->contentOfXMLPath($part, "dc:title");
                 $workDetailUrl = $part->attributes()["about"];
-                $incipitClef = $item->xpath(".//bsbmo:incipitClef");
-                $incipitAccidentals = $item->xpath(".//bsbmo:incipitKeysig");
-                $incipitTime = $item->xpath(".//bsbmo:incipitTimesig");
+                $incipitClef = $this->contentOfXMLPath($item,"bsbmo:incipitClef");
+                $incipitAccidentals = $this->contentOfXMLPath($item,"bsbmo:incipitKeysig");
+                $incipitTime = $this->contentOfXMLPath($item,"bsbmo:incipitTimesig");
                 $composer = "Christoph Willibald Gluck";
-                
-                var_dump($item,$incipitNotes,$partTitle,$workDetailUrl,$incipitClef);
-                die;
 
                 $this->addLog("catalogEntryFromWork >" . " " . $workTitle . " " . $partTitle . "\n" .
                     $incipitClef . " " . $incipitAccidentals . " " . $incipitTime . " " . $incipitNotes);
 
                 $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
 
-                $incipitUID = $this->contentOfXMLPath($part, "skos:relatedMatch/skos:Concept/dc:identifier");
+                $incipitUID = $this->contentOfXMLPath($item,"dc:identifier");
                 $entryUID = $workIdentifier . "-" . $incipitUID;
                 $catalogEntry = new CatalogEntry($incipit, "GluckWV-online", $entryUID, $dataURL, $workDetailUrl,
                     $composer, $workTitle, $partTitle, "");
 
-                var_dump($catalogEntry);
-                continue;
 
                 array_push($catalogEntries, $catalogEntry);
             }
