@@ -3648,6 +3648,10 @@
 }
 #pagination li {
 	display: inline-block;
-	margin: 0em 2em 0.5em -1.5em;
+	margin: 0 2em 0.5em -1.5em;
 	font-size: 9pt;
+}
+
+.float-right {
+	float: right;
 }
