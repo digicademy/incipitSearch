@@ -139,6 +139,57 @@ $app->get('/results/', function (Request $request, Response $response) {
 })->setName('results');
 
 /**
+ * Route for search json.
+ */
+$app->get('/json/', function (Request $request, Response $response) {
+    $this->logger->addInfo('Get: /json/');
+
+    $incipit = $request->getParam('incipit');
+    $repository = $request->getParam('repository');
+    $isPrefixSearch = $request->getParam('prefix') != null;
+    $isTransposed = $request->getParam('transposition') != null;
+
+    $searchQuery = new SearchQuery();
+
+    $searchQuery->setUserInput($incipit);
+    $searchQuery->setCatalogFilter($repository);
+    $searchQuery->setIsPrefixSearch($isPrefixSearch);
+    $searchQuery->setisTransposed($isTransposed);
+
+    $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
+
+    $catalogEntries = $searchQuery->performJsonSearchQuery();
+
+    //construct baseUrl
+    $baseUrl = "{$request->getUri()->getBasePath()}?incipit={$incipit}";
+    if($repository != null)
+    {
+        foreach ($repository as $index => $entry) {
+            $baseUrl .= "&repository[]={$entry}";
+        }
+    }
+    if($isPrefixSearch != null)
+    {
+        $baseUrl .= "&prefix={$isPrefixSearch}";
+    }
+    if($isTransposed != null)
+    {
+        $baseUrl .= "&transposition={$isTransposed}";
+    }
+
+    $response = $this->view->render($response, 'json.twig',
+        [
+            'catalogEntries' => $catalogEntries,
+            'searchString' => $searchQuery->getSingleOctaveQuery(),
+            'numberOfResults' => $searchQuery->getNumOfResults(),
+            'baseUrl' => $baseUrl
+        ]);
+
+    return $response;
+
+})->setName('json');
+
+/**
  * Route to About.
  */
 $app->get('/about[/]', function (Request $request, Response $response) {

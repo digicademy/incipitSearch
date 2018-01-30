@@ -147,7 +147,23 @@ class SearchQuery
     public function performSearchQuery(): array
     {
         $results = $this->elasticClient->search($this->generateSearchParams());
+
         return $this->parseSearchResponse($results);
+    }
+
+    /**
+     * Performs the actual search for the set query and filters
+     * and returns the matching results as an array of CatalogEntry.
+     *
+     * @return string matching CatalogEntrys, emtpy if none
+     */
+    public function performJsonSearchQuery()
+    {
+        $results = $this->elasticClient->search($this->generateSearchParams());
+
+        $catalogEntries = json_encode($results);
+
+        return $catalogEntries;
     }
 
     /**
@@ -166,6 +182,7 @@ class SearchQuery
             $catalogEntry = CatalogEntry::catalogEntryFromJSONArray($hit["_source"]);
             array_push($catalogEntries, $catalogEntry);
         }
+
         return $catalogEntries;
     }
 
