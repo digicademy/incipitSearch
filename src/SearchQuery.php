@@ -107,14 +107,12 @@ class SearchQuery
             $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"];
 
         }
-
         if($this->isTransposed)
         {
             $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->userInput);
             $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.transposedNotes" => $transposedNotes . "*"];
             //var_dump($searchParams);
         }
-
         return $searchParams;
 
     }
@@ -148,6 +146,7 @@ class SearchQuery
     {
         $results = $this->elasticClient->search($this->generateSearchParams());
         return $this->parseSearchResponse($results);
+        var_dump($results);
     }
 
     /**
