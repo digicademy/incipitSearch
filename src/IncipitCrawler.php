@@ -114,7 +114,7 @@ class IncipitCrawler
         ];
         $response = $this->elasticClient->index($params);
 
-        $this->addLog("data: addCatalogEntryToES > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
+        //$this->addLog("data: addCatalogEntryToES > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
 
     }
 
@@ -216,7 +216,7 @@ class IncipitCrawler
         // Create the index with mappings and settings now
         $response = $this->elasticClient->indices()->create($params);
 
-        $this->addLog("created Index {$params['index']} > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
+        //$this->addLog("created Index {$params['index']} > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
     }
 
 

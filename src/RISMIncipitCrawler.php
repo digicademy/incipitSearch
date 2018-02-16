@@ -50,6 +50,14 @@ class RISMIncipitCrawler extends IncipitCrawler
             echo "error: catalogEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()} <br>\n";
             return null;
         }
+
+        // do not create an entry if there is no incipit
+        if(empty($this->contentOfXMLPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='p']"))){
+            // Handle all other exceptions
+            echo "error: catalogEntryFromXML at {$dataURL} > does not contain incipit  <br>\n";
+            return null;
+        }
+
 //nicer solution to get first element of array?
         $catalogItemID = $this->contentOfXMLPath($parentXMLElement,
             "/record/controlfield[@tag='001']");

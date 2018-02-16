@@ -85,8 +85,8 @@ class GluckIncipitCrawler extends IncipitCrawler
                 $incipitTime = $this->contentOfXMLPath($item,"bsbmo:incipitTimesig");
                 $composer = "Christoph Willibald Gluck";
 
-                $this->addLog("catalogEntryFromWork >" . " " . $workTitle . " " . $partTitle . "\n" .
-                    $incipitClef . " " . $incipitAccidentals . " " . $incipitTime . " " . $incipitNotes);
+                //$this->addLog("catalogEntryFromWork >" . " " . $workTitle . " " . $partTitle . "\n" .
+                   // $incipitClef . " " . $incipitAccidentals . " " . $incipitTime . " " . $incipitNotes);
 
                 $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
 
@@ -145,7 +145,7 @@ class GluckIncipitCrawler extends IncipitCrawler
             array_push($this->logs, "error: crawlCatalog > not found at {$url}");
             return;
         }
-        $this->addLog("read index xml: \n\n {$xml}");
+        //$this->addLog("read index xml: \n\n {$xml}");
 
         try {
             $parentXMLElement = new SimpleXMLElement($xml);
@@ -159,7 +159,7 @@ class GluckIncipitCrawler extends IncipitCrawler
         foreach ($matchingElements as $resource) {
             $title = (string)$resource->xpath("title")[0];
             $workUrl = (string)$resource->attributes()["target"];
-            $this->addLog("work: $title $workUrl ");
+            //$this->addLog("work: $title $workUrl ");
             // get all incipits entries
             $catalogEntries = $this->catalogEntriesFromWork($workUrl);
             foreach ($catalogEntries as $catalogEntry)
