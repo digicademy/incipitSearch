@@ -47,14 +47,14 @@ class RISMIncipitCrawler extends IncipitCrawler
             $parentXMLElement = new SimpleXMLElement($xml);
         } catch (\Exception $e) {
             // Handle all other exceptions
-            echo "error: catalogEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()} <br>\n";
+            //echo "error: catalogEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()} <br>\n";
             return null;
         }
 
         // do not create an entry if there is no incipit
         if(empty($this->contentOfXMLPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='p']"))){
             // Handle all other exceptions
-            echo "catalogEntryFromXML at {$dataURL} > does not contain incipit  <br>\n";
+            //echo "catalogEntryFromXML at {$dataURL} > does not contain incipit  <br>\n";
             return null;
         }
 
@@ -94,7 +94,7 @@ class RISMIncipitCrawler extends IncipitCrawler
      */
     private function contentOfXMLPath(SimpleXMLElement $parentXmlElement, string $xpath): string {
         if ($parentXmlElement == null) {
-            echo "error: contentOfXMLElementAtPath > no parentXmlElement given <br>\n";
+            //echo "error: contentOfXMLElementAtPath > no parentXmlElement given <br>\n";
             return "";
         }
         $matchingElements = $parentXmlElement->xpath($xpath);
@@ -120,7 +120,7 @@ class RISMIncipitCrawler extends IncipitCrawler
             $url = "https://opac.rism.info/id/rismid/" . $i . "?format=marc";
             $xml = $this->contentOfURL($url);
             if ($xml == null || strlen($xml) == 0) {
-                echo".";
+                //echo".";
                // echo "error: crawlCatalog > not found at {$url}<br>\n";
                 continue;
             }
