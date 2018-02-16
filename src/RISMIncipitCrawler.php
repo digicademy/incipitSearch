@@ -54,9 +54,11 @@ class RISMIncipitCrawler extends IncipitCrawler
         // do not create an entry if there is no incipit
         if(empty($this->contentOfXMLPath($parentXMLElement, "/record/datafield[@tag='031']/subfield[@code='p']"))){
             // Handle all other exceptions
-            echo "error: catalogEntryFromXML at {$dataURL} > does not contain incipit  <br>\n";
+            echo "catalogEntryFromXML at {$dataURL} > does not contain incipit  <br>\n";
             return null;
         }
+
+        echo "incipit entry at {$dataURL}<br>\n";
 
 //nicer solution to get first element of array?
         $catalogItemID = $this->contentOfXMLPath($parentXMLElement,
@@ -111,14 +113,15 @@ class RISMIncipitCrawler extends IncipitCrawler
     public function crawlCatalog()
     {
 
-        $startID = 400110160;
-        $endID =   400110863;
+        $startID = 400000000;
+        $endID =   400040000;
 
         for ($i = $startID; $i < $endID; $i++) {
             $url = "https://opac.rism.info/id/rismid/" . $i . "?format=marc";
             $xml = $this->contentOfURL($url);
             if ($xml == null || strlen($xml) == 0) {
-                echo "error: crawlCatalog > not found at {$url}<br>\n";
+                echo".";
+               // echo "error: crawlCatalog > not found at {$url}<br>\n";
                 continue;
             }
             $catalogEntry = $this->catalogEntryFromXML($url, $xml);
