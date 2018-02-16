@@ -15,62 +15,18 @@
 
 {% block pageContent %}
 
-
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-            var vrvToolkit = new verovio.toolkit();
-
-            $('.result').each(function (i, domResult) {
-                var result = $(domResult);
-                var incipit = result.find('.incipit').text();
-
-                var data = "@clef:" + result.find('.incipitClef').text() + "\n";
-                data += "@keysig:" + result.find('.incipitAccidentals').text() + "\n";
-                data += "@timesig:" + result.find('.incipitTime').text() + "\n";
-                data += "@data:" + result.find('.incipitNotes').text();
-                //console.log("incipit data " + data);
-
-                var containerWidth = $(".container").width();
-                var scale = 40;
-                if (containerWidth < 500) {
-                    scale = 15;
-                }
-                //the output will be pageWidth * scale/100
-                //to get constant size we multiply with the inverse
-                var pageWidth = containerWidth * (100 / scale)
-
-                var options = JSON.stringify({
-                    inputFormat: 'pae',
-                    pageHeight: 500,
-                    pageWidth: pageWidth,
-                    ignoreLayout: 1,
-					noLayout: 1,
-                    border: 0,
-                    scale: 40,
-                    adjustPageHeight: 1
-                });
-
-                var notesSVG = vrvToolkit.renderData(data, options);
-                var svgContainerDiv = result.find('.incipitSVG');
-                svgContainerDiv.html(notesSVG);
-
-            });//end for each result
-
-			$('.incipitSVG > svg').incipitScroll();
-
-        });//end doc ready
-
-    </script>
-
+{% include 'verovio.html' %}
 
 <div class="wrapper style1">
     <section id="main" class="container">
         <div class="box">
-
-        <h1>Gefundene Werke</h1>
+            <h1>Gefundene Werke</h1>
             <div>
                 <strong>{{ numberOfResults }} Ergebnisse für das Incipit "{{ searchString }}"</strong><br>
+                {% if numberOfResults > 10000 %}
+                    Sie haben sehr viele Ergebnisse erhalten. Es werden die ersten 10.000 angezeigt.
+                    Päzisieren Sie Ihre Suche, indem Sie die Auswahl der Kataloge verringern oder mehr Noten eingeben.
+                {% endif %}
                 Alphabetische Sortierung
             <p><strong><a href="/">Zurück zur Suche</a></strong></p>
             </div>
