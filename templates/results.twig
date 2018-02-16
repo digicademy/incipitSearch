@@ -75,51 +75,10 @@
             <p><strong><a href="/">Zurück zur Suche</a></strong></p>
             </div>
 
-        <hr>
-            {# pagination of results#}
-            {% spaceless %}
-                {% if numberOfPages > 1 %}
 
-                    {# Number of page around current page+1 #}
-                    {% set surroundingPages = 3 %}
+{% include 'pagination.twig' %}
 
-                    <div id="pagination">
-                        <p>Sie sehen Seite {{ currentPage }} von {{ numberOfPages }} Ergebnisseiten</p>
-                        <ul>
-                            {#First Page will only be displayed when not visible as sourrounding page#}
-                            {% if currentPage != 1 %}
-                                <li>
-                                    <a href="{{ "#{baseUrl}&page=1" }}">Erste Seite</a>
-                                </li>
-                            {% endif %}
-                            {% for i in 1..numberOfPages %}
-                                {% if 0 == (currentPage - surroundingPages) - loop.index %}
-                                    <li class="disabled"><a href="#">...</a></li>
-                                {% elseif 0 == (currentPage + surroundingPages) - loop.index %}
-                                    <li class="disabled"><a href="#">...</a></li>
-                                {% elseif 0 < (currentPage - surroundingPages) - loop.index %}
-                                {% elseif 0 > (currentPage + surroundingPages) - loop.index %}
-                                {% else %}
-                                    <li {% if currentPage == loop.index  %} class="active"{% endif %}>
-                                        <a href={{ "#{baseUrl}&page=#{loop.index}" }}>{{ loop.index }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                            {#Last Page will only be displayed when not visible as sourrounding page#}
-                            {% if currentPage != numberOfPages %}
-                                <li>
-                                    <a href="{{ "#{baseUrl}&page=#{numberOfPages}"}}">Letzte Seite</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                {% endif %}
-            {% endspaceless %}
-            {# end pagination #}
-
-            <hr>
-
-
+            <!-- RESULTS -->
             {% for catalogEntry in catalogEntries %}
 
             <div class="result">
@@ -145,46 +104,7 @@
 
         {% endfor %}
 
-            {# pagination of results#}
-            {% spaceless %}
-                {% if numberOfPages > 1 %}
-
-                    {# Number of page around current page+1 #}
-                    {% set surroundingPages = 3 %}
-
-                    <div id="pagination">
-                        <p>Sie sehen Seite {{ currentPage }} von {{ numberOfPages }} Ergebnisseiten</p>
-                        <ul>
-                            {#First Page will only be displayed when not visible as sourrounding page#}
-                            {% if currentPage != 1 %}
-                                <li>
-                                    <a href="{{ "#{baseUrl}&page=1" }}">Erste Seite</a>
-                                </li>
-                            {% endif %}
-                            {% for i in 1..numberOfPages %}
-                                {% if 0 == (currentPage - surroundingPages) - loop.index %}
-                                    <li class="disabled"><a href="#">...</a></li>
-                                {% elseif 0 == (currentPage + surroundingPages) - loop.index %}
-                                    <li class="disabled"><a href="#">...</a></li>
-                                {% elseif 0 < (currentPage - surroundingPages) - loop.index %}
-                                {% elseif 0 > (currentPage + surroundingPages) - loop.index %}
-                                {% else %}
-                                    <li {% if currentPage == loop.index  %} class="active"{% endif %}>
-                                        <a href={{ "#{baseUrl}&page=#{loop.index}" }}>{{ loop.index }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                            {#Last Page will only be displayed when not visible as sourrounding page#}
-                            {% if currentPage != numberOfPages %}
-                                <li>
-                                    <a href="{{ "#{baseUrl}&page=#{numberOfPages}"}}">Letzte Seite</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                {% endif %}
-            {% endspaceless %}
-            {# end pagination #}
+{% include 'pagination.twig' %}
 
         </div>
     </section>
