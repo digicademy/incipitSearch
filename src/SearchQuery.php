@@ -146,7 +146,7 @@ class SearchQuery
     {
         $results = $this->elasticClient->search($this->generateSearchParams());
         return $this->parseSearchResponse($results);
-        var_dump($results);
+        // var_dump($results);
     }
 
     /**
