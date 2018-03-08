@@ -161,7 +161,7 @@ class SearchQuery
     {
         $results = $this->elasticClient->search($this->generateSearchParams());
 
-        $catalogEntries = json_encode($results);
+        $catalogEntries = json_encode($results, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         return $catalogEntries;
     }

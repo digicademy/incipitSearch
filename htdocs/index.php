@@ -26,7 +26,6 @@ use Slim\Views as Views;
 $configuration = [
     'settings' => [
         'displayErrorDetails' => true,
-
     ],
 ];
 
@@ -36,8 +35,12 @@ $app = new App($container);
 // Register component on container
 $container['view'] = function ($container) {
     $view = new Views\Twig('../templates', [
-        'cache' => false
+        'cache' => false,
+        'debug' => true
     ]);
+
+    $view->addExtension(new \Twig_Extension_Debug());
+
     $view->addExtension(new Views\TwigExtension(
         $container['router'],
         $container['request']->getUri()
@@ -142,12 +145,14 @@ $app->get('/results/', function (Request $request, Response $response) {
  * Route for search json.
  */
 $app->get('/json/', function (Request $request, Response $response) {
+
     $this->logger->addInfo('Get: /json/');
 
     $incipit = $request->getParam('incipit');
     $repository = $request->getParam('repository');
     $isPrefixSearch = $request->getParam('prefix') != null;
     $isTransposed = $request->getParam('transposition') != null;
+
 
     $searchQuery = new SearchQuery();
 
@@ -158,10 +163,14 @@ $app->get('/json/', function (Request $request, Response $response) {
 
     $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
 
-    $catalogEntries = $searchQuery->performJsonSearchQuery();
+    // TODO: Nobody's perfect but we still have some cleaning up to do here. Where does <script> sh*t come from? How to have application/json response header?
+
+    $response = $searchQuery->performJsonSearchQuery();
+
+    return $response;
 
     //construct baseUrl
-    $baseUrl = "{$request->getUri()->getBasePath()}?incipit={$incipit}";
+    /*$baseUrl = "{$request->getUri()->getBasePath()}?incipit={$incipit}";
     if($repository != null)
     {
         foreach ($repository as $index => $entry) {
@@ -185,7 +194,7 @@ $app->get('/json/', function (Request $request, Response $response) {
             'baseUrl' => $baseUrl
         ]);
 
-    return $response;
+    return $response->withHeader('Content-Type', 'application/json');*/
 
 })->setName('json');
 
