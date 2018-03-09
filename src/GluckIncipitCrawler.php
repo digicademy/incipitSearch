@@ -63,6 +63,7 @@ class GluckIncipitCrawler extends IncipitCrawler
         $work = $parentXMLElement->xpath("/rdf:RDF/skos:Concept")[0];
         $workIdentifier = $this->contentOfXMLPath($work, "dc:identifier");
         $workTitle = $this->contentOfXMLPath($work, "dc:title");
+        $dataUID = $this->contentOfXMLPath($work, "dc:uid");
         //$workDetailUrl = $work->attributes()["about"];
 
         // Array with urls to parts, e.g. http://www.gluck-gesamtausgabe.de/id/1-20-00-0#parts&456
@@ -92,7 +93,7 @@ class GluckIncipitCrawler extends IncipitCrawler
 
                 $incipitUID = $this->contentOfXMLPath($item,"dc:identifier");
                 $entryUID = $workIdentifier . "-" . $incipitUID;
-                $catalogEntry = new CatalogEntry($incipit, "GluckWV-online", $entryUID, $dataURL, $workDetailUrl,
+                $catalogEntry = new CatalogEntry($incipit, "GluckWV-online", $entryUID, $dataUID, $dataURL, $workDetailUrl,
                     $composer, $workTitle, $partTitle, "");
 
 
@@ -136,9 +137,9 @@ class GluckIncipitCrawler extends IncipitCrawler
     public function crawlCatalog()
     {
         //local
-        // $url = "http://gluck-gesamtausgabe.local/rdf/collection/works/";
+        $url = "http://gluck-gesamtausgabe.local/rdf/collection/works/";
         //live
-        $url = "http://www.gluck-gesamtausgabe.de/rdf/collection/works/";
+        //$url = "http://www.gluck-gesamtausgabe.de/rdf/collection/works/";
         $xml = $this->contentOfURL($url);
 
         if ($xml == null || strlen($xml) == 0) {
