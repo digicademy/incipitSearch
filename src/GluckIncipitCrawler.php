@@ -63,7 +63,6 @@ class GluckIncipitCrawler extends IncipitCrawler
         $work = $parentXMLElement->xpath("/rdf:RDF/skos:Concept")[0];
         $workIdentifier = $this->contentOfXMLPath($work, "dc:identifier");
         $workTitle = $this->contentOfXMLPath($work, "dc:title");
-        $dataUID = $this->contentOfXMLPath($work, "dc:uid");
         //$workDetailUrl = $work->attributes()["about"];
 
         // Array with urls to parts, e.g. http://www.gluck-gesamtausgabe.de/id/1-20-00-0#parts&456
@@ -76,6 +75,7 @@ class GluckIncipitCrawler extends IncipitCrawler
 
             foreach ($part->xpath(".//skos:relatedMatch/skos:Concept") as $item) {
                 $incipitNotes = $this->contentOfXMLPath($item,"bsbmo:incipitScore");
+                $dataUID = $this->contentOfXMLPath($item, "dc:identifier");
                 if(empty($incipitNotes)){
                     continue;
                 }
