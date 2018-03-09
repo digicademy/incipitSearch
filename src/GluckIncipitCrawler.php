@@ -137,9 +137,9 @@ class GluckIncipitCrawler extends IncipitCrawler
     public function crawlCatalog()
     {
         //local
-        $url = "http://gluck-gesamtausgabe.local/rdf/collection/works/";
+        // $url = "http://gluck-gesamtausgabe.local/rdf/collection/works/";
         //live
-        //$url = "http://www.gluck-gesamtausgabe.de/rdf/collection/works/";
+        $url = "http://www.gluck-gesamtausgabe.de/rdf/collection/works/";
         $xml = $this->contentOfURL($url);
 
         if ($xml == null || strlen($xml) == 0) {
