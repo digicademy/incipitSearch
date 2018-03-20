@@ -26,7 +26,6 @@ use Slim\Views as Views;
 $configuration = [
     'settings' => [
         'displayErrorDetails' => true,
-
     ],
 ];
 
@@ -36,8 +35,12 @@ $app = new App($container);
 // Register component on container
 $container['view'] = function ($container) {
     $view = new Views\Twig('../templates', [
-        'cache' => false
+        'cache' => false,
+        'debug' => true
     ]);
+
+    $view->addExtension(new \Twig_Extension_Debug());
+
     $view->addExtension(new Views\TwigExtension(
         $container['router'],
         $container['request']->getUri()
@@ -137,6 +140,63 @@ $app->get('/results/', function (Request $request, Response $response) {
     return $response;
 
 })->setName('results');
+
+/**
+ * Route for search json.
+ */
+$app->get('/json/', function (Request $request, Response $response) {
+
+    $this->logger->addInfo('Get: /json/');
+
+    $incipit = $request->getParam('incipit');
+    $repository = $request->getParam('repository');
+    $isPrefixSearch = $request->getParam('prefix') != null;
+    $isTransposed = $request->getParam('transposition') != null;
+
+    $searchQuery = new SearchQuery();
+
+    $searchQuery->setUserInput($incipit);
+    $searchQuery->setCatalogFilter($repository);
+    $searchQuery->setIsPrefixSearch($isPrefixSearch);
+    $searchQuery->setisTransposed($isTransposed);
+
+    $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
+
+    // TODO: Nobody's perfect but we still have some cleaning up to do here. Where does <script> sh*t come from? How to have application/json response header?
+
+    $result = $searchQuery->performJsonSearchQuery();
+    $response->write($result);
+
+    return $response->withHeader('Content-Type', 'application/json');
+
+    //construct baseUrl
+    /*$baseUrl = "{$request->getUri()->getBasePath()}?incipit={$incipit}";
+    if($repository != null)
+    {
+        foreach ($repository as $index => $entry) {
+            $baseUrl .= "&repository[]={$entry}";
+        }
+    }
+    if($isPrefixSearch != null)
+    {
+        $baseUrl .= "&prefix={$isPrefixSearch}";
+    }
+    if($isTransposed != null)
+    {
+        $baseUrl .= "&transposition={$isTransposed}";
+    }
+
+    $response = $this->view->render($response, 'json.twig',
+        [
+            'catalogEntries' => $catalogEntries,
+            'searchString' => $searchQuery->getSingleOctaveQuery(),
+            'numberOfResults' => $searchQuery->getNumOfResults(),
+            'baseUrl' => $baseUrl
+        ]);
+
+    return $response->withHeader('Content-Type', 'application/json');*/
+
+})->setName('json');
 
 /**
  * Route to About.

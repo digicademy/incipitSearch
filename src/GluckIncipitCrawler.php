@@ -75,6 +75,7 @@ class GluckIncipitCrawler extends IncipitCrawler
 
             foreach ($part->xpath(".//skos:relatedMatch/skos:Concept") as $item) {
                 $incipitNotes = $this->contentOfXMLPath($item,"bsbmo:incipitScore");
+                $dataUID = $this->contentOfXMLPath($item, "dc:identifier");
                 if(empty($incipitNotes)){
                     continue;
                 }
@@ -92,7 +93,7 @@ class GluckIncipitCrawler extends IncipitCrawler
 
                 $incipitUID = $this->contentOfXMLPath($item,"dc:identifier");
                 $entryUID = $workIdentifier . "-" . $incipitUID;
-                $catalogEntry = new CatalogEntry($incipit, "GluckWV-online", $entryUID, $dataURL, $workDetailUrl,
+                $catalogEntry = new CatalogEntry($incipit, "GluckWV-online", $entryUID, $dataUID, $dataURL, $workDetailUrl,
                     $composer, $workTitle, $partTitle, "");
 
 

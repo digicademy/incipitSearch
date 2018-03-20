@@ -30,6 +30,7 @@ class CatalogEntry
 
     protected $catalog;
     protected $catalogItemID;
+    protected $dataUID;
     protected $dataURL;
     protected $detailURL;
     protected $incipit;
@@ -44,6 +45,7 @@ class CatalogEntry
      * @param Incipit|null $incipit
      * @param string|null $catalog will be set to empty if null
      * @param string|null $catalogItemID will be set to empty if null
+     * @param int|null $dataUID will be set to empty if null
      * @param string|null $dataURL will be set to empty if null
      * @param string|null $detailURL will be set to empty if null
      * @param string|null $composer will be set to empty if null
@@ -51,7 +53,7 @@ class CatalogEntry
      * @param string|null $subTitle will be set to empty if null
      * @param string|null $year will be set to empty if null
      */
-    public function __construct(Incipit $incipit = null, string $catalog = null, string $catalogItemID = null,
+    public function __construct(Incipit $incipit = null, string $catalog = null, string $catalogItemID = null, int $dataUID = null,
                                 string $dataURL = null, string $detailURL = null,
                                 string $composer = null, string $title = null, string $subTitle = null,
                                 string $year = null)
@@ -61,19 +63,18 @@ class CatalogEntry
         }
         if ($catalogItemID == null) {
             echo "CatalogEntry > construct > catalogItemID is null";
-
         }
         //TODO: catch invalid data
         $this->incipit = $incipit;
         $this->catalog = $catalog ?? "";
         $this->catalogItemID = $catalogItemID ?? "";
+        $this->dataUID = $dataUID ?? "";
         $this->dataURL = $dataURL ?? "";
         $this->detailURL = $detailURL ?? "";
         $this->composer = $composer ?? "";
         $this->title = $title ?? "";
         $this->subTitle = $subTitle ?? "";
         $this->year = $year ?? "";
-
     }
 
 
@@ -89,6 +90,7 @@ class CatalogEntry
     public function getJSONArray(): array {
         $array = ['catalog' => $this->getCatalog(),
             'catalogItemID' => $this->getCatalogItemID(),
+            'dataUID' => $this->getDataUID(),
             'dataURL' => $this->getDataURL(),
             'detailURL' => $this->getDetailURL(),
             'incipit' => $this->getIncipit()->getJSONArray(),
@@ -114,7 +116,7 @@ class CatalogEntry
     {
         $incipit = Incipit::incipitFromJSONArray($jsonArray["incipit"]);
         $catalogEntry = new CatalogEntry($incipit,
-            $jsonArray["catalog"], $jsonArray["catalogItemID"],
+            $jsonArray["catalog"], $jsonArray["catalogItemID"], $jsonArray["dataUID"],
             $jsonArray["dataURL"], $jsonArray["detailURL"],
             $jsonArray["composer"],
             $jsonArray["title"], $jsonArray["subTitle"], $jsonArray["year"]);
@@ -150,12 +152,21 @@ class CatalogEntry
     }
 
     /**
-     * Gets ID of catalog.
-     * @return string
-     */
+ * Gets ID of catalog.
+ * @return string
+ */
     public function getCatalogItemID(): string
     {
         return $this->catalogItemID;
+    }
+
+    /**
+     * Gets ID of catalog.
+     * @return string
+     */
+    public function getDataUID(): int
+    {
+        return $this->dataUID;
     }
 
     /**
