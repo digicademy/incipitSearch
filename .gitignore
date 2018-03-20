@@ -5,3 +5,5 @@ coverage
 logs
 .DS_Store
 config.json
+catalogues/rism.xml
+catalogues/rism.incipits.xml
