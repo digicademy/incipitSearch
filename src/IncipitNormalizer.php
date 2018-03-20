@@ -48,12 +48,27 @@ class IncipitNormalizer
      * Creates incipit without ornaments. q8D and q''C are getting replaced with ''.
      *
      * E.g. 4'A/2''Cq8D{C'Bq''C'BA}
+     * becomes ACCBBA
      *
      *
      */
     public static function normalizeOrnaments(string $paeCode, Array $sharpSignatureAccidentals = null, Array $flatSignatureAccidentals = null): string
     {
-        $normalized = preg_replace(['[gq]\w+[A-Z]','[gq]\w+[r]'], '', self::normalizeOrnaments($paeCode, $sharpSignatureAccidentals, $flatSignatureAccidentals));
+
+        var_dump($paeCode);
+
+        $normalized = preg_replace(['/[gq]\w[A-Z]/','/[gq]\w[r]/'], '', $paeCode);
+
+        var_dump($normalized);
+
+        $normalized = self::normalizeToSingleOctave(
+            $normalized,
+            $sharpSignatureAccidentals,
+            $flatSignatureAccidentals
+        );
+
+        var_dump($normalized);
+
         return $normalized;
     }
 

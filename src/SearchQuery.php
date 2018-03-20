@@ -80,11 +80,11 @@ class SearchQuery
             'body' => [
                 'query' => [
                     'bool' => [
-                        'must' => [
-                            'wildcard' => [
-                                "incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"
-                            ]
-                        ],
+                        'should' => [
+                                    ['wildcard' => ["incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"]],
+                                    ['wildcard' => ["incipit.withoutOrnaments" =>  $this->singleOctaveQuery . "*"]]
+                             ],
+                        'minimum_number_should_match' => 1,
                         'filter' => $this->getFilterArray() //there might be multiple filter set or not
                     ]
 
@@ -104,8 +104,10 @@ class SearchQuery
         //maybe there is a better solution for setting of prefix search in query (see "prefix"): https://www.elastic.co/guide/en/elasticsearch/reference/current/term-level-queries.html
         if($this->isPrefixSearch)
         {
-            $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"];
-
+            $searchParams['body']['query']['bool']['should'] = [
+                ['wildcard' => ["incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"]],
+                ['wildcard' => ["incipit.withoutOrnaments" =>  $this->singleOctaveQuery . "*"]]
+            ];
         }
         if($this->isTransposed)
         {

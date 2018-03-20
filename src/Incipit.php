@@ -34,6 +34,7 @@ class Incipit
     protected $notes;
     protected $completeIncipit;
     protected $notesNormalized;
+    protected $notesWithoutOrnaments;
     protected $notesNormalizedToPitch;
     protected $transposedNotes;
 
@@ -92,6 +93,30 @@ class Incipit
         return $this->notesNormalized;
     }
 
+    /**
+     * Creates incipit without Ornaments for use in search.
+     * Removes all infomation except the note names including ornaments.
+     *
+     * E.g. 4'A/2''Cq8D{C'Bq''C'BA}
+     * becomes ACCBBA
+     *
+     * @return string incipit without Ornaments
+     */
+    public function getNotesWithoutOrnaments(): string
+    {
+        if (!empty($this->notesWithoutOrnaments)) {
+            return $this->notesWithoutOrnaments;
+        }
+
+        $this->notesWithoutOrnaments = IncipitNormalizer::normalizeOrnaments(
+            $this->notes,
+            $this->getSharpAccidentals(),
+            $this->getFlatAccidentals()
+        );
+
+        return $this->notesWithoutOrnaments;
+    }
+
 
     /**
      * Creates incipit normalized to note values for use in search.
@@ -110,26 +135,33 @@ class Incipit
             return $this->notesNormalizedToPitch;
         }
 
-        $this->notesNormalizedToPitch = IncipitNormalizer::normalizeToPitch($this->notes, $this->getSharpAccidentals(),
-            $this->getFlatAccidentals());
+        $this->notesNormalizedToPitch = IncipitNormalizer::normalizeToPitch(
+            $this->notes,
+            $this->getSharpAccidentals(),
+            $this->getFlatAccidentals()
+        );
 
         return $this->notesNormalizedToPitch;
     }
 
     /**
-     * Creates incipit string containing proportional information on up and down pitch only (transposition)
+     * Creates incipit string containing proportional information on up and
+     * down pitch only (transposition)
      *
-     * Starting point is  getNotesNormalizedToPitch, as it contains a normalized incipit with accidentals marked at each note
+     * Starting point is  getNotesNormalizedToPitch, as it contains a normalized
+     * incipit with accidentals marked at each note
      * E.g.
      *
      * @return string string containing transposition only
      */
     public function getTransposedNotes(): string
     {
-        if(!empty($this->transposedNotes)){
+        if(!empty($this->transposedNotes)) {
             return $this->transposedNotes;
         }
-        $this->transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->getNotesNormalizedToPitch());
+        $this->transposedNotes = IncipitTransposer::transposeNormalizedNotes(
+            $this->getNotesNormalizedToPitch()
+        );
 
         return $this->transposedNotes;
     }
@@ -153,7 +185,7 @@ class Incipit
      * The array has the following keys: "notes", "clef", "accidentals",
      * "time", "completeIncipit", "normalizedIncipit"
      *
-     * @return Array of string
+     * @return array of string
      */
     public function getJSONArray(): Array
     {
@@ -164,6 +196,7 @@ class Incipit
             'time' => $this->getTime(),
             'completeIncipit' => $this->getCompleteIncipit(),
             'normalizedToSingleOctave' => $this->getNotesNormalizedToSingleOctave(),
+            'withoutOrnaments' => $this->getNotesWithoutOrnaments(),
             'normalizedToPitch' => $this->getNotesNormalizedToPitch(),
             'transposedNotes' => $this->getTransposedNotes()
         ];
@@ -183,7 +216,12 @@ class Incipit
      */
     public static function incipitFromJSONArray(array $json): Incipit
     {
-        $incipit = new Incipit($json["notes"], $json["clef"], $json["accidentals"], $json["time"]);
+        $incipit = new Incipit(
+            $json["notes"],
+            $json["clef"],
+            $json["accidentals"],
+            $json["time"]
+        );
 
         return $incipit;
     }

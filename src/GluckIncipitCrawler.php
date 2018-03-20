@@ -86,8 +86,8 @@ class GluckIncipitCrawler extends IncipitCrawler
                 $incipitTime = $this->contentOfXMLPath($item,"bsbmo:incipitTimesig");
                 $composer = "Christoph Willibald Gluck";
 
-                //$this->addLog("catalogEntryFromWork >" . " " . $workTitle . " " . $partTitle . "\n" .
-                   // $incipitClef . " " . $incipitAccidentals . " " . $incipitTime . " " . $incipitNotes);
+                $this->addLog("catalogEntryFromWork >" . " " . $workTitle . " " . $partTitle . "\n" .
+                    $incipitClef . " " . $incipitAccidentals . " " . $incipitTime . " " . $incipitNotes);
 
                 $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
 
@@ -163,6 +163,7 @@ class GluckIncipitCrawler extends IncipitCrawler
             //$this->addLog("work: $title $workUrl ");
             // get all incipits entries
             $catalogEntries = $this->catalogEntriesFromWork($workUrl);
+
             foreach ($catalogEntries as $catalogEntry)
             {
             $this->addCatalogEntryToElasticSearchIndex($catalogEntry);
