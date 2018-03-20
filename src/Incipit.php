@@ -52,9 +52,9 @@ class Incipit
         string $time = null
     ) {
         $this->notes = $notes;
-        $this->clef = $clef ?? "";
-        $this->accidentals = $accidentals ?? "";
-        $this->time = $time ?? "";
+        $this->clef = $clef ?? '';
+        $this->accidentals = $accidentals ?? '';
+        $this->time = $time ?? '';
     }
 
     /**
