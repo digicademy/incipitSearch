@@ -153,7 +153,6 @@ $app->get('/json/', function (Request $request, Response $response) {
     $isPrefixSearch = $request->getParam('prefix') != null;
     $isTransposed = $request->getParam('transposition') != null;
 
-
     $searchQuery = new SearchQuery();
 
     $searchQuery->setUserInput($incipit);
@@ -165,9 +164,10 @@ $app->get('/json/', function (Request $request, Response $response) {
 
     // TODO: Nobody's perfect but we still have some cleaning up to do here. Where does <script> sh*t come from? How to have application/json response header?
 
-    $response = $searchQuery->performJsonSearchQuery();
+    $result = $searchQuery->performJsonSearchQuery();
+    $response->write($result);
 
-    return $response;
+    return $response->withHeader('Content-Type', 'application/json');
 
     //construct baseUrl
     /*$baseUrl = "{$request->getUri()->getBasePath()}?incipit={$incipit}";
