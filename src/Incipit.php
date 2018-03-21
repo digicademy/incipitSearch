@@ -156,11 +156,11 @@ class Incipit
      */
     public function getTransposedNotes(): string
     {
-        if(!empty($this->transposedNotes)) {
+        if (!empty($this->transposedNotes)) {
             return $this->transposedNotes;
         }
         $this->transposedNotes = IncipitTransposer::transposeNormalizedNotes(
-            $this->getNotesNormalizedToPitch()
+            $this->getNotesNormalizedToSingleOctave()
         );
 
         return $this->transposedNotes;

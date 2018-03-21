@@ -1,4 +1,5 @@
 <?php
+
 namespace ADWLM\IncipitSearch;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -80,10 +81,6 @@ class SearchQuery
             'body' => [
                 'query' => [
                     'bool' => [
-                        'should' => [
-                                    ['wildcard' => ["incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"]],
-                                    ['wildcard' => ["incipit.withoutOrnaments" =>  $this->singleOctaveQuery . "*"]]
-                             ],
                         'minimum_number_should_match' => 1,
                         'filter' => $this->getFilterArray() //there might be multiple filter set or not
                     ]
@@ -100,21 +97,19 @@ class SearchQuery
         ];
         //TODO: cleanup setting of filters for transposition and prefix
 
-        // if only searching from beginning of incipit
-        //maybe there is a better solution for setting of prefix search in query (see "prefix"): https://www.elastic.co/guide/en/elasticsearch/reference/current/term-level-queries.html
-        if($this->isPrefixSearch)
-        {
-            $searchParams['body']['query']['bool']['should'] = [
-                ['wildcard' => ["incipit.normalizedToSingleOctave" =>  $this->singleOctaveQuery . "*"]],
-                ['wildcard' => ["incipit.withoutOrnaments" =>  $this->singleOctaveQuery . "*"]]
-            ];
-        }
-        if($this->isTransposed)
-        {
-            $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->userInput);
+        if ($this->isTransposed) {
+
+            $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->singleOctaveQuery . "*");
+
             $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.transposedNotes" => $transposedNotes . "*"];
-            //var_dump($searchParams);
-        }
+
+        } else {
+            $searchParams['body']['query']['bool']['should'] = [
+                ['wildcard' => ["incipit.normalizedToSingleOctave" => $this->singleOctaveQuery . "*"]],
+                ['wildcard' => ["incipit.withoutOrnaments" => $this->singleOctaveQuery . "*"]]
+            ];
+        };
+
         return $searchParams;
 
     }
@@ -131,10 +126,10 @@ class SearchQuery
         if (!empty($this->getCatalogFilter())) {
 
             $filter[] = [
-                'terms' =>
-                    ['catalog' => $this->getCatalogFilter()]
+                'terms' => ['catalog' => $this->getCatalogFilter()]
             ];
-       }
+        }
+
         return $filter;
     }
 
@@ -172,6 +167,7 @@ class SearchQuery
      * the JSON result returned by a search request.
      *
      * @param array $results associative array as returned by elastic search
+     *
      * @return array of CatalogEntry
      */
     private function parseSearchResponse(array $results): array
@@ -195,6 +191,7 @@ class SearchQuery
 
     /**
      * Sets the incipit search query.
+     *
      * @param string $userInput
      */
     public function setUserInput(string $userInput)
@@ -207,6 +204,7 @@ class SearchQuery
 
     /**
      * Gets the currently set incipitQuery string
+     *
      * @return mixed
      */
     public function getSingleOctaveQuery(): string
@@ -216,6 +214,7 @@ class SearchQuery
 
     /**
      * Gets the currently set catalog filter.
+     *
      * @return string|null
      */
     public function getCatalogFilter()
@@ -225,6 +224,7 @@ class SearchQuery
 
     /**
      * Sets the catalog filter.
+     *
      * @param array|null $catalogFilter
      */
     public function setCatalogFilter(array $catalogFilter = null)
@@ -234,24 +234,27 @@ class SearchQuery
 
     /**
      * Gets number of search results.
+     *
      * @return int
      */
-    public function getNumOfResults():int
+    public function getNumOfResults(): int
     {
         return $this->numOfResults;
     }
 
     /**
      * Gets the current results page.
+     *
      * @return int
      */
-    public function getPage():int
+    public function getPage(): int
     {
         return $this->page;
     }
 
     /**
      * Sets the current results page.
+     *
      * @param int $page
      */
     public function setPage(int $page)
@@ -261,6 +264,7 @@ class SearchQuery
 
     /**
      * Gets the page size.
+     *
      * @return int
      */
     public function getPageSize(): int
@@ -270,6 +274,7 @@ class SearchQuery
 
     /**
      * Sets the page size.
+     *
      * @param int $pageSize
      */
     public function setPageSize(int $pageSize)

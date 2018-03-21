@@ -22,6 +22,7 @@ namespace ADWLM\IncipitSearch;
  */
 class IncipitTransposer
 {
+
     // notes with value assigned to each semitone
     public static $notes = [
         "bC" => 11,
@@ -53,16 +54,18 @@ class IncipitTransposer
     /**
      * Creates an incipit with transposition (relative distance between two pitches)
      *
-     * @param string $notesNormalizedToPitch incipit normalized to note values expanded accidentals(''A''B''xC'xF)
+     * @param string $normalizedToSingleOctave incipit normalized to note values expanded accidentals(ABxCxF)
      *
      * @return string incipit with transposition
      */
-    public static function transposeNormalizedNotes(string $notesNormalizedToPitch): string
+    public static function transposeNormalizedNotes(string $normalizedToSingleOctave): string
     {
-        if (empty($notesNormalizedToPitch)) {
+        if (empty($normalizedToSingleOctave)) {
             return '';
         }
 
+        var_dump($normalizedToSingleOctave);
+        
         // default values
         $highOctaveValue = 0; // can be bewteen 0-4
         $lowOctaveValue = 0; // can be bewteen 0-4
@@ -73,8 +76,8 @@ class IncipitTransposer
          * go through string token by token and identify notes by checking each token, saving value, composing
          * full note out of the values and saving to array
          */
-         foreach (str_split($notesNormalizedToPitch) as $token) {
-             // this looks so ugly, because  switch does not alloe regex; maybe rewrite as if /else
+        foreach (str_split($normalizedToSingleOctave) as $token) {
+            // this looks so ugly, because  switch does not alloe regex; maybe rewrite as if /else
             switch ($token) {
                 case ",":
                     $lowOctaveValue += 1;
@@ -89,7 +92,7 @@ class IncipitTransposer
                     $accidentalValue = "b";
                     break;
                 case "A":
-                   IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
+                    IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
                     $noteWasParsed = true;
                     break;
                 case "B":
@@ -124,7 +127,7 @@ class IncipitTransposer
                     echo 'Invalid Incipit';
                     break;
             }
-            if($noteWasParsed){
+            if ($noteWasParsed) {
                 $accidentalValue = "";
                 $lowOctaveValue = 0;
                 $highOctaveValue = 0;
@@ -138,9 +141,9 @@ class IncipitTransposer
     /**
      * Calculates numeric value of each note that represents its pitch
      *
-     * @param $lowOctaveValue value of low octave
+     * @param $lowOctaveValue  value of low octave
      * @param $highOctaveValue value of high octave
-     * @param $noteValue value of note
+     * @param $noteValue       value of note
      *
      */
     public static function calculatePitch($lowOctaveValue, $highOctaveValue, $noteString): int
@@ -153,6 +156,7 @@ class IncipitTransposer
         } elseif ($highOctaveValue > 1) {
             return (12 * $highOctaveValue) + $noteValue;
         }
+
         return $noteValue;
 
     }
@@ -168,7 +172,7 @@ class IncipitTransposer
      */
     public static function pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue)
     {
-        $noteString = $accidentalValue .$token;
+        $noteString = $accidentalValue . $token;
         array_push(IncipitTransposer::$pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
     }
 
@@ -184,14 +188,14 @@ class IncipitTransposer
         $calculatedIntervals = "";
         $currentPitch = current(IncipitTransposer::$pitchValues);
         // go though pitches and suvtect nect from current
-        while(next(IncipitTransposer::$pitchValues) !== false)
-        {
+        while (next(IncipitTransposer::$pitchValues) !== false) {
             $nextPitch = current(IncipitTransposer::$pitchValues);
             $intervalValue = $nextPitch - $currentPitch;
-            $interval = (string) $intervalValue;
-            $calculatedIntervals = $calculatedIntervals. " " .$interval;
+            $interval = (string)$intervalValue;
+            $calculatedIntervals = $calculatedIntervals . " " . $interval;
             $currentPitch = current(IncipitTransposer::$pitchValues);
         }
+
         //echo "ERGEBNIS: " . $calculatedIntervals . "\n";
         return $calculatedIntervals;
 
