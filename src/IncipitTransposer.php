@@ -64,8 +64,6 @@ class IncipitTransposer
             return '';
         }
 
-        var_dump($normalizedToSingleOctave);
-        
         // default values
         $highOctaveValue = 0; // can be bewteen 0-4
         $lowOctaveValue = 0; // can be bewteen 0-4
@@ -124,7 +122,7 @@ class IncipitTransposer
                     $noteWasParsed = true;
                     break;
                 default:
-                    echo 'Invalid Incipit';
+                    // echo 'Invalid Incipit';
                     break;
             }
             if ($noteWasParsed) {
