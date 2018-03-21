@@ -168,8 +168,18 @@ class SBNIncipitCrawler extends IncipitCrawler
         // create incipit an catalog entry
         $detailURL = $dataURL;
         $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
-        $catalogEntry = new CatalogEntry($incipit, "SBN", $incipitUID, $dataURL, $detailURL,
-            $composer, $title, $subtitle, $year);
+        $catalogEntry = new CatalogEntry(
+            $incipit,
+            "SBN",
+            $incipitUID,
+            0,
+            $dataURL,
+            $detailURL,
+            $composer,
+            $title,
+            $subtitle,
+            $year)
+        ;
 
         return $catalogEntry;
     }

@@ -107,6 +107,7 @@ class SchemaIncipitCrawler extends IncipitCrawler
                             $incipit,
                             $dataCatalogName,
                             $entryUid,
+                            0,
                             $dataUrl,
                             $detailUrl,
                             $composer,
