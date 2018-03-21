@@ -1,6 +1,4 @@
 {# pagination of results#}
-
-{# TODO: make 10000 limit generic (calculated via page and number of results per page) #}
             {% spaceless %}
                 {% if numberOfPages > 1 %}
 
@@ -8,50 +6,72 @@
                     {% set surroundingPages = 3 %}
 
                     <div id="pagination">
-                        {#if Slim-Limit of 10,000 results is reached#}
-                        {% if numberOfResults < 10000 %}
-                        <p>Sie sehen Seite {{ currentPage }} von {{ numberOfPages }} Ergebnisseiten</p>
-                        {% else %}
-                        <p>Sie sehen Seite {{ currentPage }} von 333 Ergebnisseiten</p>
+
+                        {% if currentPage is null %}
+                            <p>Sie sehen Seite 1 von {{ numberOfPages }} Ergebnisseiten</p>
                         {% endif %}
+
+                        {% if currentPage is not null %}
+                            {% if numberOfResults <= 10000 %}
+                                <p>Sie sehen Seite {{ currentPage }} von {{ numberOfPages }} Ergebnisseiten</p>
+                            {% endif %}
+                            {% if numberOfResults > 10000 %}
+                                <p>Sie sehen Seite {{ currentPage }} von 333 Ergebnisseiten</p>
+                            {% endif %}
+                        {% endif %}
+
                         <ul>
                             {#First Page will only be displayed when not visible as sourrounding page#}
-                            {% if currentPage != 1 %}
+                            {% if currentPage > 3 %}
                                 <li>
                                     <a href="{{ "#{baseUrl}&page=1" }}">Erste Seite</a>
                                 </li>
                             {% endif %}
-                    {#rearrange and mathematically determin how many pages will be displayed dependent on number of results per page {% for i in 1..numberOfPages %}#}
-                            {% for i in 1..(numberOfPages) %}
-                                {% if 0 == (currentPage - surroundingPages) - loop.index %}
-                                    <li class="disabled"><a href="#">...</a></li>
-                                {% elseif 0 == (currentPage + surroundingPages) - loop.index %}
-                                    <li class="disabled"><a href="#">...</a></li>
-                                {% elseif 0 < (currentPage - surroundingPages) - loop.index %}
-                                {% elseif 0 > (currentPage + surroundingPages) - loop.index %}
-                                {% else %}
-                                    <li {% if currentPage == loop.index  %} class="active"{% endif %}>
-                                        <a href={{ "#{baseUrl}&page=#{loop.index}" }}>{{ loop.index }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                            {#Last Page will only be displayed when not visible as sourrounding page#}
-                            {#if Slim-Limit of 10,000 results is reached, refinement of search will besuggested#}
-                            {% if numberOfResults < 10000 %}
-                                {% if currentPage != numberOfPages %}
+                            {% if numberOfResults <= 10000 %}
+                                {% for i in 1..numberOfPages %}
+                                    {% if 0 == (currentPage - surroundingPages) - loop.index %}
+                                        <li class="disabled">...</li>
+                                    {% elseif 0 == (currentPage + surroundingPages) - loop.index %}
+                                        <li class="disabled">...</li>
+                                    {% elseif 0 < (currentPage - surroundingPages) - loop.index %}
+                                    {% elseif 0 > (currentPage + surroundingPages) - loop.index %}
+                                    {% else %}
+                                        <li {% if currentPage == loop.index %} class="active"{% endif %}>
+                                            <a href={{ "#{baseUrl}&page=#{loop.index}" }}>{{ loop.index }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                {#Last Page will only be displayed when not visible as sourrounding page#}
+                                {% if (currentPage != numberOfPages) and (numberOfPages > 4) %}
                                     <li>
-                                        <a href="{{ "#{baseUrl}&page=#{numberOfPages}"}}">Letzte Seite</a>
+                                        <a href="{{ "#{baseUrl}&page=#{numberOfPages}" }}">Letzte Seite</a>
                                     </li>
                                 {% endif %}
-                            {% else %}
-                                <li>
-                                    <a href="{{ "#{baseUrl}&page=#{333}"}}">Letzte Seite</a>
-                                </li>
+                            {% endif %}
+                            {#rearrange and determin how many pages will be displayed dependent on number of results per page {% for i in 1..numberOfPages %}#}
+                            {% if numberOfResults > 10000 %}
+                                {% for i in 1..332 %}
+                                    {% if 0 == (currentPage - surroundingPages) - loop.index %}
+                                        <li class="disabled">...</li>
+                                    {% elseif 0 == (currentPage + surroundingPages) - loop.index %}
+                                        <li class="disabled">...</li>
+                                    {% elseif 0 < (currentPage - surroundingPages) - loop.index %}
+                                    {% elseif 0 > (currentPage + surroundingPages) - loop.index %}
+                                    {% else %}
+                                        <li {% if currentPage == loop.index %} class="active"{% endif %}>
+                                            <a href={{ "#{baseUrl}&page=#{loop.index}" }}>{{ loop.index }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                {#Last Page will only be displayed when not visible as sourrounding page#}
+                                {% if (currentPage != numberOfPages) and (numberOfPages > 4) %}
+                                    <li>
+                                        <a href="{{ "#{baseUrl}&page=#{333}" }}">Letzte Seite</a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
                         </ul>
                     </div>
                 {% endif %}
             {% endspaceless %}
             {# end pagination #}
-
-<hr>
