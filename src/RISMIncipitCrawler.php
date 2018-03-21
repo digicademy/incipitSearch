@@ -72,6 +72,7 @@ class RISMIncipitCrawler extends IncipitCrawler
                 $incipit,
                 "RISM",
                 $catalogItemID,
+                0,
                 $dataURL,
                 $detailURL,
                 $composer,
