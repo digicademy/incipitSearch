@@ -22,7 +22,7 @@
                                 </li>
                             {% endif %}
                     {#rearrange and mathematically determin how many pages will be displayed dependent on number of results per page {% for i in 1..numberOfPages %}#}
-                            {% for i in 1..332 %}
+                            {% for i in 1..(numberOfPages) %}
                                 {% if 0 == (currentPage - surroundingPages) - loop.index %}
                                     <li class="disabled"><a href="#">...</a></li>
                                 {% elseif 0 == (currentPage + surroundingPages) - loop.index %}

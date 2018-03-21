@@ -41,10 +41,7 @@ $container['view'] = function ($container) {
 
     $view->addExtension(new \Twig_Extension_Debug());
 
-    $view->addExtension(new Views\TwigExtension(
-        $container['router'],
-        $container['request']->getUri()
-    ));
+    $view->addExtension(new Views\TwigExtension($container['router'], $container['request']->getUri()));
 
     return $view;
 };
@@ -84,9 +81,9 @@ $app->get('/results/', function (Request $request, Response $response) {
     $isPrefixSearch = $request->getParam('prefix') != null;
     $isTransposed = $request->getParam('transposition') != null;
 
-	$searchQuery = new SearchQuery();
+    $searchQuery = new SearchQuery();
 
-	//TODO: check if at least two notes (or maybe 3) were entered
+    //TODO: check if at least two notes (or maybe 3) were entered
     // use transposed string for stringlength eval, as it only contains notes (accidentals and octave removed)
     // in HTML: set min input to same value, so request will not be triggered
     $searchQuery->setUserInput($incipit);
@@ -96,7 +93,7 @@ $app->get('/results/', function (Request $request, Response $response) {
         // as ElasticSearch and SearchQuery starts counting pages from zero,
         // we subtract 1
         // for the user facing HTML and URL we start pages at 1, though
-        $searchQuery->setPage($page -1);
+        $searchQuery->setPage($page - 1);
     }
     // "query does not support array of values"
     $searchQuery->setCatalogFilter($repository);
@@ -111,23 +108,19 @@ $app->get('/results/', function (Request $request, Response $response) {
 
     //construct baseUrl
     $baseUrl = "{$request->getUri()->getBasePath()}?incipit={$incipit}";
-    if($repository != null)
-    {
-    	foreach ($repository as $index => $entry) {
-			$baseUrl .= "&repository[]={$entry}";
-		}
+    if ($repository != null) {
+        foreach ($repository as $index => $entry) {
+            $baseUrl .= "&repository[]={$entry}";
+        }
     }
-    if($isPrefixSearch != null)
-    {
+    if ($isPrefixSearch != null) {
         $baseUrl .= "&prefix={$isPrefixSearch}";
     }
-    if($isTransposed != null)
-    {
+    if ($isTransposed != null) {
         $baseUrl .= "&transposition={$isTransposed}";
     }
 
-    $response = $this->view->render($response, 'results.twig',
-        [
+    $response = $this->view->render($response, 'results.twig', [
             'catalogEntries' => $catalogEntries,
             'searchString' => $searchQuery->getSingleOctaveQuery(),
             'numberOfResults' => $searchQuery->getNumOfResults(),
@@ -138,8 +131,8 @@ $app->get('/results/', function (Request $request, Response $response) {
         ]);
 
     return $response;
-
-})->setName('results');
+}
+)->setName('results');
 
 /**
  * Route for search json.
@@ -162,80 +155,52 @@ $app->get('/json/', function (Request $request, Response $response) {
 
     $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
 
-    // TODO: Nobody's perfect but we still have some cleaning up to do here. Where does <script> sh*t come from? How to have application/json response header?
-
     $result = $searchQuery->performJsonSearchQuery();
     $response->write($result);
 
     return $response->withHeader('Content-Type', 'application/json');
 
-    //construct baseUrl
-    /*$baseUrl = "{$request->getUri()->getBasePath()}?incipit={$incipit}";
-    if($repository != null)
-    {
-        foreach ($repository as $index => $entry) {
-            $baseUrl .= "&repository[]={$entry}";
-        }
-    }
-    if($isPrefixSearch != null)
-    {
-        $baseUrl .= "&prefix={$isPrefixSearch}";
-    }
-    if($isTransposed != null)
-    {
-        $baseUrl .= "&transposition={$isTransposed}";
-    }
-
-    $response = $this->view->render($response, 'json.twig',
-        [
-            'catalogEntries' => $catalogEntries,
-            'searchString' => $searchQuery->getSingleOctaveQuery(),
-            'numberOfResults' => $searchQuery->getNumOfResults(),
-            'baseUrl' => $baseUrl
-        ]);
-
-    return $response->withHeader('Content-Type', 'application/json');*/
-
-})->setName('json');
+}
+)->setName('json');
 
 /**
  * Route to About.
  */
 $app->get('/about[/]', function (Request $request, Response $response) {
 
-	$this->logger->addInfo('Get: /about');
+    $this->logger->addInfo('Get: /about');
 
-	$response = $this->view->render($response, 'about.twig');
+    $response = $this->view->render($response, 'about.twig');
 
-	return $response;
-
-})->setName('about');
+    return $response;
+}
+)->setName('about');
 
 /**
  * Route to Repositories.
  */
 $app->get('/repositories[/]', function (Request $request, Response $response) {
 
-	$this->logger->addInfo('Get: /repositories');
+    $this->logger->addInfo('Get: /repositories');
 
-	$response = $this->view->render($response, 'repositories.twig');
+    $response = $this->view->render($response, 'repositories.twig');
 
-	return $response;
-
-})->setName('repositories');
+    return $response;
+}
+)->setName('repositories');
 
 /**
  * Route to participation.
  */
 $app->get('/participation[/]', function (Request $request, Response $response) {
 
-	$this->logger->addInfo('Get: /participation');
+    $this->logger->addInfo('Get: /participation');
 
-	$response = $this->view->render($response, 'participation.twig');
+    $response = $this->view->render($response, 'participation.twig');
 
-	return $response;
-
-})->setName('participation');
+    return $response;
+}
+)->setName('participation');
 
 /**
  * Route to Impressum.
@@ -247,8 +212,8 @@ $app->get('/impressum[/]', function (Request $request, Response $response) {
     $response = $this->view->render($response, 'impressum.twig');
 
     return $response;
-
-})->setName('impressum');
+}
+)->setName('impressum');
 
 
 $app->run();
