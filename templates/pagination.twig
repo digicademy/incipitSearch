@@ -7,6 +7,7 @@
 
                     <div id="pagination">
 
+                        {# Number for some reason, currentPage is empty when result is initially displayed#}
                         {% if currentPage is null %}
                             <p>Sie sehen Seite 1 von {{ numberOfPages }} Ergebnisseiten</p>
                         {% endif %}
