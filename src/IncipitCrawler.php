@@ -203,6 +203,7 @@ class IncipitCrawler
                                     'completeIncipit' => $notAnalyzedStringType,
                                     'normalizedToPitch' => $notAnalyzedStringType,
                                     'normalizedToSingleOctave' => $notAnalyzedStringType,
+                                    'withoutOrnaments' => $notAnalyzedStringType,
                                     'transposedNotes' => $notAnalyzedStringType
                                 ]
                             ]
