@@ -2,7 +2,6 @@
 
 namespace ADWLM\IncipitSearch;
 
-
 /**
  * IncipitNormalizer normalizes Plaine and Easie (PAE) encoded incipits
  * to normalized formats.
@@ -38,7 +37,7 @@ class IncipitNormalizer
      *
      * @return string normalized incipit
      */
-    public static function normalizeToSingleOctave(string $paeCode, Array $sharpSignatureAccidentals = null, Array $flatSignatureAccidentals = null): string
+    public static function normalizeToSingleOctave(string $paeCode, array $sharpSignatureAccidentals = null, array $flatSignatureAccidentals = null): string
     {
         $normalized = str_replace(["'",","], '', self::normalizeToPitch($paeCode, $sharpSignatureAccidentals, $flatSignatureAccidentals));
         return $normalized;
@@ -52,7 +51,7 @@ class IncipitNormalizer
      *
      *
      */
-    public static function normalizeOrnaments(string $paeCode, Array $sharpSignatureAccidentals = null, Array $flatSignatureAccidentals = null): string
+    public static function normalizeOrnaments(string $paeCode, array $sharpSignatureAccidentals = null, array $flatSignatureAccidentals = null): string
     {
 
         var_dump($paeCode);
@@ -83,7 +82,7 @@ class IncipitNormalizer
      *
      * @return string normalized incipit
      */
-    public static function normalizeToPitch(string $paeCode, Array $sharpSignatureAccidentals = null, Array $flatSignatureAccidentals = null): string
+    public static function normalizeToPitch(string $paeCode, array $sharpSignatureAccidentals = null, array $flatSignatureAccidentals = null): string
     {
 
         //first remove all unnecessary chars
@@ -133,7 +132,6 @@ class IncipitNormalizer
                 //set accidental for next note
                 $currentAccidental = $char;
             } else {
-
                 //we set the signature accidentals to each single note
                 if (empty($currentAccidental) && in_array($char, $sharpAccidentals, true)) {
                     $currentAccidental = 'x';
@@ -149,7 +147,6 @@ class IncipitNormalizer
                 $normalized .= $octave . $currentAccidental . $char;
                 $currentAccidental = '';
             }
-
         }
         return $normalized;
     }
@@ -188,7 +185,7 @@ class IncipitNormalizer
             } else if ($char == 'b' || $char == 'x' || $char == 'n') {
                 //we remember the last seen accidental
                 $currentAccidental = $char;
-            } else if (in_array($char, ['A', 'B', 'C', 'D', 'E', 'F', 'G']) ) {
+            } elseif (in_array($char, ['A', 'B', 'C', 'D', 'E', 'F', 'G'])) {
                 //if there was an accidental before the note we put the note in the measureAccidentals list
                 //example: xFAF -> measureSharpAccidentals == [F]
                 //          ^
@@ -212,16 +209,10 @@ class IncipitNormalizer
                 $normalized .= $currentAccidental . $char;
 
                 $currentAccidental = ''; //reset current note accidental (measures are saved in list)
-
             } else {
                 $normalized .= $char; //any other char is just kept
             }
-
         }
         return $normalized;
     }
-
-
-
-
 }
