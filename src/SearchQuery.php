@@ -31,8 +31,8 @@ use ADWLM\IncipitSearch\CatalogEntry;
 class SearchQuery
 {
 
-    private $singleOctaveQuery = "";
-    private $userInput = "";
+    private $singleOctaveQuery = '';
+    private $userInput = '';
     private $catalogFilter = null;
 
 
@@ -57,7 +57,7 @@ class SearchQuery
         $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../config.json'));
         $elasticHost = $jsonConfig->elasticSearch->host;
         if (empty($elasticHost)) {
-            $elasticHost = "127.0.0.1";
+            $elasticHost = '127.0.0.1';
         }
 
         $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
@@ -92,21 +92,21 @@ class SearchQuery
             ],
 
             // page refers to one single item, while pageSize is the amount of item to be displayed
-            "from" => $this->page * $this->pageSize,
-            "size" => $this->pageSize
+            'from' => $this->page * $this->pageSize,
+            'size' => $this->pageSize
         ];
         //TODO: cleanup setting of filters for transposition and prefix
 
         if ($this->isTransposed) {
 
-            $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->singleOctaveQuery . "*");
+            $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->singleOctaveQuery . '*');
 
-            $searchParams['body']['query']['bool']['must']['wildcard'] = ["incipit.transposedNotes" => $transposedNotes . "*"];
+            $searchParams['body']['query']['bool']['must']['wildcard'] = ['incipit.transposedNotes' => $transposedNotes . '*'];
 
         } else {
             $searchParams['body']['query']['bool']['should'] = [
-                ['wildcard' => ["incipit.normalizedToSingleOctave" => $this->singleOctaveQuery . "*"]],
-                ['wildcard' => ["incipit.withoutOrnaments" => $this->singleOctaveQuery . "*"]]
+                ['wildcard' => ['incipit.normalizedToSingleOctave' => $this->singleOctaveQuery . '*']],
+                ['wildcard' => ['incipit.withoutOrnaments' => $this->singleOctaveQuery . '*']]
             ];
         };
 
@@ -172,11 +172,11 @@ class SearchQuery
      */
     private function parseSearchResponse(array $results): array
     {
-        $this->numOfResults = $results["hits"]["total"];
-        $hits = $results["hits"]["hits"];
+        $this->numOfResults = $results['hits']['total'];
+        $hits = $results['hits']['hits'];
         $catalogEntries = [];
         foreach ($hits as $hit) {
-            $catalogEntry = CatalogEntry::catalogEntryFromJSONArray($hit["_source"]);
+            $catalogEntry = CatalogEntry::catalogEntryFromJSONArray($hit['_source']);
             array_push($catalogEntries, $catalogEntry);
         }
 
@@ -197,9 +197,9 @@ class SearchQuery
     public function setUserInput(string $userInput)
     {
         $this->userInput = $userInput;
-        $this->addLog("SearchQuery > set query to: " . $this->singleOctaveQuery);
+        $this->addLog('SearchQuery > set query to: ' . $this->singleOctaveQuery);
         $this->singleOctaveQuery = IncipitNormalizer::normalizeToSingleOctave($userInput);
-        $this->addLog("SearchQuery > set query to: " . $this->singleOctaveQuery);
+        $this->addLog('SearchQuery > set query to: ' . $this->singleOctaveQuery);
     }
 
     /**
