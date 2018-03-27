@@ -217,10 +217,10 @@ class Incipit
     public static function incipitFromJSONArray(array $json): Incipit
     {
         $incipit = new Incipit(
-            $json["notes"],
-            $json["clef"],
-            $json["accidentals"],
-            $json["time"]
+            $json['notes'],
+            $json['clef'],
+            $json['accidentals'],
+            $json['time']
         );
 
         return $incipit;
@@ -239,7 +239,7 @@ class Incipit
         if (strlen($this->getAccidentals()) < 2) {
             return [];
         }
-        if ($this->getAccidentals()[0] != "x") {
+        if ($this->getAccidentals()[0] != 'x') {
             return [];
         }
         $sharpAccidentals = [];
@@ -262,7 +262,7 @@ class Incipit
         if (strlen($this->getAccidentals()) < 2) {
             return [];
         }
-        if ($this->getAccidentals()[0] != "b") {
+        if ($this->getAccidentals()[0] != 'b') {
             return [];
         }
         $flatAccidentals = [];
