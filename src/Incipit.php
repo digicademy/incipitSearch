@@ -322,5 +322,4 @@ class Incipit
     {
         return $this->notes;
     }
-
 }
