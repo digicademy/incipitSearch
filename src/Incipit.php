@@ -87,7 +87,7 @@ class Incipit
         if (empty($this->notesNormalized)) {
             //we don't call the IncipitNormalizer function here
             //because normalizedToPitch has to be called anyway and is buffered here
-            $this->notesNormalized = str_replace(["'", ","], '', $this->getNotesNormalizedToPitch());
+            $this->notesNormalized = str_replace(["'", ','], '', $this->getNotesNormalizedToPitch());
         }
 
         return $this->notesNormalized;

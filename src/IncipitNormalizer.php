@@ -39,7 +39,7 @@ class IncipitNormalizer
      */
     public static function normalizeToSingleOctave(string $paeCode, array $sharpSignatureAccidentals = null, array $flatSignatureAccidentals = null): string
     {
-        $normalized = str_replace(["'",","], '', self::normalizeToPitch($paeCode, $sharpSignatureAccidentals, $flatSignatureAccidentals));
+        $normalized = str_replace(["'",','], '', self::normalizeToPitch($paeCode, $sharpSignatureAccidentals, $flatSignatureAccidentals));
         return $normalized;
     }
 
@@ -101,7 +101,7 @@ class IncipitNormalizer
 
         $notesLength = strlen($notes);
         $octave = "'"; //current octave mark (default is ')
-        $currentAccidental = ""; //accidental for next / current note
+        $currentAccidental = ''; //accidental for next / current note
 
         for ($i = 0; $i < $notesLength; $i++) {
             $char = $notes[$i];
@@ -117,11 +117,11 @@ class IncipitNormalizer
                 continue;
             }
 
-            if ($char == ",") {
-                $octave = ",";
+            if ($char == ',') {
+                $octave = ',';
                 //now look ahead for multiple '
-                while (($i + 1) < $notesLength && $notes[$i + 1] == ",") {
-                    $octave .= ",";
+                while (($i + 1) < $notesLength && $notes[$i + 1] == ',') {
+                    $octave .= ',';
                     $i++;
                 }
                 continue;
