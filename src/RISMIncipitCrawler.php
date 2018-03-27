@@ -44,10 +44,10 @@ class RISMIncipitCrawler extends IncipitCrawler
 
         $result = array();
 
-        $catalogItemID = $this->contentOfXMLPath($parentXMLElement,'controlfield[@tag=\'001\']');
-        $composer = $this->contentOfXMLPath($parentXMLElement,'datafield[@tag=\'100\']');
-        $title = $this->contentOfXMLPath($parentXMLElement,'datafield[@tag=\'240\']/subfield[@code=\'a\']');
-        $subtitle = $this->contentOfXMLPath($parentXMLElement,'datafield[@tag=\'240\']/subfield[@code=\'k\']');
+        $catalogItemID = $this->contentOfXMLPath($parentXMLElement, 'controlfield[@tag=\'001\']');
+        $composer = $this->contentOfXMLPath($parentXMLElement, 'datafield[@tag=\'100\']');
+        $title = $this->contentOfXMLPath($parentXMLElement, 'datafield[@tag=\'240\']/subfield[@code=\'a\']');
+        $subtitle = $this->contentOfXMLPath($parentXMLElement, 'datafield[@tag=\'240\']/subfield[@code=\'k\']');
         $year = $this->contentOfXMLPath($parentXMLElement, 'datafield[@tag=\'260\']');
         $detailURL = 'https://opac.rism.info/search?id=' . $catalogItemID;
         $dataURL = 'https://opac.rism.info/id/rismid/' . $catalogItemID . '?format=marc';
@@ -56,10 +56,22 @@ class RISMIncipitCrawler extends IncipitCrawler
 
         $i = 1;
         foreach ($incipits as $incipit) {
-            $incipitClef = $this->contentOfXMLPath($parentXMLElement,'datafield[@tag=\'031\']['. $i .']/subfield[@code=\'g\']');
-            $incipitAccidentals = $this->contentOfXMLPath($parentXMLElement,'datafield[@tag=\'031\']['. $i .']/subfield[@code=\'n\']');
-            $incipitTime = $this->contentOfXMLPath($parentXMLElement, 'datafield[@tag=\'031\']['. $i .']/subfield[@code=\'o\']');
-            $incipitNotes = $this->contentOfXMLPath($parentXMLElement, 'datafield[@tag=\'031\']['. $i .']/subfield[@code=\'p\']');
+            $incipitClef = $this->contentOfXMLPath(
+                $parentXMLElement,
+                'datafield[@tag=\'031\']['. $i .']/subfield[@code=\'g\']'
+            );
+            $incipitAccidentals = $this->contentOfXMLPath(
+                $parentXMLElement,
+                'datafield[@tag=\'031\']['. $i .']/subfield[@code=\'n\']'
+            );
+            $incipitTime = $this->contentOfXMLPath(
+                $parentXMLElement,
+                'datafield[@tag=\'031\']['. $i .']/subfield[@code=\'o\']'
+            );
+            $incipitNotes = $this->contentOfXMLPath(
+                $parentXMLElement,
+                'datafield[@tag=\'031\']['. $i .']/subfield[@code=\'p\']'
+            );
 
             $incipit = new Incipit(
                 $incipitNotes,
@@ -95,7 +107,10 @@ class RISMIncipitCrawler extends IncipitCrawler
      * @param string $xpath
      * @return string the content, empty if not found
      */
-    private function contentOfXMLPath(SimpleXMLElement $parentXmlElement, string $xpath): string {
+    private function contentOfXMLPath(
+        SimpleXMLElement $parentXmlElement,
+        string $xpath
+    ): string {
         if ($parentXmlElement == null) {
             return '';
         }
@@ -130,5 +145,4 @@ class RISMIncipitCrawler extends IncipitCrawler
             throw new \Exception('RISM incipit file does not exist. Use rismStreamParser to create it', 1521580546);
         }
     }
-
 }
