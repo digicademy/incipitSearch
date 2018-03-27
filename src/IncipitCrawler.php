@@ -38,7 +38,8 @@ class IncipitCrawler
     protected $indexName = 'catalog_entries';
 
     protected $logs = [];
-    protected function addLog(string $message) {
+    protected function addLog(string $message)
+    {
         array_push($this->logs, $message);
         echo $message . '\n';
     }
@@ -71,8 +72,6 @@ class IncipitCrawler
         $this->catalogClient = new Client([
             'timeout' => 15.0,
         ]);
-
-
     }
 
     /**
@@ -115,7 +114,6 @@ class IncipitCrawler
         $response = $this->elasticClient->index($params);
 
         //$this->addLog("data: addCatalogEntryToES > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
-
     }
 
 
@@ -135,11 +133,11 @@ class IncipitCrawler
         }
         try {
             $response = $this->elasticClient->indices()->delete($params);
-            $this->addLog("delete Index {$params['index']} > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
+            $this->addLog("delete Index {$params['index']} > Response " .
+            trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
         } catch (Exception $e) {
             $this->addLog("delete Index {$params['index']} > Failed with Error:\n " . $e->getMessage());
         }
-
     }
 
 
@@ -219,7 +217,4 @@ class IncipitCrawler
 
         //$this->addLog("created Index {$params['index']} > Response " . trim(preg_replace('/\s\s+/', ' ', json_encode($response))));
     }
-
-
-
 }
