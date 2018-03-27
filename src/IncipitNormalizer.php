@@ -129,25 +129,25 @@ class IncipitNormalizer
             }
 
 
-            if ($char == "b" || $char == "x" || $char == "n") {
+            if ($char == 'b' || $char == 'x' || $char == 'n') {
                 //set accidental for next note
                 $currentAccidental = $char;
             } else {
 
                 //we set the signature accidentals to each single note
                 if (empty($currentAccidental) && in_array($char, $sharpAccidentals, true)) {
-                    $currentAccidental = "x";
+                    $currentAccidental = 'x';
                 } else if (empty($currentAccidental) && in_array($char, $flatAccidentals, true)) {
-                    $currentAccidental = "b";
+                    $currentAccidental = 'b';
                 }
 
                 //if note is marked with neutral accidental, we set the accidental to blank
-                if ($currentAccidental == "n") {
-                    $currentAccidental = "";
+                if ($currentAccidental == 'n') {
+                    $currentAccidental = '';
                 }
 
                 $normalized .= $octave . $currentAccidental . $char;
-                $currentAccidental = "";
+                $currentAccidental = '';
             }
 
         }
@@ -173,45 +173,45 @@ class IncipitNormalizer
         $measureSharpAccidentals = [];
         $measureFlatAccidentals = [];
         $measureNeutralAccidentals = [];
-        $currentAccidental = ""; //this is for the current note
-        $normalized = "";
+        $currentAccidental = ''; //this is for the current note
+        $normalized = '';
         for ($i = 0; $i < $notesLength; $i++) {
             $char = $notes[$i];
 
-            if ($char == "/") {
+            if ($char == '/') {
                 //when the measure ends all accidentals are reset
                 $measureSharpAccidentals = [];
                 $measureFlatAccidentals = [];
                 $measureNeutralAccidentals = [];
-                $currentAccidental = "";
+                $currentAccidental = '';
                 $normalized .= $char;
-            } else if ($char == "b" || $char == "x" || $char == "n") {
+            } else if ($char == 'b' || $char == 'x' || $char == 'n') {
                 //we remember the last seen accidental
                 $currentAccidental = $char;
-            } else if (in_array($char, ["A", "B", "C", "D", "E", "F", "G"]) ) {
+            } else if (in_array($char, ['A', 'B', 'C', 'D', 'E', 'F', 'G']) ) {
                 //if there was an accidental before the note we put the note in the measureAccidentals list
                 //example: xFAF -> measureSharpAccidentals == [F]
                 //          ^
-                if ($currentAccidental == "x") {
+                if ($currentAccidental == 'x') {
                     array_push($measureSharpAccidentals, $char);
-                } else if ($currentAccidental == "b") {
+                } else if ($currentAccidental == 'b') {
                     array_push($measureFlatAccidentals, $char);
-                } else if ($currentAccidental == "n") {
+                } else if ($currentAccidental == 'n') {
                     array_push($measureNeutralAccidentals, $char);
                 }
 
                 //now we check if the current note is marked to have an accidental for this measure
                 if (in_array($char, $measureSharpAccidentals)) {
-                    $currentAccidental = "x";
+                    $currentAccidental = 'x';
                 } else if (in_array($char, $measureFlatAccidentals)) {
-                    $currentAccidental = "b";
+                    $currentAccidental = 'b';
                 } else if (in_array($char, $measureNeutralAccidentals)) {
-                    $currentAccidental = "n";
+                    $currentAccidental = 'n';
                 }
 
                 $normalized .= $currentAccidental . $char;
 
-                $currentAccidental = ""; //reset current note accidental (measures are saved in list)
+                $currentAccidental = ''; //reset current note accidental (measures are saved in list)
 
             } else {
                 $normalized .= $char; //any other char is just kept

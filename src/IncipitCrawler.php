@@ -35,12 +35,12 @@ class IncipitCrawler
     protected $elasticClient;
     protected $catalogClient;
 
-    protected $indexName = "catalog_entries";
+    protected $indexName = 'catalog_entries';
 
     protected $logs = [];
     protected function addLog(string $message) {
         array_push($this->logs, $message);
-        echo $message . "\n";
+        echo $message . '\n';
     }
 
     /**
@@ -63,7 +63,7 @@ class IncipitCrawler
         $elasticHost = $jsonConfig->elasticSearch->host;
 
         if (empty($elasticHost)) {
-            $elasticHost = "127.0.0.1";
+            $elasticHost = '127.0.0.1';
         }
 
         $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
@@ -105,7 +105,7 @@ class IncipitCrawler
             return;
         }
 
-        $esId = $catalogEntry->getCatalog() . "-" . $catalogEntry->getCatalogItemID();
+        $esId = $catalogEntry->getCatalog() . '-' . $catalogEntry->getCatalogItemID();
         $params = [
             'index' => $this->indexName,
             'type' => 'catalogEntry',
@@ -124,7 +124,7 @@ class IncipitCrawler
      */
     public function resetIndex()
     {
-        $this->addLog("reset Index");
+        $this->addLog('reset Index');
 
         $params = [
             'index' => $this->indexName
@@ -188,10 +188,10 @@ class IncipitCrawler
                             'catalogItemID' => $notAnalyzedStringType,
                             'dataURL' => $notAnalyzedStringType,
                             'detailURL' => $notAnalyzedStringType,
-                            'composer' => ["type" => "string"],
+                            'composer' => ['type' => 'string'],
                             'title' => $rawType,
-                            'subTitle' => ["type" => "string"],
-                            'year' => ["type" => "string"],
+                            'subTitle' => ['type' => 'string'],
+                            'year' => ['type' => 'string'],
 
                             'incipit' => [
                                 'type' => 'object',
