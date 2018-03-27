@@ -59,22 +59,22 @@ class CatalogEntry
                                 string $year = null)
     {
         if ($incipit == null) {
-            echo "CatalogEntry > construct > incipit is null";
+            echo 'CatalogEntry > construct > incipit is null';
         }
         if ($catalogItemID == null) {
-            echo "CatalogEntry > construct > catalogItemID is null";
+            echo 'CatalogEntry > construct > catalogItemID is null';
         }
         //TODO: catch invalid data
         $this->incipit = $incipit;
-        $this->catalog = $catalog ?? "";
-        $this->catalogItemID = $catalogItemID ?? "";
-        $this->dataUID = $dataUID ?? "";
-        $this->dataURL = $dataURL ?? "";
-        $this->detailURL = $detailURL ?? "";
-        $this->composer = $composer ?? "";
-        $this->title = $title ?? "";
-        $this->subTitle = $subTitle ?? "";
-        $this->year = $year ?? "";
+        $this->catalog = $catalog ?? '';
+        $this->catalogItemID = $catalogItemID ?? '';
+        $this->dataUID = $dataUID ?? '';
+        $this->dataURL = $dataURL ?? '';
+        $this->detailURL = $detailURL ?? '';
+        $this->composer = $composer ?? '';
+        $this->title = $title ?? '';
+        $this->subTitle = $subTitle ?? '';
+        $this->year = $year ?? '';
     }
 
 
@@ -114,12 +114,17 @@ class CatalogEntry
      */
     public static function catalogEntryFromJSONArray(array $jsonArray): CatalogEntry
     {
-        $incipit = Incipit::incipitFromJSONArray($jsonArray["incipit"]);
+        $incipit = Incipit::incipitFromJSONArray($jsonArray['incipit']);
         $catalogEntry = new CatalogEntry($incipit,
-            $jsonArray["catalog"], $jsonArray["catalogItemID"], $jsonArray["dataUID"],
-            $jsonArray["dataURL"], $jsonArray["detailURL"],
-            $jsonArray["composer"],
-            $jsonArray["title"], $jsonArray["subTitle"], $jsonArray["year"]);
+            $jsonArray['catalog'],
+            $jsonArray['catalogItemID'],
+            $jsonArray['dataUID'],
+            $jsonArray['dataURL'],
+            $jsonArray['detailURL'],
+            $jsonArray['composer'],
+            $jsonArray['title'],
+            $jsonArray['subTitle'],
+            $jsonArray['year']);
         return $catalogEntry;
     }
 
