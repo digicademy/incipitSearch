@@ -98,20 +98,20 @@ class SearchQuery
         //TODO: cleanup setting of filters for transposition and prefix
 
         if ($this->isTransposed) {
-
             $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->singleOctaveQuery . '*');
 
-            $searchParams['body']['query']['bool']['must']['wildcard'] = ['incipit.transposedNotes' => $transposedNotes . '*'];
+            $searchParams
+            ['body']['query']['bool']['must']['wildcard'] = ['incipit.transposedNotes' => $transposedNotes . '*'];
 
         } else {
-            $searchParams['body']['query']['bool']['should'] = [
+            $searchParams
+            ['body']['query']['bool']['should'] = [
                 ['wildcard' => ['incipit.normalizedToSingleOctave' => $this->singleOctaveQuery . '*']],
                 ['wildcard' => ['incipit.withoutOrnaments' => $this->singleOctaveQuery . '*']]
             ];
         };
 
         return $searchParams;
-
     }
 
     /**
@@ -124,7 +124,6 @@ class SearchQuery
         $filter = [];
 
         if (!empty($this->getCatalogFilter())) {
-
             $filter[] = [
                 'terms' => ['catalog' => $this->getCatalogFilter()]
             ];
