@@ -53,11 +53,18 @@ class CatalogEntry
      * @param string|null $subTitle will be set to empty if null
      * @param string|null $year will be set to empty if null
      */
-    public function __construct(Incipit $incipit = null, string $catalog = null, string $catalogItemID = null, int $dataUID = null,
-                                string $dataURL = null, string $detailURL = null,
-                                string $composer = null, string $title = null, string $subTitle = null,
-                                string $year = null)
-    {
+    public function __construct(
+        Incipit $incipit = null,
+        string $catalog = null,
+        string $catalogItemID = null,
+        int $dataUID = null,
+        string $dataURL = null,
+        string $detailURL = null,
+        string $composer = null,
+        string $title = null,
+        string $subTitle = null,
+        string $year = null
+    ) {
         if ($incipit == null) {
             echo 'CatalogEntry > construct > incipit is null';
         }
@@ -85,9 +92,10 @@ class CatalogEntry
      * "detailURL", "incipit" (embedded JSON array itself), "composer",
      * "title", "subTitle", "year"
      *
-     * @return Array of string
+     * @return array of string
      */
-    public function getJSONArray(): array {
+    public function getJSONArray(): array
+    {
         $array = ['catalog' => $this->getCatalog(),
             'catalogItemID' => $this->getCatalogItemID(),
             'dataUID' => $this->getDataUID(),
@@ -109,13 +117,14 @@ class CatalogEntry
      * "detailURL", "incipit" (embedded JSON array itself), "composer",
      * "title", "subTitle", "year"
      *
-     * @param array $json
-     * @return CatalogEntry
+     * @param array $jsonArray
+     * @return catalogEntry
      */
     public static function catalogEntryFromJSONArray(array $jsonArray): CatalogEntry
     {
         $incipit = Incipit::incipitFromJSONArray($jsonArray['incipit']);
-        $catalogEntry = new CatalogEntry($incipit,
+        $catalogEntry = new CatalogEntry(
+            $incipit,
             $jsonArray['catalog'],
             $jsonArray['catalogItemID'],
             $jsonArray['dataUID'],
@@ -124,7 +133,8 @@ class CatalogEntry
             $jsonArray['composer'],
             $jsonArray['title'],
             $jsonArray['subTitle'],
-            $jsonArray['year']);
+            $jsonArray['year']
+        );
         return $catalogEntry;
     }
 
@@ -238,4 +248,3 @@ class CatalogEntry
         return $this->incipit;
     }
 }
-
