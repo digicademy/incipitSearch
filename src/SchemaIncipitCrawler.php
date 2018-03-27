@@ -60,16 +60,14 @@ class SchemaIncipitCrawler extends IncipitCrawler
 
         // iterate through all data catalogs and fetch catalog identifier (uri) and name
         foreach ($dataCatalogs as $dataCatalog) {
-
             $dataCatalogIdentifier = $dataCatalog->getUri();
             $dataCatalogName = $graph->get($dataCatalogIdentifier, 'schema:name')->getValue();
 
-            // each catalog has 1:n datasets, each dataset equals a "work" and has 1:n composers
+            // each catalog has 1:n datasets, each dataset equals a 'work' and has 1:n composers
             $dataSets = $graph->all($dataCatalogIdentifier, 'schema:hasPart');
 
             // iterate through each data set and get composer and incipits
             foreach ($dataSets as $dataSet) {
-
                 $composer = $dataSet->get('schema:composer/schema:name')->getValue();
                 $detailUrl = $dataSet->get('schema:image')->getValue();
 
@@ -77,14 +75,12 @@ class SchemaIncipitCrawler extends IncipitCrawler
                 $includedCompositions = $dataSet->all('schema:includedComposition');
 
                 foreach ($includedCompositions as $includedComposition) {
-
                     $compositionTitle = $includedComposition->get('schema:name')->getValue();
 
                     // each composition has 1:n incipits
                     $compositionIncipits = $includedComposition->all('schema:includedComposition');
 
                     foreach ($compositionIncipits as $musicIncipit) {
-
                         // get incipit components
                         $incipitName = $musicIncipit->get('schema:name')->getValue();
                         $incipitValue = $musicIncipit->get('schema:incipitValue')->getValue();
@@ -93,8 +89,13 @@ class SchemaIncipitCrawler extends IncipitCrawler
                         $incipitTimesig = $musicIncipit->get('schema:incipitTimesig')->getValue();
 
                         // add log entry
-                        $this->addLog('catalogEntryFromSchema > ' . $dataCatalogName  . ' - ' . $compositionTitle . ' - ' . $incipitName . "\n" .
-                            $incipitClef . ' ' . $incipitKeysig . ' ' . $incipitTimesig . ' ' . $incipitValue);
+                        $this->addLog('catalogEntryFromSchema > ' . $dataCatalogName  . ' - 
+                        ' . $compositionTitle . ' - 
+                        ' . $incipitName . "\n" .
+                            $incipitClef . ' 
+                            ' . $incipitKeysig . ' 
+                            ' . $incipitTimesig . ' 
+                            ' . $incipitValue);
 
                         // create ADWLM\IncipitSearch\Incipit instance for catalog entry
                         $incipit = new Incipit($incipitValue, $incipitClef, $incipitKeysig, $incipitTimesig);
@@ -113,7 +114,7 @@ class SchemaIncipitCrawler extends IncipitCrawler
                             $composer,
                             $compositionTitle,
                             $incipitName,
-                            ""
+                            ''
                         );
 
                         // add entry to search index
@@ -135,7 +136,8 @@ class SchemaIncipitCrawler extends IncipitCrawler
      */
     private function generateUUID()
     {
-        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        return sprintf(
+            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             mt_rand(0, 0xffff),
             mt_rand(0, 0xffff),
             mt_rand(0, 0xffff),
@@ -143,7 +145,7 @@ class SchemaIncipitCrawler extends IncipitCrawler
             mt_rand(0, 0x3fff) | 0x8000,
             mt_rand(0, 0xffff),
             mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff));
+            mt_rand(0, 0xffff)
+        );
     }
-
 }
