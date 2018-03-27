@@ -11,7 +11,6 @@ use Elasticsearch\ClientBuilder;
 use ADWLM\IncipitSearch\Incipit;
 use ADWLM\IncipitSearch\CatalogEntry;
 
-
 /**
  * SBNIncipitCrawler is an expansion of IncipitCrawler.
  * It crawls a small subset of the SBN catalog and adds found incipits
@@ -32,17 +31,17 @@ use ADWLM\IncipitSearch\CatalogEntry;
  */
 class SBNIncipitCrawler extends IncipitCrawler
 {
-        protected $composer = "Nicht angegeben";
-        protected $title = "Nicht angegeben";
-        protected $subtitle = "";
-        protected $year = "Nicht angegeben";
+    protected $composer = 'Nicht angegeben';
+    protected $title = 'Nicht angegeben';
+    protected $subtitle = '';
+    protected $year = 'Nicht angegeben';
 
     /**
      * Creates a CatalogEntry with Incipit from the data at the given URL.
      *
      * @param string $catalogEntryUrl url of data in catalog
      * @param string string $catalogEntryID ID of the entry
-     * @return CatalogEntries Array of catalog entries
+     * @return array of CatalogEntry objects
      */
     public function catalogEntriesFromHTML(string $catalogEntryUrl, string $catalogEntryID) //can return null
     {
@@ -77,25 +76,25 @@ class SBNIncipitCrawler extends IncipitCrawler
          * 3. trim whitespaces
          */
         preg_match($composerRegEx, $bodyHTML, $matches);
-        $composer = preg_replace('/Autore principale\s*<\/td>\s*<td class="detail_value">/', "", $matches[0]);
-        $composer = preg_replace('/<\/td>/', "", $composer);
+        $composer = preg_replace('/Autore principale\s*<\/td>\s*<td class="detail_value">/', '', $matches[0]);
+        $composer = preg_replace('/<\/td>/', '', $composer);
         $composer = trim($composer);
         //cleanup
-        $composer = str_replace("&lt;", "", $composer);
-        $composer = str_replace("&gt;", "", $composer);
+        $composer = str_replace('&lt;', '', $composer);
+        $composer = str_replace('&gt;', '', $composer);
 
         preg_match($titleRegEx, $bodyHTML, $matches);
-        $title = preg_replace('/Titolo\s*<\/td>\s*<td class="detail_value">\s*<strong>/', "", $matches[0]);
-        $title = preg_replace('/<\/strong>/', "", $title);
+        $title = preg_replace('/Titolo\s*<\/td>\s*<td class="detail_value">\s*<strong>/', '', $matches[0]);
+        $title = preg_replace('/<\/strong>/', '', $title);
         $title = trim($title);
         // some titles are in quotation marks => remove them
         $title = trim($title, "\"");
 
-        $subtitle = "";
+        $subtitle = '';
 
 
         preg_match($yearRegEx, $bodyHTML, $matches);
-        $year = preg_replace('/Pubblicazione\s*<\/td>\s*<td class="detail_value">/', "", $matches[0]);
+        $year = preg_replace('/Pubblicazione\s*<\/td>\s*<td class="detail_value">/', '', $matches[0]);
         preg_match('/[0-9]+/', $year, $matches);
         $year = $matches[0];
 
@@ -110,8 +109,8 @@ class SBNIncipitCrawler extends IncipitCrawler
 
         $incipitEntryID = 0;
         $catalogEntries = [];
-        foreach ($matches[0] as $incipit){
-            $incipitUID = $catalogEntryID . "-" . $incipitEntryID ;
+        foreach ($matches[0] as $incipit) {
+            $incipitUID = $catalogEntryID . '-' . $incipitEntryID ;
             $catalogEntry = $this->createCatalogEntry($incipit, $catalogEntryUrl, $incipitUID, $composer, $title, $subtitle, $year);
             $incipitEntryID++;
             array_push($catalogEntries, $catalogEntry);
@@ -135,30 +134,31 @@ class SBNIncipitCrawler extends IncipitCrawler
      *
      * @return \ADWLM\IncipitSearch\CatalogEntry
      */
-    public function createCatalogEntry($incipit, $dataURL, $incipitUID , $composer, $title, $subtitle, $year){
+    public function createCatalogEntry($incipit, $dataURL, $incipitUID, $composer, $title, $subtitle, $year)
+    {
 
         /**
          * get specific values from $incipit:
          * example string for incipt: @clef:G-2\n@keysig:none\n@timesig:3/4      \n@data:6-{'FEF}{DAGA}{''D'AGA}\n";
          */
-        $incipitClef ="";
-        $incipitAccidentals = "";
-        $incipitTime = "";
-        $incipitNotes = "";
+        $incipitClef ='';
+        $incipitAccidentals = '';
+        $incipitTime = '';
+        $incipitNotes = '';
 
-        $incipitValues = explode("\\n", $incipit);
+        $incipitValues = explode('\\n', $incipit);
         //get array that contains all values
         // trim array
-        for($i = 0; $i < count($incipitValues); $i++){
+        for ($i = 0; $i < count($incipitValues); $i++) {
             $incipitValues[$i] = trim($incipitValues[$i]);
             //trim everything before :
-            $colonIndex = strpos($incipitValues[$i], ":");
+            $colonIndex = strpos($incipitValues[$i], ':');
             $incipitValues[$i] = substr($incipitValues[$i], $colonIndex+1);
             //echo "CLEANED VALUE: " . $incipitValues[$i];
         }
 
         $incipitClef = $incipitValues[0];
-        if($incipitValues[1] != "none"){
+        if ($incipitValues[1] != 'none') {
             $incipitAccidentals = $incipitValues[1];
         }
         $incipitTime = $incipitValues[2];
@@ -170,7 +170,7 @@ class SBNIncipitCrawler extends IncipitCrawler
         $incipit = new Incipit($incipitNotes, $incipitClef, $incipitAccidentals, $incipitTime);
         $catalogEntry = new CatalogEntry(
             $incipit,
-            "SBN",
+            'SBN',
             $incipitUID,
             0,
             $dataURL,
@@ -178,8 +178,8 @@ class SBNIncipitCrawler extends IncipitCrawler
             $composer,
             $title,
             $subtitle,
-            $year)
-        ;
+            $year
+        );
 
         return $catalogEntry;
     }
@@ -199,19 +199,16 @@ class SBNIncipitCrawler extends IncipitCrawler
         for ($i = $startID; $i <= $endID; $i++) {
             // create 8 digit number used for catalogEntry and creation of URL
             $catalogEntryID = sprintf('%07d', $i);
-            $catalogEntryUrl = "http://opac.sbn.it/bid/MSM" . $catalogEntryID;
+            $catalogEntryUrl ='http://opac.sbn.it/bid/MSM' . $catalogEntryID;
             $html = $this->contentOfURL($catalogEntryUrl);
             if ($html == null || strlen($html) == 0) {
-                echo "error: crawlCatalog > not found at {catalogEntryUrl}<br>\n";
+                echo 'error: crawlCatalog > not found at {catalogEntryUrl}<br>\n';
                 continue;
             }
             $catalogEntries = $this->catalogEntriesFromHTML($catalogEntryUrl, $catalogEntryID);
-            foreach ($catalogEntries as $catalogEntry)
-            {
-            $this->addCatalogEntryToElasticSearchIndex($catalogEntry);
+            foreach ($catalogEntries as $catalogEntry) {
+                $this->addCatalogEntryToElasticSearchIndex($catalogEntry);
             }
         }
-
     }
-
 }
