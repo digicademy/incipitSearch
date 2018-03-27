@@ -2,7 +2,6 @@
 
 namespace ADWLM\IncipitSearch;
 
-
 /**
  * IncipitTransposer transforms the normilized Incipit,
  * with accidentals mapped to each note into a notation with transposiiton.
@@ -26,27 +25,27 @@ class IncipitTransposer
 
     // notes with value assigned to each semitone
     public static $notes = [
-        "bC" => 11,
-        "C" => 0,
-        "xC" => 1,
-        "bD" => 1,
-        "D" => 2,
-        "xD" => 3,
-        "bE" => 3,
-        "E" => 4,
-        "xE" => 5,
-        "bF" => 4,
-        "F" => 5,
-        "xF" => 6,
-        "bG" => 6,
-        "G" => 7,
-        "xG" => 8,
-        "bA" => 8,
-        "A" => 9,
-        "xA" => 10,
-        "bB" => 10,
-        "B" => 11,
-        "xB" => 0,
+        'bC' => 11,
+        'C' => 0,
+        'xC' => 1,
+        'bD' => 1,
+        'D' => 2,
+        'xD' => 3,
+        'bE' => 3,
+        'E' => 4,
+        'xE' => 5,
+        'bF' => 4,
+        'F' => 5,
+        'xF' => 6,
+        'bG' => 6,
+        'G' => 7,
+        'xG' => 8,
+        'bA' => 8,
+        'A' => 9,
+        'xA' => 10,
+        'bB' => 10,
+        'B' => 11,
+        'xB' => 0,
     ];
 
     public static $pitchValues = array();
@@ -78,47 +77,47 @@ class IncipitTransposer
         foreach (str_split($normalizedToSingleOctave) as $token) {
             // this looks so ugly, because  switch does not allow regex; maybe rewrite as if /else
             switch ($token) {
-                case ",":
+                case ',':
                     $lowOctaveValue += 1;
                     break;
                 case "'":
                     $highOctaveValue += 1;
                     break;
-                case "x":
-                    $accidentalValue = "x";
+                case 'x':
+                    $accidentalValue = 'x';
                     break;
-                case "b":
-                    $accidentalValue = "b";
+                case 'b':
+                    $accidentalValue = 'b';
                     break;
-                case "A":
+                case 'A':
                     IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
                     $noteWasParsed = true;
                     break;
-                case "B":
+                case 'B':
                     IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
                     $noteWasParsed = true;
                     break;
-                case "C":
+                case 'C':
                     IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
                     $noteWasParsed = true;
                     break;
-                case "D":
+                case 'D':
                     IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
                     $noteWasParsed = true;
                     break;
-                case "E":
+                case 'E':
                     IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
                     $noteWasParsed = true;
                     break;
-                case "F":
+                case 'F':
                     IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
                     $noteWasParsed = true;
                     break;
-                case "G":
+                case 'G':
                     IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
                     $noteWasParsed = true;
                     break;
-                case "B":
+                case 'B':
                     IncipitTransposer::pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue);
                     $noteWasParsed = true;
                     break;
@@ -127,7 +126,7 @@ class IncipitTransposer
                     break;
             }
             if ($noteWasParsed) {
-                $accidentalValue = "";
+                $accidentalValue = '';
                 $lowOctaveValue = 0;
                 $highOctaveValue = 0;
                 $noteWasParsed = false;
@@ -184,20 +183,18 @@ class IncipitTransposer
      */
     public static function calculateIntervals(): string
     {
-        $calculatedIntervals = "";
+        $calculatedIntervals = '';
         $currentPitch = current(IncipitTransposer::$pitchValues);
         // go though pitches and suvtect nect from current
         while (next(IncipitTransposer::$pitchValues) !== false) {
             $nextPitch = current(IncipitTransposer::$pitchValues);
             $intervalValue = $nextPitch - $currentPitch;
             $interval = (string)$intervalValue;
-            $calculatedIntervals = $calculatedIntervals . " " . $interval;
+            $calculatedIntervals = $calculatedIntervals . ' ' . $interval;
             $currentPitch = current(IncipitTransposer::$pitchValues);
         }
 
         //echo "ERGEBNIS: " . $calculatedIntervals . "\n";
         return $calculatedIntervals;
     }
-
-
 }
