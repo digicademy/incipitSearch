@@ -37,9 +37,20 @@ class IncipitNormalizer
      *
      * @return string normalized incipit
      */
-    public static function normalizeToSingleOctave(string $paeCode, array $sharpSignatureAccidentals = null, array $flatSignatureAccidentals = null): string
-    {
-        $normalized = str_replace(["'",','], '', self::normalizeToPitch($paeCode, $sharpSignatureAccidentals, $flatSignatureAccidentals));
+    public static function normalizeToSingleOctave(
+        string $paeCode,
+        array $sharpSignatureAccidentals = null,
+        array $flatSignatureAccidentals = null
+    ): string {
+        $normalized = str_replace(
+            ["'",','],
+            '',
+            self::normalizeToPitch(
+                $paeCode,
+                $sharpSignatureAccidentals,
+                $flatSignatureAccidentals
+            )
+        );
         return $normalized;
     }
 
@@ -51,8 +62,11 @@ class IncipitNormalizer
      *
      *
      */
-    public static function normalizeOrnaments(string $paeCode, array $sharpSignatureAccidentals = null, array $flatSignatureAccidentals = null): string
-    {
+    public static function normalizeOrnaments(
+        string $paeCode,
+        array $sharpSignatureAccidentals = null,
+        array $flatSignatureAccidentals = null
+    ): string {
 
         var_dump($paeCode);
 
@@ -82,8 +96,11 @@ class IncipitNormalizer
      *
      * @return string normalized incipit
      */
-    public static function normalizeToPitch(string $paeCode, array $sharpSignatureAccidentals = null, array $flatSignatureAccidentals = null): string
-    {
+    public static function normalizeToPitch(
+        string $paeCode,
+        array $sharpSignatureAccidentals = null,
+        array $flatSignatureAccidentals = null
+    ): string {
 
         //first remove all unnecessary chars
         $notes = preg_replace('/[^\/\',xbnA-Z]/', '', $paeCode);
@@ -135,7 +152,7 @@ class IncipitNormalizer
                 //we set the signature accidentals to each single note
                 if (empty($currentAccidental) && in_array($char, $sharpAccidentals, true)) {
                     $currentAccidental = 'x';
-                } else if (empty($currentAccidental) && in_array($char, $flatAccidentals, true)) {
+                } elseif (empty($currentAccidental) && in_array($char, $flatAccidentals, true)) {
                     $currentAccidental = 'b';
                 }
 
@@ -182,7 +199,7 @@ class IncipitNormalizer
                 $measureNeutralAccidentals = [];
                 $currentAccidental = '';
                 $normalized .= $char;
-            } else if ($char == 'b' || $char == 'x' || $char == 'n') {
+            } elseif ($char == 'b' || $char == 'x' || $char == 'n') {
                 //we remember the last seen accidental
                 $currentAccidental = $char;
             } elseif (in_array($char, ['A', 'B', 'C', 'D', 'E', 'F', 'G'])) {
@@ -191,18 +208,18 @@ class IncipitNormalizer
                 //          ^
                 if ($currentAccidental == 'x') {
                     array_push($measureSharpAccidentals, $char);
-                } else if ($currentAccidental == 'b') {
+                } elseif ($currentAccidental == 'b') {
                     array_push($measureFlatAccidentals, $char);
-                } else if ($currentAccidental == 'n') {
+                } elseif ($currentAccidental == 'n') {
                     array_push($measureNeutralAccidentals, $char);
                 }
 
                 //now we check if the current note is marked to have an accidental for this measure
                 if (in_array($char, $measureSharpAccidentals)) {
                     $currentAccidental = 'x';
-                } else if (in_array($char, $measureFlatAccidentals)) {
+                } elseif (in_array($char, $measureFlatAccidentals)) {
                     $currentAccidental = 'b';
-                } else if (in_array($char, $measureNeutralAccidentals)) {
+                } elseif (in_array($char, $measureNeutralAccidentals)) {
                     $currentAccidental = 'n';
                 }
 
