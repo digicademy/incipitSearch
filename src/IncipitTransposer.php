@@ -4,7 +4,8 @@ namespace ADWLM\IncipitSearch;
 
 
 /**
- * IncipitTransposer transforms the normilized Incipit with accidentals mapped to each note into a notation with transposiiton.
+ * IncipitTransposer transforms the normilized Incipit,
+ * with accidentals mapped to each note into a notation with transposiiton.
  *
  *
  * Copyright notice
@@ -65,8 +66,8 @@ class IncipitTransposer
         }
 
         // default values
-        $highOctaveValue = 0; // can be bewteen 0-4
-        $lowOctaveValue = 0; // can be bewteen 0-4
+        $highOctaveValue = 0; // can be between 0-4
+        $lowOctaveValue = 0; // can be between 0-4
         $accidentalValue = ""; // x or b
         $noteWasParsed = false;
 
@@ -75,7 +76,7 @@ class IncipitTransposer
          * full note out of the values and saving to array
          */
         foreach (str_split($normalizedToSingleOctave) as $token) {
-            // this looks so ugly, because  switch does not alloe regex; maybe rewrite as if /else
+            // this looks so ugly, because  switch does not allow regex; maybe rewrite as if /else
             switch ($token) {
                 case ",":
                     $lowOctaveValue += 1;
@@ -156,7 +157,6 @@ class IncipitTransposer
         }
 
         return $noteValue;
-
     }
 
 
@@ -171,7 +171,8 @@ class IncipitTransposer
     public static function pushNotesToArray($token, $accidentalValue, $lowOctaveValue, $highOctaveValue)
     {
         $noteString = $accidentalValue . $token;
-        array_push(IncipitTransposer::$pitchValues, IncipitTransposer::calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
+        array_push(IncipitTransposer::$pitchValues, IncipitTransposer::
+        calculatePitch($lowOctaveValue, $highOctaveValue, $noteString));
     }
 
     /**
@@ -196,7 +197,6 @@ class IncipitTransposer
 
         //echo "ERGEBNIS: " . $calculatedIntervals . "\n";
         return $calculatedIntervals;
-
     }
 
 
