@@ -96,7 +96,7 @@ class IncipitNormalizer
     ): string {
 
         //first remove all unnecessary chars
-        $notes = preg_replace('/[^\/\',xbnA-Z]/', '', $paeCode);
+        $notes = preg_replace('/(%[CGF]-\d\s)|[^\/\',xbnA-Z]/', '', $paeCode);
 
         //expand the accidentals that are valid for a single measure
         $notes = self::expandMeasureWideAccidentals($notes);
