@@ -54,15 +54,17 @@ class IncipitTransposer
     /**
      * Creates an incipit with transposition (relative distance between two pitches)
      *
-     * @param string $normalizedToSingleOctave incipit normalized to note values expanded accidentals(ABxCxF)
+     * @param string incipit normalized to note values expanded accidentals(ABxCxF)
      *
      * @return string incipit with transposition
      */
-    public static function transposeNormalizedNotes(string $normalizedToSingleOctave): string
+    public static function transposeNormalizedNotes(string $incipit): string
     {
-        if (empty($normalizedToSingleOctave)) {
+        if (empty($incipit)) {
             return '';
         }
+
+        var_dump('Input: ' . $incipit);
 
         // default values
         $highOctaveValue = 0; // can be between 0-4
@@ -74,7 +76,7 @@ class IncipitTransposer
          * go through string token by token and identify notes by checking each token, saving value, composing
          * full note out of the values and saving to array
          */
-        foreach (str_split($normalizedToSingleOctave) as $token) {
+        foreach (str_split($incipit) as $token) {
             // this looks so ugly, because  switch does not allow regex; maybe rewrite as if /else
             switch ($token) {
                 case ',':
@@ -132,6 +134,8 @@ class IncipitTransposer
                 $noteWasParsed = false;
             }
         }
+
+        var_dump('Transposition: ' . IncipitTransposer::calculateIntervals());
 
         return IncipitTransposer::calculateIntervals();
     }

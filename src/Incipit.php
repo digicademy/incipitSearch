@@ -37,6 +37,7 @@ class Incipit
     protected $notesWithoutOrnaments;
     protected $notesNormalizedToPitch;
     protected $transposedNotes;
+    protected $transposedNotesWithoutOrnaments;
 
     /**
      * Incipit constructor.
@@ -166,6 +167,28 @@ class Incipit
         return $this->transposedNotes;
     }
 
+    /**
+     * Creates incipit string containing proportional information on up and
+     * down pitch only (transposition) and removes all infomation except the note names including ornaments.
+     *
+     * Starting point is getNotesWithoutOrnaments, as it contains a normalized
+     * incipit with accidentals marked at each note
+     * E.g.
+     *
+     * @return string string containing transposition only
+     */
+    public function getTransposedNotesWithoutOrnaments(): string
+    {
+        if (!empty($this->transposedNotesWithoutOrnaments)) {
+            return $this->transposedNotesWithoutOrnaments;
+        }
+
+        $this->transposedNotesWithoutOrnaments = IncipitTransposer::transposeNormalizedNotes(
+            $this->notesWithoutOrnaments
+        );
+
+        return $this->transposedNotesWithoutOrnaments;
+    }
 
     /**
      * Creates a string that only contain valid PAE characters.
@@ -198,7 +221,8 @@ class Incipit
             'normalizedToSingleOctave' => $this->getNotesNormalizedToSingleOctave(),
             'withoutOrnaments' => $this->getNotesWithoutOrnaments(),
             'normalizedToPitch' => $this->getNotesNormalizedToPitch(),
-            'transposedNotes' => $this->getTransposedNotes()
+            'transposedNotes' => $this->getTransposedNotes(),
+            'transposedNotesWithoutOrnaments' => $this->getTransposedNotesWithoutOrnaments()
         ];
 
         return $json;

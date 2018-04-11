@@ -84,7 +84,6 @@ class SearchQuery
                         'minimum_number_should_match' => 1,
                         'filter' => $this->getFilterArray() //there might be multiple filter set or not
                     ]
-
                 ],
                 'sort' => [
                     'title.raw'
@@ -101,7 +100,10 @@ class SearchQuery
             $transposedNotes = IncipitTransposer::transposeNormalizedNotes($this->singleOctaveQuery . '*');
 
             $searchParams
-            ['body']['query']['bool']['must']['wildcard'] = ['incipit.transposedNotes' => $transposedNotes . '*'];
+            ['body']['query']['bool']['should'] = [
+                ['wildcard' => ['incipit.transposedNotes' => $transposedNotes . '*']],
+                ['wildcard' => ['incipit.transposedNotesWithoutOrnaments' => $transposedNotes . '*']]
+            ];
 
         } else {
             $searchParams
