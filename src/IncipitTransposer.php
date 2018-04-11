@@ -64,8 +64,6 @@ class IncipitTransposer
             return '';
         }
 
-        var_dump('Input: ' . $incipit);
-
         // default values
         $highOctaveValue = 0; // can be between 0-4
         $lowOctaveValue = 0; // can be between 0-4
@@ -134,8 +132,6 @@ class IncipitTransposer
                 $noteWasParsed = false;
             }
         }
-
-        var_dump('Transposition: ' . IncipitTransposer::calculateIntervals());
 
         return IncipitTransposer::calculateIntervals();
     }
