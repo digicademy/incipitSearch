@@ -215,5 +215,18 @@ $app->get('/impressum[/]', function (Request $request, Response $response) {
 }
 )->setName('impressum');
 
+/**
+ * Route to Privacy policy.
+ */
+$app->get('/privacy[/]', function (Request $request, Response $response) {
+
+    $this->logger->addInfo('Get: /privacy');
+
+    $response = $this->view->render($response, 'privacy.twig');
+
+    return $response;
+}
+)->setName('privacy');
+
 
 $app->run();
