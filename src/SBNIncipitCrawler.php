@@ -31,10 +31,10 @@ use ADWLM\IncipitSearch\CatalogEntry;
  */
 class SBNIncipitCrawler extends IncipitCrawler
 {
-    protected $composer = 'Nicht angegeben';
-    protected $title = 'Nicht angegeben';
+    protected $composer = 'Kein Komponist angegeben';
+    protected $title = 'Kein Titel angegeben';
     protected $subtitle = '';
-    protected $year = 'Nicht angegeben';
+    protected $year = 'Kein Jahr angegeben';
 
     /**
      * Creates a CatalogEntry with Incipit from the data at the given URL.
@@ -56,8 +56,8 @@ class SBNIncipitCrawler extends IncipitCrawler
         // EXTRACT TBODY: get and save content of body-tag
         $body = $catalogEntryDOM->getElementsByTagName('tbody');
         // maybe check if tag is existing
-            $body = $body->item(0);
-            $bodyHTML = $catalogEntryDOM->saveHTML($body);
+        $body = $body->item(0);
+        $bodyHTML = $catalogEntryDOM->saveHTML($body);
         //echo "TBODY: " . $bodyHTML;
         //echo "URL: " . $catalogEntryUrl;
 
@@ -68,35 +68,44 @@ class SBNIncipitCrawler extends IncipitCrawler
         $titleRegEx = '/Titolo\s*<\/td>\s*<td class="detail_value">\s*<strong>(.*)<\/strong>/';
         $yearRegEx = '/Pubblicazione\s*<\/td>\s*<td class="detail_value">(.*)<br>/';
 
-
-        //TODO: undefined offest errors appear in lines 79,96,98
         /*
          * 1. get pattern
-         * 2. remove regex before and after needed information
-         * 3. trim whitespaces
+         * 2. if: macthes has some entry
+         * 3. remove regex before and after needed information
+         * 4. trim whitespaces
          */
-        preg_match($composerRegEx, $bodyHTML, $matches);
-        $composer = preg_replace('/Autore principale\s*<\/td>\s*<td class="detail_value">/', '', $matches[0]);
-        $composer = preg_replace('/<\/td>/', '', $composer);
-        $composer = trim($composer);
-        //cleanup
-        $composer = str_replace('&lt;', '', $composer);
-        $composer = str_replace('&gt;', '', $composer);
+        if (preg_match($composerRegEx, $bodyHTML, $matches)){
+            $composer = preg_replace('/Autore principale\s*<\/td>\s*<td class="detail_value">/', '', $matches[0]);
+            $composer = preg_replace('/<\/td>/', '', $composer);
+            $composer = trim($composer);
+            //cleanup
+            $composer = str_replace('&lt;', '', $composer);
+            $composer = str_replace('&gt;', '', $composer);
+        }  else {
+            $composer = '';
+        }
 
-        preg_match($titleRegEx, $bodyHTML, $matches);
-        $title = preg_replace('/Titolo\s*<\/td>\s*<td class="detail_value">\s*<strong>/', '', $matches[0]);
-        $title = preg_replace('/<\/strong>/', '', $title);
-        $title = trim($title);
-        // some titles are in quotation marks => remove them
-        $title = trim($title, "\"");
+        if (preg_match($titleRegEx, $bodyHTML, $matches)){
+            $title = preg_replace('/Titolo\s*<\/td>\s*<td class="detail_value">\s*<strong>/', '', $matches[0]);
+            $title = preg_replace('/<\/strong>/', '', $title);
+            $title = trim($title);
+            // some titles are in quotation marks => remove them
+            $title = trim($title, "\"");
+            $subtitle = '';
+        } else {
+            $title = 'Kein Titel angegeben';
+        }
 
-        $subtitle = '';
-
-
-        preg_match($yearRegEx, $bodyHTML, $matches);
-        $year = preg_replace('/Pubblicazione\s*<\/td>\s*<td class="detail_value">/', '', $matches[0]);
-        preg_match('/[0-9]+/', $year, $matches);
-        $year = $matches[0];
+        if(preg_match($yearRegEx, $bodyHTML, $matches)){
+            $year = preg_replace('/Pubblicazione\s*<\/td>\s*<td class="detail_value">/', '', $matches[0]);
+            if (preg_match('/[0-9]+/', $year, $matches)) {
+                $year = $matches[0];
+            } else {
+                $year = '';
+            }
+        } else {
+            $year = '';
+        }
 
         //echo " COMPOSER " . $composer . " TITLE " . $title . " YEAR " . $year;
 
@@ -106,7 +115,6 @@ class SBNIncipitCrawler extends IncipitCrawler
         preg_match_all($incipitRegex, $bodyHTML, $matches);
         //print_r($matches);
 
-
         $incipitEntryID = 0;
         $catalogEntries = [];
         foreach ($matches[0] as $incipit) {
@@ -114,14 +122,12 @@ class SBNIncipitCrawler extends IncipitCrawler
             $catalogEntry = $this->createCatalogEntry($incipit, $catalogEntryUrl, $incipitUID, $composer, $title, $subtitle, $year);
             $incipitEntryID++;
             array_push($catalogEntries, $catalogEntry);
-           // echo "INCIPIT " . $incipitEntryID . "\n" . $incipit . "\n";
+            //echo "INCIPIT " . $incipitEntryID . "\n" . $incipit . "\n";
+            echo $incipitUID . "\n";
         }
 
         return $catalogEntries;
     }
-
-
-
 
     /**
      * @param $match
@@ -184,7 +190,6 @@ class SBNIncipitCrawler extends IncipitCrawler
         return $catalogEntry;
     }
 
-
     /**
      * Crawls catalog and adds found CatalogEntries to ElasticSearch.
      * For SBN this just crawls a selection of about 300 entries.
@@ -193,8 +198,8 @@ class SBNIncipitCrawler extends IncipitCrawler
     public function crawlCatalog()
     {
         $startID = 1; // 0000001
-        $endID =   2000; // 0000300
-        // real endID is 0178310
+        $endID =   178310; // 0178310
+        // endID is 0178310
 
         for ($i = $startID; $i <= $endID; $i++) {
             // create 8 digit number used for catalogEntry and creation of URL
