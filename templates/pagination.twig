@@ -9,15 +9,15 @@
 
                         {# Number for some reason, currentPage is empty when result is initially displayed#}
                         {% if currentPage is null %}
-                            <p>Sie sehen Seite 1 von {{ numberOfPages }} Ergebnisseiten</p>
+                            <p>Page 1 of {{ numberOfPages }} result pages</p>
                         {% endif %}
 
                         {% if currentPage is not null %}
                             {% if numberOfResults <= 10000 %}
-                                <p>Sie sehen Seite {{ currentPage }} von {{ numberOfPages }} Ergebnisseiten</p>
+                                <p>Page {{ currentPage }} 1 {{ numberOfPages }} result pages</p>
                             {% endif %}
                             {% if numberOfResults > 10000 %}
-                                <p>Sie sehen Seite {{ currentPage }} von 333 Ergebnisseiten</p>
+                                <p>Page {{ currentPage }} of 333 result pages</p>
                             {% endif %}
                         {% endif %}
 
@@ -25,7 +25,7 @@
                             {#First Page will only be displayed when not visible as sourrounding page#}
                             {% if currentPage > 3 %}
                                 <li>
-                                    <a href="{{ "#{baseUrl}&page=1" }}">Erste Seite</a>
+                                    <a href="{{ "#{baseUrl}&page=1" }}">First page</a>
                                 </li>
                             {% endif %}
                             {% if numberOfResults <= 10000 %}
@@ -45,7 +45,7 @@
                                 {#Last Page will only be displayed when not visible as sourrounding page#}
                                 {% if (currentPage != numberOfPages) and (numberOfPages > 4) %}
                                     <li>
-                                        <a href="{{ "#{baseUrl}&page=#{numberOfPages}" }}">Letzte Seite</a>
+                                        <a href="{{ "#{baseUrl}&page=#{numberOfPages}" }}">Last page</a>
                                     </li>
                                 {% endif %}
                             {% endif %}
@@ -67,7 +67,7 @@
                                 {#Last Page will only be displayed when not visible as sourrounding page#}
                                 {% if (currentPage != numberOfPages) and (numberOfPages > 4) %}
                                     <li>
-                                        <a href="{{ "#{baseUrl}&page=#{333}" }}">Letzte Seite</a>
+                                        <a href="{{ "#{baseUrl}&page=#{333}" }}">Last page</a>
                                     </li>
                                 {% endif %}
                             {% endif %}

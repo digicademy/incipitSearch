@@ -4,7 +4,7 @@
 
 {% extends "base.twig" %}
 
-{% block title %}Such-Ergebnisse - IncipitSuche{% endblock %}
+{% block title %}Search results - IncipitSuche{% endblock %}
 {% block head %}
     {{ parent() }}
     <link rel="stylesheet" href="/public/piano/piano_style.css">
@@ -20,7 +20,7 @@
 <div class="wrapper style1">
     <section id="main" class="container">
         <div class="box">
-            <h1>Gefundene Werke</h1>
+            <h1>Matching works</h1>
             <div>
                 <strong>{{ numberOfResults }} results for the incipit "{{ searchString }}"</strong><br>
                 Alphabetical order
