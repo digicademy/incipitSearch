@@ -22,16 +22,20 @@
         <div class="box">
             <h1>Gefundene Werke</h1>
             <div>
-                <strong>{{ numberOfResults }} Ergebnisse für das Incipit "{{ searchString }}"</strong><br>
-                Alphabetische Sortierung
+                <strong>{{ numberOfResults }} results for the incipit "{{ searchString }}"</strong><br>
+                Alphabetical order
                 {% if numberOfResults > 10000 %}
-                    <p>Sie haben sehr viele Ergebnisse erhalten. Es werden die ersten 10.000 angezeigt.
-                        Präzisieren Sie Ihre Suche, indem Sie die Auswahl der Kataloge verringern oder mehr Noten eingeben.</p>
+                    <p>Your search returned a large result set.
+                        The first 10.000 results will be displayed.
+                        Please specify your search by selecting specific catalogues or entering more notes.</p>
                 {% elseif numberOfResults == 0 %}
-                    <p>Das eingegebene Incipit erzielte keine Treffer in den Katalogen.</p>
+                    <p>No music pieces are matching your query.
+                        Please refine your <a href="/">search</a> by selecting further repositories
+                        and using the virtual keyboard to make sure, that the Plaine & Easie Code is valid.
+                            </p>
                 {% endif %}
 
-            <p><strong><a href="/">Zurück zur Suche</a></strong></p>
+            <p><strong><a href="/">Back to search</a></strong></p>
             </div>
 
 

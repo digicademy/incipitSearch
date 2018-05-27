@@ -112,7 +112,7 @@
 	<div class="wrapper style1">
 		<section class="container 75%">
 			<div class="box">
-				<h2>Geben Sie über die virtuelle Klaviatur oder als Buchstabenfolge ein Musikincipit ein, um nach Einträgen zu suchen.</h2>
+				<h2>Enter a short melody via the virtual keyboard to search for entries.</h2>
 				<form action="{{ path_for('results') }}" method="GET">
 					<div class="row uniform">
 						<div class="7u 12u(normal)">
@@ -127,14 +127,14 @@
 					<div class="row uniform">
 						<div class="7u 12u(normal)">
 							<!-- TODO: min-input size: 3 (?) adjust placeholder text minlength=""-->
-							<a href="http://www.iaml.info/plaine-easie-code" class="float-right" title="Plaine & Easie Dokumentation">Zur Plaine & Easie Dokumentation</a>
+							<a href="http://www.iaml.info/plaine-easie-code" class="float-right" title="Plaine & Easie Dokumentation">Plaine & Easie documentation</a>
 							<input name="incipit" type="text" id="search" placeholder="Plaine & Easie Code (ExDxCBAxGxFE)" required>
 						</div>
 						<div class="12u 12u(normal)">
 							<ul class="actions">
-								<li><button type="submit" value="Suchen" id="submit">Suche</button></li>
-								<li><button type="submit" value="1" id="submit" name="transposition">Suchen mit Transposition</button></li>
-								<li><button type="button" value="Löschen" id="backspaceButton" class="alt">Letzten Ton löschen</button></li>
+								<li><button type="submit" value="Suchen" id="submit">Search</button></li>
+								<li><button type="submit" value="1" id="submit" name="transposition">Search with transposition</button></li>
+								<li><button type="button" value="Löschen" id="backspaceButton" class="alt">Delete last note</button></li>
 							</ul>
 						</div>
 					</div>

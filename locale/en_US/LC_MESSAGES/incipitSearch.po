@@ -1,0 +1,12 @@
+msgid ""
+msgstr ""
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bin\n"
+
+msgid "Über IncipitSearch"
+msgstr "About IncipitSearch"
+
+msgid "IncipitSearch ist eine Suchmaschine für Musik-Incipits, mit der aktuell über 850 000 Einträge in drei Musikkatalogen und Musikeditionen durchsucht werden können. Bei Incipits handelt es sich um einen pragmatischen Ansatz zur Katalogisierung von notierter Musik, indem jeweils wenige Takte einer Partitur transkribiert werden. Gleichzeitig lassen sich bisweilen auch Aussagen über melodische Charakteristika der Musik anhand dieser kurzen Bruchstücke treffen. In erster Linie versteht sich IncipitSearch jedoch als ein Pendant zu konventionellen thematisch-bibliographischen Katalogen und Werkverzeichnissen, wie sie in gedruckter Form schon seit langem vorgelegt werden."
+msgstr "fwhfjwehfjekwrhwejrhew"
