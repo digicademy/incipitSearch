@@ -10,13 +10,14 @@
 	<section id="main" class="container">
 		<div class="box">
 			<h2>Participation</h2>
-			<p>Digital catalogues, editions, and all further forms of digital note-repositories, that provide their material in a standardised format, can be connected with the IncipitSearch. The content of the
-				<a href="{{ path_for('repositories') }}">is obtained from RDF/XML, the IncipitSearch metadata format as well as from the HTML structure. If you want to integrate your repository in the IncipitSeatch, please  <a href="mailto:incipitsearch@adwmainz.net">contact us</a>.</p>
+			<p>Digital catalogues, editions, and all further forms of digital note-repositories, that provide their material in a standardised format, can be connected with the IncipitSearch.
+				The content of the
+				<a href="{{ path_for('repositories') }}">currently integrated repositories</a> is obtained from RDF/XML, the IncipitSearch metadata format as well as from the HTML structure. If you want to integrate your repository in  IncipitSearch, please  <a href="mailto:incipitsearch@adwmainz.net">contact us</a>.</p>
 
 			<h3>IncipitSearch metadata format (RDF)</h3>
-			<p>The standard metadata format for the data exchange and the aggregation of data with the IncipitSearch uses the vocabulary of
+			<p>The standard metadata format for the data exchange and the aggregation of data with  IncipitSearch uses the vocabulary of
 				<a href="http://schema.org/">schema.org</a>.
-				There, Turtle is deployed as leading type of serialisation and JSON-LD as preferred type of embedding. The structure of the data is divided into the following levels: data sets consist of overall compositions, overall compositions consist of partial compositions, partial compositions have one or more incipits
+				Turtle is used as serialisation for the annotation of catalogues and JSON-LD as the preferred type of embedding. The structure of the data is divided into the following levels: data sets consist of overall compositions, overall compositions consist of partial compositions, partial compositions have one or more incipits.
 			</p>
 			<span class="image fit"><a href="/public/img/schema-illustration.jpg" title="Link zur Illustrationsgrafik"><img src="/public/img/schema-illustration.jpg" alt="Illustration des IncipitSearch Metadatenformats"></a></span>
 
