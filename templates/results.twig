@@ -22,17 +22,20 @@
         <div class="box">
             <h1>Matching works</h1>
             <div>
+                <p>
                 <strong>{{ numberOfResults }} results for the incipit "{{ searchString }}"</strong><br>
-                Alphabetical order
+                Alphabetical order</p>
                 {% if numberOfResults > 10000 %}
                     <p>Your search returned a large result set.
                         The first 10.000 results will be displayed.
                         Please specify your search by selecting specific catalogues or entering more notes.</p>
                 {% elseif numberOfResults == 0 %}
-                    <p>No music pieces are matching your query.
-                        Please refine your <a href="/">search</a> by selecting further repositories
-                        and using the virtual keyboard to make sure, that the Plaine & Easie Code is valid.
-                            </p>
+                    <p>
+                        <strong>No music pieces are matching your query.
+                        Please refine your <a href="/">search</a> by selecting further repositories.<br/>
+                        Use the virtual keyboard to make sure, that the Plaine & Easie Code is valid.
+                        </strong>
+                    </p>
                 {% endif %}
 
             <p><strong><a href="/">Back to search</a></strong></p>
@@ -60,7 +63,7 @@
 
                 <div class="incipitSVG"></div>
                 <!-- end notes displaying -->
-                <b><a target="_blank" href="{{ catalogEntry.detailURL }}">Detail-Seite in {{ catalogEntry.catalog }} </a></b>
+                <b><a target="_blank" href="{{ catalogEntry.detailURL }}">Detail page in {{ catalogEntry.catalog }} </a></b>
                 <hr>
             </div><!--end result-->
             <br/>
