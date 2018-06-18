@@ -65,7 +65,16 @@ $container['logger'] = function ($c) {
 $app->get('/', function (Request $request, Response $response) {
     $this->logger->addInfo('Get: /');
 
-    return $this->view->render($response, 'index.twig', []);
+    return $this->view->render($response, 'en/index.twig', []);
+})->setName('index');
+
+/**
+ * Route for german index / start page.
+ */
+$app->get('/de', function (Request $request, Response $response) {
+    $this->logger->addInfo('Get: /');
+
+    return $this->view->render($response, 'de/index.twig', []);
 })->setName('index');
 
 
@@ -120,7 +129,7 @@ $app->get('/results/', function (Request $request, Response $response) {
         $baseUrl .= "&transposition={$isTransposed}";
     }
 
-    $response = $this->view->render($response, 'results.twig', [
+    $response = $this->view->render($response, 'en/results.twig', [
             'catalogEntries' => $catalogEntries,
             'searchString' => $searchQuery->getSingleOctaveQuery(),
             'numberOfResults' => $searchQuery->getNumOfResults(),
@@ -170,7 +179,7 @@ $app->get('/about[/]', function (Request $request, Response $response) {
 
     $this->logger->addInfo('Get: /about');
 
-    $response = $this->view->render($response, 'about.twig');
+    $response = $this->view->render($response, 'en/about.twig');
 
     return $response;
 }
@@ -183,7 +192,7 @@ $app->get('/repositories[/]', function (Request $request, Response $response) {
 
     $this->logger->addInfo('Get: /repositories');
 
-    $response = $this->view->render($response, 'repositories.twig');
+    $response = $this->view->render($response, 'en/repositories.twig');
 
     return $response;
 }
@@ -196,7 +205,7 @@ $app->get('/participation[/]', function (Request $request, Response $response) {
 
     $this->logger->addInfo('Get: /participation');
 
-    $response = $this->view->render($response, 'participation.twig');
+    $response = $this->view->render($response, 'en/participation.twig');
 
     return $response;
 }
@@ -209,7 +218,7 @@ $app->get('/impressum[/]', function (Request $request, Response $response) {
 
     $this->logger->addInfo('Get: /impressum');
 
-    $response = $this->view->render($response, 'impressum.twig');
+    $response = $this->view->render($response, 'en/impressum.twig');
 
     return $response;
 }
@@ -222,7 +231,7 @@ $app->get('/privacy[/]', function (Request $request, Response $response) {
 
     $this->logger->addInfo('Get: /privacy');
 
-    $response = $this->view->render($response, 'privacy.twig');
+    $response = $this->view->render($response, 'en/privacy.twig');
 
     return $response;
 }

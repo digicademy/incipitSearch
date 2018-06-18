@@ -1,0 +1,34 @@
+{#
+    This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+ #}
+
+{% extends 'de/base.twig' %}
+
+{% block pageContent %}
+
+<div class="wrapper style1">
+	<section id="main" class="container">
+		<div class="box">
+			<h2>Mitwirkung</h2>
+			<p>Digitale Werkverzeichnisse, Editionen und sämtliche andere Formen digitaler Notenrepositorien,
+				die ihr Material in einem standardisierten Format bereitstellt, können an IncipitSearch angeschlossen werden.
+				Die Inhalte der <a href="{{ path_for('repositories') }}">aktuell eingebundenen Repsoitorien</a> werden über RDF/XML, über das IncipitSearch Metadatenformat
+				sowie aus der HTML-Struktur bezogen.<br>
+				 Wenn Sie Ihr Repositorium an IncipitSearch anbinden möchten, <a href="mailto:incipitsearch@adwmainz.net">kontaktieren Sie uns</a>.</p>
+			<h3>IncipitSearch Metadatenformat (RDF)</h3>
+			<p> Das Standardmetadatenformat für den Datenaustausch und die Datenaggregation mit IncipitSearch
+				nutzt das Vokabular <a href="http://schema.org/">schema.org</a>.
+				Dabei kommen Turtle als führende Serialisierungsform und JSON-LD als bevorzugte Einbettungsform zum Einsatz.
+				Die Struktur der Daten teilt sich auf folgende Ebenen auf:
+				Datensets bestehen aus Gesamtkompositionen, Gesamtkompositionen bestehen aus Teilkompositionen, Teilkompositionen haben
+				ein oder mehrere Incipits.
+			</p>
+			<span class="image fit"><a href="/public/img/schema-illustration.jpg" title="Link zur Illustrationsgrafik"><img src="/public/img/schema-illustration.jpg" alt="Illustration des IncipitSearch Metadatenformats"></a></span>
+
+
+		</div>
+	</section>
+
+</div>
+
+{% endblock %} {# end pageContent #}

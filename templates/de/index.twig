@@ -2,7 +2,7 @@
     This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
  #}
 
-{% extends "base.twig" %}
+{% extends 'de/base.twig' %}
 
 {% block title %}Incipit Search{% endblock %}
 {% block head %}
@@ -112,31 +112,29 @@
 	<div class="wrapper style1">
 		<section class="container 75%">
 			<div class="box">
-				<h2>Enter a short melody via the virtual keyboard to search for music.</h2>
+				<h2>Geben Sie über die virtuelle Klaviatur oder als Buchstabenfolge ein Musikincipit ein, um nach Einträgen zu suchen.</h2>
 				<form action="{{ path_for('results') }}" method="GET">
 					<div class="row uniform">
 						<div class="7u 12u(normal)">
 						<input type="checkbox" name="repository[]" value="GluckWV-online" id="gga" checked>
-							<label for="gga" id="gga">Gluck complete edition</label>
-						 <input type="checkbox" name="repository[]" value="RISM" id="rism" checked>
+							<label for="gga" id="gga">Gluck-Gesamtausgabe</label>
+						 <input type="checkbox" name="repository[]" value="RISM" id="rism">
 							<label for="rism" id="rism">RISM</label>
-						<input type="checkbox" name="repository[]" value="SBN" id="sbn" checked>
+						<input type="checkbox" name="repository[]" value="SBN" id="sbn">
 							<label for="sbn" id="sbn">SBN</label>
-							<input type="checkbox" name="repository[]" value="Catalogo delle Sinfonie" id="cds" checked>
-							<label for="cds" id="cds">Catalogo delle Sinfonie 1762</label>
 						</div>
 					</div>
 					<div class="row uniform">
 						<div class="7u 12u(normal)">
 							<!-- TODO: min-input size: 3 (?) adjust placeholder text minlength=""-->
-							<a href="http://www.iaml.info/plaine-easie-code" class="float-right" title="Plaine & Easie Dokumentation">Plaine & Easie documentation</a>
+							<a href="http://www.iaml.info/plaine-easie-code" class="float-right" title="Plaine & Easie Dokumentation">Zur Plaine & Easie Dokumentation</a>
 							<input name="incipit" type="text" id="search" placeholder="Plaine & Easie Code (ExDxCBAxGxFE)" required>
 						</div>
 						<div class="12u 12u(normal)">
 							<ul class="actions">
-								<li><button type="submit" value="Suchen" id="submit">Search</button></li>
-								<li><button type="submit" value="1" id="submit" name="transposition">Search with transposition</button></li>
-								<li><button type="button" value="Löschen" id="backspaceButton" class="alt">Delete last note</button></li>
+								<li><button type="submit" value="Suchen" id="submit">Suche</button></li>
+								<li><button type="submit" value="1" id="submit" name="transposition">Suchen mit Transposition</button></li>
+								<li><button type="button" value="Löschen" id="backspaceButton" class="alt">Letzten Ton löschen</button></li>
 							</ul>
 						</div>
 					</div>

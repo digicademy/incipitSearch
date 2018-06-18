@@ -2,7 +2,7 @@
     This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
  #}
 
-{% extends "base.twig" %}
+{% extends "en/base.twig" %}
 
 {% block title %}Search results - IncipitSuche{% endblock %}
 {% block head %}
@@ -42,7 +42,7 @@
             </div>
 
 
-{% include 'pagination.twig' %}
+{% include 'en/pagination.twig' %}
 
             <!-- RESULTS -->
             {% for catalogEntry in catalogEntries %}
@@ -72,7 +72,7 @@
 
         {% endfor %}
 
-{% include 'pagination.twig' %}
+{% include 'en/pagination.twig' %}
 
         </div>
     </section>
