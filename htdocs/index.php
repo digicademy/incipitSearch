@@ -75,7 +75,7 @@ $app->get('/de', function (Request $request, Response $response) {
     $this->logger->addInfo('Get: /de');
 
     return $this->view->render($response, 'de/index.twig', []);
-})->setName('index');
+})->setName('index.de');
 
 
 /**
