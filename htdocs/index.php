@@ -158,9 +158,110 @@ $app->get('/{langkey}/results/', function (Request $request, Response $response,
 )->setName('results');
 
 /**
+ * Route to About.
+ */
+$app->get('/{langkey}/about[/]', function (Request $request, Response $response, $args) {
+
+    $this->logger->addInfo('Get: /{langkey}/about');
+
+    if ($args['langkey'] === 'en')
+    {
+        $response = $this->view->render($response, 'en/about.twig');
+    }
+    elseif ($args['langkey'] === 'de')
+    {
+        $response = $this->view->render($response, 'de/about.twig');
+    }
+
+    return $response;
+}
+)->setName('about');
+
+/**
+ * Route to Repositories.
+ */
+$app->get('/{langkey}/repositories[/]', function (Request $request, Response $response, $args) {
+
+    $this->logger->addInfo('Get: /{langkey}/repositories');
+
+    if ($args['langkey'] === 'en')
+    {
+        $response = $this->view->render($response, 'en/repositories.twig');
+    }
+    elseif ($args['langkey'] === 'de')
+    {
+        $response = $this->view->render($response, 'de/repositories.twig');
+    }
+
+    return $response;
+}
+)->setName('repositories');
+
+/**
+ * Route to participation.
+ */
+$app->get('/{langkey}/participation[/]', function (Request $request, Response $response, $args) {
+
+    $this->logger->addInfo('Get: /{langkey}/participation');
+
+    if ($args['langkey'] === 'en')
+    {
+        $response = $this->view->render($response, 'en/participation.twig');
+    }
+    elseif ($args['langkey'] === 'de')
+    {
+        $response = $this->view->render($response, 'de/participation.twig');
+    }
+
+    return $response;
+}
+)->setName('participation');
+
+/**
+ * Route to Impressum.
+ */
+$app->get('/{langkey}/impressum[/]', function (Request $request, Response $response, $args) {
+
+    $this->logger->addInfo('Get: /{langkey}/impressum');
+
+    if ($args['langkey'] === 'en')
+    {
+        $response = $this->view->render($response, 'en/impressum.twig');
+    }
+    elseif ($args['langkey'] === 'de')
+    {
+        $response = $this->view->render($response, 'de/impressum.twig');
+    }
+
+    return $response;
+}
+)->setName('impressum');
+
+/**
+ * Route to Privacy policy.
+ */
+$app->get('/{langkey}/privacy[/]', function (Request $request, Response $response, $args) {
+
+    $this->logger->addInfo('Get: /{langkey}/privacy');
+
+    if ($args['langkey'] === 'en')
+    {
+        $response = $this->view->render($response, 'en/privacy.twig');
+    }
+    elseif ($args['langkey'] === 'de')
+    {
+        $response = $this->view->render($response, 'de/privacy.twig');
+    }
+
+    return $response;
+}
+)->setName('privacy');
+
+
+/**
  * Route for search json.
  */
-$app->get('/json/', function (Request $request, Response $response) {
+$app->get('/json/', function (Request $request, Response $response, $args) {
 
     $this->logger->addInfo('Get: /json/');
 
@@ -185,71 +286,5 @@ $app->get('/json/', function (Request $request, Response $response) {
 
 }
 )->setName('json');
-
-/**
- * Route to About.
- */
-$app->get('/about[/]', function (Request $request, Response $response) {
-
-    $this->logger->addInfo('Get: /about');
-
-    $response = $this->view->render($response, 'en/about.twig');
-
-    return $response;
-}
-)->setName('about');
-
-/**
- * Route to Repositories.
- */
-$app->get('/repositories[/]', function (Request $request, Response $response) {
-
-    $this->logger->addInfo('Get: /repositories');
-
-    $response = $this->view->render($response, 'en/repositories.twig');
-
-    return $response;
-}
-)->setName('repositories');
-
-/**
- * Route to participation.
- */
-$app->get('/participation[/]', function (Request $request, Response $response) {
-
-    $this->logger->addInfo('Get: /participation');
-
-    $response = $this->view->render($response, 'en/participation.twig');
-
-    return $response;
-}
-)->setName('participation');
-
-/**
- * Route to Impressum.
- */
-$app->get('/impressum[/]', function (Request $request, Response $response) {
-
-    $this->logger->addInfo('Get: /impressum');
-
-    $response = $this->view->render($response, 'en/impressum.twig');
-
-    return $response;
-}
-)->setName('impressum');
-
-/**
- * Route to Privacy policy.
- */
-$app->get('/privacy[/]', function (Request $request, Response $response) {
-
-    $this->logger->addInfo('Get: /privacy');
-
-    $response = $this->view->render($response, 'en/privacy.twig');
-
-    return $response;
-}
-)->setName('privacy');
-
 
 $app->run();
