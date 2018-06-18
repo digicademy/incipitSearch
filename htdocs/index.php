@@ -72,7 +72,7 @@ $app->get('/', function (Request $request, Response $response) {
  * Route for german index / start page.
  */
 $app->get('/de', function (Request $request, Response $response) {
-    $this->logger->addInfo('Get: /');
+    $this->logger->addInfo('Get: /de');
 
     return $this->view->render($response, 'de/index.twig', []);
 })->setName('index');
@@ -81,8 +81,8 @@ $app->get('/de', function (Request $request, Response $response) {
 /**
  * Route for search results.
  */
-$app->get('/results/', function (Request $request, Response $response) {
-    $this->logger->addInfo('Get: /results/');
+$app->get('/{langkey}/results/', function (Request $request, Response $response, $args) {
+    $this->logger->addInfo('Get: /{langkey}/results/');
 
     $incipit = $request->getParam('incipit');
     $repository = $request->getParam('repository');
@@ -129,7 +129,9 @@ $app->get('/results/', function (Request $request, Response $response) {
         $baseUrl .= "&transposition={$isTransposed}";
     }
 
-    $response = $this->view->render($response, 'en/results.twig', [
+    if ($args['langkey'] === 'en')
+    {
+        $response = $this->view->render($response, 'en/results.twig', [
             'catalogEntries' => $catalogEntries,
             'searchString' => $searchQuery->getSingleOctaveQuery(),
             'numberOfResults' => $searchQuery->getNumOfResults(),
@@ -138,7 +140,19 @@ $app->get('/results/', function (Request $request, Response $response) {
             //url will be used as base for pagination; in results.twig, the page number will be added
             'baseUrl' => $baseUrl
         ]);
-
+    }
+    elseif ($args['langkey'] === 'de')
+    {
+        $response = $this->view->render($response, 'de/results.twig', [
+            'catalogEntries' => $catalogEntries,
+            'searchString' => $searchQuery->getSingleOctaveQuery(),
+            'numberOfResults' => $searchQuery->getNumOfResults(),
+            'currentPage' => $request->getParam('page'),
+            'numberOfPages' => ceil($searchQuery->getNumOfResults() / $searchQuery->getPageSize()),
+            //url will be used as base for pagination; in results.twig, the page number will be added
+            'baseUrl' => $baseUrl
+        ]);
+    }
     return $response;
 }
 )->setName('results');

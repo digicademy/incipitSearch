@@ -113,7 +113,7 @@
 		<section class="container 75%">
 			<div class="box">
 				<h2>Enter a short melody via the virtual keyboard to search for music.</h2>
-				<form action="{{ path_for('results') }}" method="GET">
+				<form action="{{ path_for('results', {'langkey' : 'en'}) }}" method="GET">
 					<div class="row uniform">
 						<div class="7u 12u(normal)">
 						<input type="checkbox" name="repository[]" value="GluckWV-online" id="gga" checked>
