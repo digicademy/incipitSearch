@@ -257,6 +257,18 @@ $app->get('/{langkey}/privacy[/]', function (Request $request, Response $respons
 }
 )->setName('privacy');
 
+/**
+ * Route to API Documentation.
+ */
+$app->get('/api[/]', function (Request $request, Response $response, $args) {
+
+    $this->logger->addInfo('Get: /api');
+
+    $response = $this->view->render($response, 'en/apidocumentation.twig');
+
+    return $response;
+}
+)->setName('api');
 
 /**
  * Route for search json.
