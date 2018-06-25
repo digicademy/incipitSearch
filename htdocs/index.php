@@ -257,6 +257,18 @@ $app->get('/{langkey}/privacy[/]', function (Request $request, Response $respons
 }
 )->setName('privacy');
 
+/**
+ * Route to API Documentation.
+ */
+$app->get('/api[/]', function (Request $request, Response $response, $args) {
+
+    $this->logger->addInfo('Get: /api');
+
+    $response = $this->view->render($response, 'en/apidocumentation.twig');
+
+    return $response;
+}
+)->setName('api');
 
 /**
  * Route for search json.
@@ -267,6 +279,7 @@ $app->get('/json/', function (Request $request, Response $response, $args) {
 
     $incipit = $request->getParam('incipit');
     $repository = $request->getParam('repository');
+    $page = $request->getParam('page');
     $isPrefixSearch = $request->getParam('prefix') != null;
     $isTransposed = $request->getParam('transposition') != null;
 
@@ -276,6 +289,14 @@ $app->get('/json/', function (Request $request, Response $response, $args) {
     $searchQuery->setCatalogFilter($repository);
     $searchQuery->setIsPrefixSearch($isPrefixSearch);
     $searchQuery->setisTransposed($isTransposed);
+    // SearchQuery's default page is 0,
+    // so we only set it if it is > 0
+    if ($page > 0) {
+        // as ElasticSearch and SearchQuery starts counting pages from zero,
+        // we subtract 1
+        // for the user facing HTML and URL we start pages at 1, though
+        $searchQuery->setPage($page - 1);
+    }
 
     $this->logger->addInfo('query: {$searchQuery->getIncipitQuery()}');
 

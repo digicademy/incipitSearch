@@ -14,6 +14,17 @@ You can search the catalogues using the virtual keyboard. [Plaine & Easie Code](
 
 ![Screenshot of music incipit search engine and platform IncipitSearch][screenshot]
 
+IncipitSearch website: [https://incipitsearch.adwmainz.net](https://incipitsearch.adwmainz.net/)
+For an overview of functionalities and background see the presentation ["IncipitSearch - A common interface for searchin gin music repositories"](https://annaneo.github.io/DH-2018-Budapest-IncipitSearch) held at the Digital Humanities 2018 conference in Budapest.
+
+# API and LOD
+
+All content that can be searched in IncipitSearch can be also accessed using the API, which is basically a elasticsearch endpoint. The API is available at [https://incipitsearch.adwmainz.net/json/](https://incipitsearch.adwmainz.net/json/). For further information see the [documentation](https://incipitsearch.adwmainz.net/api/).
+
+# Participation
+
+You can integrate your repository in IncipitSearch and you can also use IncipitSearch as a search engine in your own repository. Learn [here](https://incipitsearch.adwmainz.net/en/participation/) how to participate and how to reintegrate IncipitSearch.
+
 # License and Contribution
 
 IncipitSearch is licensed under MIT License.

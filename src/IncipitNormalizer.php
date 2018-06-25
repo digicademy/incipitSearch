@@ -95,8 +95,8 @@ class IncipitNormalizer
         array $flatSignatureAccidentals = null
     ): string {
 
-        //first remove all unnecessary chars
-        $notes = preg_replace('/(%[CGF]-\d\s)|[^\/\',xbnA-Z]/', '', $paeCode);
+        //first remove all unnecessary chars: the first regex merges ties, the second removes everything but notes and pitch
+        $notes = preg_replace(['/[+].+?[A-Z]/', '/(%[CGF]-\d\s)|[^\/\',xbnA-Z]/'], '', $paeCode);
 
         //expand the accidentals that are valid for a single measure
         $notes = self::expandMeasureWideAccidentals($notes);
