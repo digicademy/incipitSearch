@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="/public/piano/piano_style.css">
     <script src="/public/js/verovio-toolkit.js"></script>
     <script src="/public/piano/piano.js"></script>
+
+    {# JSON-LD output of results #}
+    {% if numberOfResults > 0 %}
+        {% include 'de/json-ld.twig' %}
+    {% endif %}
+
 {% endblock %}
 
 
@@ -60,8 +66,6 @@
                 <hr>
             </div><!--end result-->
             <br/>
-
-
 
         {% endfor %}
 

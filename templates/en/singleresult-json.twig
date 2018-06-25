@@ -1,0 +1,19 @@
+{# MusicComposition json-ld #}
+
+{
+    "type": "MusicComposition",
+    "url": "{{ catalogEntry.detailURL }}",
+    "name": "{{ catalogEntry.title }}",
+    "alternativeHeadline": "{{ catalogEntry.subTitle }}",
+    "composer": [{
+        "@type": "Person",
+        "name": "{{ catalogEntry.composer }}"
+    }],
+    "hasPart": [{
+        "type": "MusicIncipit",
+        "incipitValue": "{{ catalogEntry.incipit.notes }}",
+        "incipitClef": "{{ catalogEntry.incipit.clef }}",
+        "incipitKeysig": "{{ catalogEntry.incipit.accidentals }}",
+        "incipitTimesig": "{{ catalogEntry.incipit.time }}"
+    }]
+},
