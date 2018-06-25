@@ -67,7 +67,7 @@ class IncipitNormalizer
         array $flatSignatureAccidentals = null
     ): string {
 
-        $normalized = preg_replace(['/[gq]\w[A-Z]/','/[gq].*?[r]/'], '', $paeCode);
+        $normalized = preg_replace(['/[gq][A-Z]/', '/[gq]\w[A-Z]/','/[gq].*?[r]/'], '', $paeCode);
 
         $normalized = self::normalizeToSingleOctave(
             $normalized,
