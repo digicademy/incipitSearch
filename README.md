@@ -15,7 +15,8 @@ You can search the catalogues using the virtual keyboard. [Plaine & Easie Code](
 ![Screenshot of music incipit search engine and platform IncipitSearch][screenshot]
 
 IncipitSearch website: [https://incipitsearch.adwmainz.net](https://incipitsearch.adwmainz.net/)
-For an overview of functionalities and background see the presentation ["IncipitSearch - A common interface for searchin gin music repositories"](https://annaneo.github.io/DH-2018-Budapest-IncipitSearch) held at the Digital Humanities 2018 conference in Budapest.
+
+For an overview of functionalities and background see the presentation ["IncipitSearch - A common interface for searching in music repositories"](https://annaneo.github.io/DH-2018-Budapest-IncipitSearch) held at the Digital Humanities 2018 conference in Budapest.
 
 # API and LOD
 
