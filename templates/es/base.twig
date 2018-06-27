@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 
 	{% block head %}
@@ -49,20 +49,20 @@
 	<!--Header
 	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<header id="header">
-		<h1><a href="{{ path_for('index', {'langkey' : 'en'}) }}">IncipitSearch</a></h1>
+		<h1><a href="{{ path_for('index', {'langkey' : 'es'}) }}">IncipitSearch</a></h1>
 		<nav id="nav">
 			<ul>
-				<li><a href="{{ path_for('about', {'langkey' : 'en'}) }}">About</a></li>
-				<li><a href="{{ path_for('repositories', {'langkey' : 'en'}) }}">Repositories</a></li>
-				<li><a href="{{ path_for('participation', {'langkey' : 'en'}) }}">Participation</a></li>
+				<li><a href="{{ path_for('about', {'langkey' : 'es'}) }}">Sobre IncipitSearch</a></li>
+				<li><a href="{{ path_for('repositories', {'langkey' : 'es'}) }}">Depósitos</a></li>
+				<li><a href="{{ path_for('participation', {'langkey' : 'es'}) }}">Participación</a></li>
 				<li><a href="https://github.com/digicademy/incipitSearch" target="_blank"><span class="fa fa-github"
 																								aria-hidden="true"></span>Github</a>
 				</li>
-				<li class="opener"><a class="icon fa-angle-down">Language</a>
+				<li class="opener"><a class="icon fa-angle-down">Idiomas</a>
 					<ul>
-						<li><a href="{{ path_for('index') }}">English</a></li>
-						<li><a href="{{ path_for('index.es') }}">Spanish</a></li>
-						<li><a href="{{ path_for('index.de') }}">German</a></li>
+						<li><a href="{{ path_for('index.es') }}">Español</a></li>
+						<li><a href="{{ path_for('index') }}">Inglés</a></li>
+						<li><a href="{{ path_for('index.de') }}">Alemán</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -85,14 +85,14 @@
 	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<footer id="footer">
 		<ul class="menu">
-			<li><a href="{{ path_for('participation', {'langkey' : 'en'}) }}">Contact</a></li>
-			<li><a href="{{ path_for('impressum', {'langkey' : 'en'}) }}">Impressum</a></li>
-			<li><a href="{{ path_for('privacy', {'langkey' : 'en'}) }}">Data privacy</a></li>
+			<li><a href="{{ path_for('participation', {'langkey' : 'es'}) }}">Contacto</a></li>
+			<li><a href="{{ path_for('impressum', {'langkey' : 'es'}) }}">Información legal</a></li>
+			<li><a href="{{ path_for('privacy', {'langkey' : 'es'}) }}">Aviso de privacidad</a></li>
 		</ul>
 		<a target="_blank" href="http://www.adwmainz.de/"><img width="200px" src="/public/img/adwlogo.svg"
 															   alt="Logo ADW"/></a>
 		<div class="copyright">
-			<p>Developed by <a href="http://www.digitale-akademie.de/" target="_blank">Digitale Akademie</a>.</p>
+			<p>Desarrollado por <a href="http://www.digitale-akademie.de/" target="_blank">Digitale Akademie</a>.</p>
 			<p><a href="https://twitter.com/digicademy"><i class="fa fa-twitter fa-2x"></i></a>&nbsp;<a href="https://github.com/digicademy" target="_blank"><i class="fa fa-github fa-2x"></i></a></p>
 		</div>
 	</footer>

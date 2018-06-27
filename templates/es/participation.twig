@@ -2,33 +2,33 @@
     This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
  #}
 
-{% extends "en/base.twig" %}
+{% extends "es/base.twig" %}
 
 {% block pageContent %}
 
 	<div class="wrapper style1">
 		<section id="main" class="container">
 			<div class="box">
-				<h2>Participation</h2>
-				<h3>Integrate your repository</h3>
+				<h2>Participación</h2>
+				<h3>Integra tu repositorio</h3>
 				<p>Digital catalogues, editions, and all further forms of digital note-repositories, that provide their material in a standardised format, can be connected with the IncipitSearch. The content of the
-					<a href="{{ path_for('repositories', {'langkey' : 'en'}) }}">currently integrated repositories</a> is obtained from various formats: RDF/XML, MARC XML and the IncipitSearch metadata format as well as from the HTML structure.
+					<a href="{{ path_for('repositories', {'langkey' : 'es'}) }}">currently integrated repositories</a> is obtained from various formats: RDF/XML, MARC XML and the IncipitSearch metadata format as well as from the HTML structure.
 					<br/>It is possible to integrate various encodings and standards. We also created a custom
 					metadata format that can be either <a href="jsonld">added to existing markup</a> or a <a href="rdf">standalone format</a> to integrate
 					digital reproductions and PDFs.
 					If you want to integrate your repository in IncipitSearch, please <a href="mailto:Frederic.vonVlahovits@adwmainz.de">contact us</a>.</p>
 
-				<h3>Reintegration: Use IncipitSearch in your own collection</h3>
+				<h3>Reintegración: Use IncipitSearch in your own collection</h3>
 				<p>The IncipitSearch API makes it easy to reintegrate IncipitSearch. An example of this is the
 					<a href="http://www.gluck-gesamtausgabe.de/gwv/incipitsuche.html">“Incipitsuche” of the Gluck-Gesamtausgabe’s digital catalogue raisonné.</a></p>
 				<span class="image fit" style="max-width: 600px;"><a href="/public/img/gluck-incipitsuche.png" title="Illustration of the Gluck-Incipitsuche"><img src="/public/img/gluck-incipitsuche.png" alt="Illustration of the Gluck-Incipitsuche"></a></span>
 
-				<h2>Open data and standards</h2>
+				<h2>Datos abiertos y estándares</h2>
 				<h3>IncipitSearch API</h3>
 				<p>The IncipitSearch API is basically a elasticsearch endpoint. It is HTTP-based with request and response bodies formatted in JSON.
 					<br/><a href="{{ path_for('api') }}">IncipitSearch API Documentation</a></p>
 
-				<h3 id="jsonld">JSON-LD and schema.org format</h3>
+				<h3 id="jsonld">JSON-LD y schema.org modelo</h3>
 				<p>The result list of IncipitSearch is enriched with semantic information on composition and incipits using the <a href="https://json-ld.org">JSON-LD</a> serialization and the vocabulary
 					<a href="https://schema.org/MusicComposition">schema.org</a>. We extended the schema.org vocabulary with "MusicIncipit" to integrate the information on music incipits in the data.<br/>The format can also be used to to easily integrate the markup for incipits in digital music repositories and to integrate them in IncipitSearch.<br/>Representation of one work in JSON-LD:</p>
 				<p><pre>
@@ -60,7 +60,7 @@
 </pre></p>
 				<p>For an example analysed with the Google Tool for structured data see <a href="https://search.google.com/structured-data/testing-tool?hl=de#url=https%3A%2F%2Fincipitsearch.adwmainz.net%2Fen%2Fresults%2F%3Frepository%255B%255D%3DGluckWV-online%26incipit%3D%25274C4C4C%25274D">here</a>.</p>
 
-				<h3 id="rdf">IncipitSearch metadata format (RDF)</h3>
+				<h3 id="rdf">IncipitSearch formato de metadatos (RDF)</h3>
 				<p>The standard metadata format for the data exchange and the aggregation of data with  IncipitSearch uses the vocabulary of
 					<a href="http://schema.org/">schema.org</a>.
 					Turtle is used as serialisation for the annotation of catalogues and JSON-LD as the preferred type of embedding. The structure of the data is divided into the following levels: data sets consist of overall compositions, overall compositions consist of partial compositions, partial compositions have one or more incipits.<br/>

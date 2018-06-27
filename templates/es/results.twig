@@ -1,0 +1,86 @@
+{#
+    This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+ #}
+
+{% extends "es/base.twig" %}
+
+{% block title %}Resultados de la búsqueda - IncipitSuche{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/public/piano/piano_style.css">
+    <script src="/public/js/verovio-toolkit.js"></script>
+    <script src="/public/piano/piano.js"></script>
+    {# JSON-LD output of results #}
+    {% if numberOfResults > 0 %}
+        {% include 'json-ld.twig' %}
+    {% endif %}
+{% endblock %}
+
+
+{% block pageContent %}
+
+{% include 'verovio.html' %}
+
+<div class="wrapper style1">
+    <section id="main" class="container">
+        <div class="box">
+            <h1>Matching works</h1>
+            <div>
+                <p>
+                <strong>{{ numberOfResults }} resultados por el incipit "{{ searchString }}"</strong><br>
+                    Orden alfabético</p>
+                {% if numberOfResults > 10000 %}
+                    <p>Su búsqueda arrojó un gran lista de resultados.
+                        Se mostrarán los primeros 10.000 resultados.
+                        Por favor, especifique su búsqueda seleccionando catálogos concretos o indicando más notas.</p>
+                {% elseif numberOfResults == 0 %}
+                    <p>
+                        <strong>Ninguna pieza musical coincide con su consulta.
+                            Por favor, especifique su <a href="/">búsqueda</a> seleccionando más catálogos.<br/>
+                            Utilice el teclado virtual para asegurarse de que el código Plaine & Easie es válido.
+                        </strong>
+                    </p>
+                {% endif %}
+
+            <p><strong><a href="/">Regresar a la búsqueda</a></strong></p>
+            </div>
+
+
+{% include 'es/pagination.twig' %}
+
+            <!-- RESULTS -->
+            {% for catalogEntry in catalogEntries %}
+
+            <div class="result">
+                <h3>{{ catalogEntry.title }}</h3>
+                <strong>{{ catalogEntry.subTitle }}</strong><br>
+                <strong>{{ catalogEntry.composer }}</strong><br>
+                {{ catalogEntry.year }}<br>
+
+                <!-- Display the rendered notes -->
+                <span>Plaine & Easie Code: </span>
+                <span class="incipitNotes hidden">{{ catalogEntry.incipit.notes }}</span>
+                <span class="incipitClef hidden">{{ catalogEntry.incipit.clef }}</span>
+                <span class="incipitAccidentals hidden">{{ catalogEntry.incipit.accidentals }}</span>
+                <span class="incipitTime hidden">{{ catalogEntry.incipit.time }}</span>
+                <span class="incipitNormalized hidden">{{ catalogEntry.incipit.notesNormalizedToSingleOctave }}</span>
+
+                <div class="incipitSVG"></div>
+                <!-- end notes displaying -->
+                <b><a target="_blank" href="{{ catalogEntry.detailURL }}">Página de detalles en {{ catalogEntry.catalog }} </a></b>
+                <hr>
+            </div><!--end result-->
+            <br/>
+
+
+
+        {% endfor %}
+
+{% include 'es/pagination.twig' %}
+
+        </div>
+    </section>
+</div><!-- end container -->
+
+{% endblock %} {# end pageContent #}
+

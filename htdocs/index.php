@@ -79,6 +79,16 @@ $app->get('/de', function (Request $request, Response $response) {
 
 
 /**
+ * Route for spanish index / start page.
+ */
+$app->get('/es', function (Request $request, Response $response) {
+    $this->logger->addInfo('Get: /es');
+
+    return $this->view->render($response, 'es/index.twig', []);
+})->setName('index.es');
+
+
+/**
  * Route for search results.
  */
 $app->get('/{langkey}/results/', function (Request $request, Response $response, $args) {
@@ -153,6 +163,18 @@ $app->get('/{langkey}/results/', function (Request $request, Response $response,
             'baseUrl' => $baseUrl
         ]);
     }
+    elseif ($args['langkey'] === 'es')
+    {
+        $response = $this->view->render($response, 'es/results.twig', [
+            'catalogEntries' => $catalogEntries,
+            'searchString' => $searchQuery->getSingleOctaveQuery(),
+            'numberOfResults' => $searchQuery->getNumOfResults(),
+            'currentPage' => $request->getParam('page'),
+            'numberOfPages' => ceil($searchQuery->getNumOfResults() / $searchQuery->getPageSize()),
+            //url will be used as base for pagination; in results.twig, the page number will be added
+            'baseUrl' => $baseUrl
+        ]);
+    }
     return $response;
 }
 )->setName('results');
@@ -171,6 +193,10 @@ $app->get('/{langkey}/about[/]', function (Request $request, Response $response,
     elseif ($args['langkey'] === 'de')
     {
         $response = $this->view->render($response, 'de/about.twig');
+    }
+    elseif ($args['langkey'] === 'es')
+    {
+        $response = $this->view->render($response, 'es/about.twig');
     }
 
     return $response;
@@ -192,6 +218,10 @@ $app->get('/{langkey}/repositories[/]', function (Request $request, Response $re
     {
         $response = $this->view->render($response, 'de/repositories.twig');
     }
+    elseif ($args['langkey'] === 'es')
+    {
+        $response = $this->view->render($response, 'es/repositories.twig');
+    }
 
     return $response;
 }
@@ -211,6 +241,10 @@ $app->get('/{langkey}/participation[/]', function (Request $request, Response $r
     elseif ($args['langkey'] === 'de')
     {
         $response = $this->view->render($response, 'de/participation.twig');
+    }
+    elseif ($args['langkey'] === 'es')
+    {
+        $response = $this->view->render($response, 'es/participation.twig');
     }
 
     return $response;
@@ -232,6 +266,10 @@ $app->get('/{langkey}/impressum[/]', function (Request $request, Response $respo
     {
         $response = $this->view->render($response, 'de/impressum.twig');
     }
+    elseif ($args['langkey'] === 'es')
+    {
+        $response = $this->view->render($response, 'es/impressum.twig');
+    }
 
     return $response;
 }
@@ -251,6 +289,10 @@ $app->get('/{langkey}/privacy[/]', function (Request $request, Response $respons
     elseif ($args['langkey'] === 'de')
     {
         $response = $this->view->render($response, 'de/privacy.twig');
+    }
+    elseif ($args['langkey'] === 'es')
+    {
+        $response = $this->view->render($response, 'es/privacy.twig');
     }
 
     return $response;

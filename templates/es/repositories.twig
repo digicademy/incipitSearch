@@ -1,0 +1,71 @@
+{#
+    This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+ #}
+
+{% extends "es/base.twig" %}
+
+{% block pageContent %}
+<div class="wrapper style1">
+	<section id="main" class="container 75%">
+		<div class="box">
+			<h2>Depósitos</h2>
+			<p>Depósitos actualmente integrados en IncipitSearch.</p>
+		</div>
+		<!-- <div class="box">
+			<h3><a href="http://reader.digitale-sammlungen.de/de/fs1/object/display/bsb10624209_00003.html" title="Breitkopf Katalog, 1766" target="_blank">Breitkopf Catalogi delle Sinfonie 1762  (proof of concept)</a></h3>
+			<div class="row">
+				<div class="6u 6u(normal)">
+					<span class="image fit"><a href="http://reader.digitale-sammlungen.de/de/fs1/object/display/bsb10624209_00003.html" title="Catalogo del Servizio Bibliotecario Nazionale" target="_blank"><img src="/public/img/Digitalisat_Breitkopf_Katalog_1766.png" alt="Screenshot von http://opac.sbn.it/opacsbn/opac/iccu/free.jsp/"></a></span>
+				</div>
+				<div class="6u 6u(normal)">
+					<p> Next to further so-called thematic catalogues, the “Leipziger Musikverlagshaus Breitkopf” offered their goods for sale to music lovers by means of the Catalogi delle Sinfonie,
+						which was published once a year. In these catalogues, the music that was available in print was recorded with regard to the composer and the line-up along with the musical incipit.
+						The catalogues are available in the Bavarian State Library online as digital copies, but have not yet been processed in coded form.
+						As a proof of concept for the integration of digitized material, selected entries of teh Catalogo delle Sinfonie 1762 were annotated.
+					</p>
+				</div>
+			</div>
+		</div> -->
+		<div class="box">
+			<h3><a href="http://opac.sbn.it/opacsbn/opac/iccu/free.jsp" title="SBN - Catalogo del Servizio Bibliotecario Nazionale" target="_blank">Catalogo del Servizio Bibliotecario Nazionale</a></h3>
+			<div class="row">
+				<div class="6u 6u(normal)">
+					<span class="image fit"><a href="http://opac.sbn.it/opacsbn/opac/iccu/free.jsp" title="Catalogo del Servizio Bibliotecario Nazionale" target="_blank"><img src="/public/img/Screenshot_SBN.png" alt="Screenshot von http://opac.sbn.it/opacsbn/opac/iccu/free.jsp/"></a></span>
+				</div>
+				<div class="6u 6u(normal)">
+					<p>The Servizio Bibliotecario Nazionale (SBN) is the library network of the scientific libraries in Italy. The union catalogue OPAC SBN comprises entries to more than 15.000 musical sources.<br/>
+						The data is licensed with <a href="https://creativecommons.org/licenses/by/3.0/">CC-BY 3.0</a></p>
+				</div>
+			</div>
+		</div>
+		<div class="box">
+			<h3><a href="http://www.gluck-gesamtausgabe.de" title="Gluck-Gesamtausgabe" target="_blank">Gluck-Gesamtausgabe</a></h3>
+			<div class="row">
+				<div class="6u 6u(normal)">
+					<span class="image fit"><a href="http://www.gluck-gesamtausgabe.de" title="Gluck-Gesamtausgabe" target="_blank"><img src="/public/img/Screen_Gluck-Gesamtausgabe.png" alt="Screenshot von http://gluck-gesamtausgabe.de/"></a></span>
+				</div>
+				<div class="6u 6u(normal)">
+					<p>The digital, thematic-systematic register of all works of Christoph Willibald Gluck (GluckWV-online) is part of the Gluck-Gesamtausgabe (GGA) and draws upon the findings of the editorial-work and the decades of research of the project. The goal is the comprehensive and systematic listing of all compositions by Gluck in all their versions as well as the compilation of important data on the formation, the premier, the first edition, and the reception of individual works with the according references. </p>
+				</div>
+			</div>
+		</div>
+		<div class="box">
+			<h3><a href="https://opac.rism.info/metaopac/search.do?methodToCall=selectLanguage&Language=en" title="RISM" target="_blank">RISM (Répertoire International des Sources Musicales)</a></h3>
+			<div class="row">
+				<div class="6u 6u(normal)">
+					<span class="image fit"><a href="https://opac.rism.info/metaopac/search.do?methodToCall=selectLanguage&Language=en" title="RISM" target="_blank"><img src="/public/img/Screen_RISM.png" alt="Screenshot von https://opac.rism.info/"></a></span>
+				</div>
+				<div class="6u 6u(normal)">
+					<p>The Répertoire International des Sources Musicales is an international inventory
+						of musical sources and - with over 1,100,000 records - the world's largest database of musical sources. The goal
+						of RISM is to record historic music material, especially manuscripts originating between
+						1600 and 1800, and to make it accessible and searchable. A search for musical incipits is implemented in RISM since 2011.
+						The inventory provides information on the places of storage of the manuscripts, description of the source,
+						as well as further metadata.<br/> The data is licensed with <a href="https://opac.rism.info/metaopac/search.do?methodToCall=switchSearchPage&SearchType=1&emptyFields=true">CC-BY 3.0</a></p>
+				</div>
+			</div>
+		</div>
+
+	</section>
+</div>
+{% endblock %} {# end pageContent #}

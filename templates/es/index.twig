@@ -1,0 +1,150 @@
+{#
+    This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+ #}
+
+{% extends "es/base.twig" %}
+
+{% block title %}Incipit Search{% endblock %}
+{% block head %}
+	{{ parent() }}
+	<link rel="stylesheet" href="/public/piano/piano_style.css">
+	<script src="/public/js/verovio-toolkit.js"></script>
+	<script src="/public/piano/piano.js"></script>
+
+{% endblock %}
+
+
+{% block pageContent %}
+
+	<script type="text/javascript">
+
+		$(document).ready(function () {
+			//create piano with 1 octave, starting at C4 (lowest key)
+			//shows labels and octave shift buttons
+			var keyboardHTML = htmlForKeyboardWithOctaves(1, octaves.C4, true, false, false, false)
+			//render the keyboard in the div
+			$("#keyboardContainer").html(keyboardHTML)
+			//when keys are pressed updatePreview() is called
+			bindKeysToFunction(updatePreviewWithNote)
+			//set the default clef to G4
+			setSelectedClef(clefs.G4)
+			$("#backspaceButton").click(deleteLast)
+
+		})
+
+		//this stores all keyboard input
+		var plaineEasieCodes = []
+		var selectedClef = clefs.G4
+		var naturalNotes = [] // this stores notes without their accidentals to remeber them
+		var accidentNotes = [] // this stores notes notes with their accidentals to remeber them in their distinct form
+
+		//this is called whenever a piano key is pressed
+		function updatePreviewWithNote(sender, paeNote) {
+			console.log("key pressed is " + paeNote)
+
+			var naturalPae = paeNote.replace(/[']|[x]|[b]|[n]/g, "") // this converts every pressed not in a pure natural note what means that e.g. if 'x4D is pressed 4D is stored
+
+			// this checks if the pressed Note is as natural part of naturalNotes
+			// if not it will be remembered as natural and also unchanged in accidentNotes
+			if($.inArray(naturalPae, naturalNotes) === -1){ 
+				naturalNotes.push(naturalPae)
+				accidentNotes.push(paeNote)
+				plaineEasieCodes.push(paeNote)
+				updateNotesSVG()
+			}
+
+			// if we're here, the pressed Note is as natural part of naturalNotes
+			else{
+
+				// now let's check if the exact note has been there before what means it would be stored in accidentNotes
+				if($.inArray(paeNote, accidentNotes) === -1){
+					
+					// if not we first need remove it's sibbling from accidentNotes, e.g. if 'x4D is stored it must be replaced with the new pressed note 'b4D
+					accidentNotes = $.grep(accidentNotes, function(v) {
+						return v.replace(/[']|[x]|[b]|[n]/g, "") != naturalPae;
+					})
+					accidentNotes.push(paeNote)
+
+					// second we check if the pressed note has x or b as accidental
+					// if not a natural must be set as accidental 
+					if(/[x]|[b]/.test(paeNote) === false){
+						paeNote = paeNote.replace(/[']|[x]|[b]|[n]/g, "")
+						plaineEasieCodes.push("'n" + paeNote)
+						updateNotesSVG()
+					}
+
+					// if the pressed note has x or b as accidental it's fine
+					else{
+						plaineEasieCodes.push(paeNote)
+						updateNotesSVG()
+					}
+				}
+
+				// we're here means the exact same note has been there before. Therefore all accidentals are still valid and don't need to be printed out again
+				else{
+					plaineEasieCodes.push(paeNote.replace(/[']|[x]|[b]|[n]/g, ""))
+					updateNotesSVG()
+				}
+			}	
+		}
+
+		//delete last input
+		function deleteLast() {
+			plaineEasieCodes.pop()
+			updateNotesSVG()
+		}
+
+		function updateNotesSVG() {
+			$('#search').val(plaineEasieCodes.join(""))
+			//render the notes to an SVG using the Verovio tookit
+			//width of the svg is 800px and note scaling 50%
+			var notesSVG = svgNotesForPlaineEasieCode(plaineEasieCodes.join(""), selectedClef, 800, 50)
+			//insert thes SVG code in our div
+			var svgContainerDiv = $('#svgNotesContainer')
+			svgContainerDiv.html(notesSVG)
+			$('#svgNotesContainer > svg').incipitScroll()
+			svgContainerDiv.scrollLeft($('#svgNotesContainer > svg').width())
+		}
+
+
+	</script>
+
+	<div class="wrapper style1">
+		<section class="container 75%">
+			<div class="box">
+				<h2>Utiliza el teclado virtual para buscar una melodía.</h2>
+				<form action="{{ path_for('results', {'langkey' : 'es'}) }}" method="GET">
+					<div class="row uniform">
+						<div class="7u 12u(normal)">
+						<input type="checkbox" name="repository[]" value="GluckWV-online" id="gga" checked>
+							<label for="gga" id="gga">Edición completa de Gluck</label>
+						 <input type="checkbox" name="repository[]" value="RISM" id="rism" checked>
+							<label for="rism" id="rism">RISM</label>
+						<input type="checkbox" name="repository[]" value="SBN" id="sbn" checked>
+							<label for="sbn" id="sbn">SBN</label>
+						</div>
+					</div>
+					<div class="row uniform">
+						<div class="7u 12u(normal)">
+							<!-- TODO: min-input size: 3 (?) adjust placeholder text minlength-->
+							<a href="http://www.iaml.info/plaine-easie-code" class="float-right" title="Plaine & Easie Dokumentation">Plaine & Easie documentación</a>
+							<input name="incipit" type="text" id="search" placeholder="Plaine & Easie Code (ExDxCBAxGxFE)" required>
+						</div>
+						<div class="12u 12u(normal)">
+							<ul class="actions">
+								<li><button type="submit" value="Suchen" id="submit">Busca valores de notas</button></li>
+								<li><button type="submit" value="1" id="submit" name="transposition">Busca con transposición</button></li>
+								<li><button type="button" value="Löschen" id="backspaceButton" class="alt">Eliminar la última nota</button></li>
+							</ul>
+						</div>
+					</div>
+				</form>
+
+				<div class="align-center" id="keyboardContainer"></div><!-- this will hold the keyboard -->
+				<div id="svgNotesContainer"></div><!-- this will hold the SVG with rendered notes -->
+
+			</div>
+		</section>
+	</div><!-- end container -->
+
+{% endblock %} {# end pageContent #}

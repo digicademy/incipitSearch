@@ -1,0 +1,104 @@
+{#
+    This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
+ #}
+
+{% extends "es/base.twig" %}
+
+{% block pageContent %}
+
+    <div class="wrapper style1">
+        <section id="main" class="container">
+            <div class="box">
+                <h1><a id="IncipitSearch_REST_API_0"></a>IncipitSearch REST API</h1>
+                <h2><a id="Get_Started_1"></a>Get Started</h2>
+                <p>The IncipitSearch API is basically a elasticsearch endpoint. It is HTTP-based with request and
+                    response bodies formatted in JSON.</p>
+                <h2><a id="API_requests_4"></a>API requests</h2>
+                <h3><a id="The_HTTP_GETRequest_5"></a>The HTTP <code>GET</code>-Request</h3>
+                <p>Right now it is possible to fetch the IncipitSearch data via HTTP <code>GET</code>-Requests.</p>
+                <h3><a id="API_URL_7"></a>API URL</h3>
+                <p><code>https://incipitsearch.adwmainz.net/json/</code></p>
+                <h3><a id="Query_Parameters_9"></a>Query Parameters</h3>
+                <ul>
+                    <li><code>incipit</code>
+                        <ul>
+                            <li>Type: string</li>
+                            <li>The <a href="http://www.iaml.info/plaine-easie-code">Plaine &amp; Easie Code</a> to be
+                                queried or an asterisk
+                            </li>
+                        </ul>
+                    </li>
+                    <li><code>repository[]</code>
+                        <ul>
+                            <li>Type: string</li>
+                            <li>A repository selection from the current repositories (GluckWV-online, RISM, SBN)</li>
+                        </ul>
+                    </li>
+                    <li><code>page</code>
+                        <ul>
+                            <li>Type: Integer</li>
+                            <li>Page number of the paginated result list</li>
+                        </ul>
+                    </li>
+                    <li><code>transposition</code>
+                        <ul>
+                            <li>Type: Boolean</li>
+                            <li><code>1</code> to search with transposition, <code>0</code> to search without</li>
+                        </ul>
+                    </li>
+                </ul>
+                <h4><a id="Example_22"></a>Example</h4>
+                <pre><code class="language-bash">curl -XGET -g
+    <span class="hljs-string">"https://incipitsearch.adwmainz.net/json/?repository[]=GluckWV-online&amp;repository[]=RISM&amp;repository[]=SBN&amp;transposition=1&amp;incipit=CGCEG&amp;page=2"</span>
+        </code></pre>
+                <pre><code class="language-json">{
+    "<span class="hljs-attribute">took</span>": <span class="hljs-value"><span class="hljs-number">8</span></span>,
+    "<span class="hljs-attribute">timed_out</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">_shards</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">total</span>": <span class="hljs-value"><span class="hljs-number">5</span></span>,
+        "<span class="hljs-attribute">successful</span>": <span class="hljs-value"><span class="hljs-number">5</span></span>,
+        "<span class="hljs-attribute">failed</span>": <span class="hljs-value"><span class="hljs-number">0</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">hits</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">total</span>": <span class="hljs-value"><span class="hljs-number">314</span></span>,
+        "<span class="hljs-attribute">max_score</span>": <span class="hljs-value"><span class="hljs-literal">null</span></span>,
+        "<span class="hljs-attribute">hits</span>": <span class="hljs-value">[{
+            "<span class="hljs-attribute">_index</span>": <span class="hljs-value"><span class="hljs-string">"20180525_catalog_entries"</span></span>,
+            "<span class="hljs-attribute">_type</span>": <span class="hljs-value"><span class="hljs-string">"catalogEntry"</span></span>,
+            "<span class="hljs-attribute">_id</span>": <span class="hljs-value"><span class="hljs-string">"RISM-652000216"</span></span>,
+            "<span class="hljs-attribute">_score</span>": <span class="hljs-value"><span class="hljs-literal">null</span></span>,
+            "<span class="hljs-attribute">_source</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">catalog</span>": <span class="hljs-value"><span class="hljs-string">"RISM"</span></span>,
+                "<span class="hljs-attribute">catalogItemID</span>": <span class="hljs-value"><span class="hljs-string">"652000216"</span></span>,
+                "<span class="hljs-attribute">dataUID</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+                "<span class="hljs-attribute">dataURL</span>": <span class="hljs-value"><span class="hljs-string">"https://opac.rism.info/id/rismid/652000216?format=marc"</span></span>,
+                "<span class="hljs-attribute">detailURL</span>": <span class="hljs-value"><span class="hljs-string">"https://opac.rism.info/search?id=652000216"</span></span>,
+                "<span class="hljs-attribute">incipit</span>": <span class="hljs-value">{
+                    "<span class="hljs-attribute">notes</span>": <span class="hljs-value"><span class="hljs-string">"6'C,G'CE2(G)// //@2/4 86688CCCCE/i//"</span></span>,
+                    "<span class="hljs-attribute">clef</span>": <span class="hljs-value"><span class="hljs-string">"G-2"</span></span>,
+                    "<span class="hljs-attribute">accidentals</span>": <span class="hljs-value"><span class="hljs-string">""</span></span>,
+                    "<span class="hljs-attribute">time</span>": <span class="hljs-value"><span class="hljs-string">"3/4; 2/4"</span></span>,
+                    "<span class="hljs-attribute">completeIncipit</span>": <span class="hljs-value"><span class="hljs-string">"%G-2$@3/4; 2/46'C,G'CE2(G)// //@2/4 86688CCCCE/i//"</span></span>,
+                    "<span class="hljs-attribute">normalizedToSingleOctave</span>": <span class="hljs-value"><span class="hljs-string">"CGCEGCCCCE"</span></span>,
+                    "<span class="hljs-attribute">withoutOrnaments</span>": <span class="hljs-value"><span class="hljs-string">"CGCEGCCCCE"</span></span>,
+                    "<span class="hljs-attribute">normalizedToPitch</span>": <span class="hljs-value"><span class="hljs-string">"'C,G'C'E'G'C'C'C'C'E"</span></span>,
+                    "<span class="hljs-attribute">transposedNotes</span>": <span class="hljs-value"><span class="hljs-string">" 7 -7 4 3 -7 0 0 0 4"</span></span>,
+                    "<span class="hljs-attribute">transposedNotesWithoutOrnaments</span>": <span class="hljs-value"><span class="hljs-string">" 7 -7 4 3 -7 0 0 0 4"</span>
+                </span>}</span>,
+                "<span class="hljs-attribute">composer</span>": <span class="hljs-value"><span class="hljs-string">"Anonymus"</span></span>,
+                "<span class="hljs-attribute">title</span>": <span class="hljs-value"><span class="hljs-string">"Abmarsch in Linie"</span></span>,
+                "<span class="hljs-attribute">subTitle</span>": <span class="hljs-value"><span class="hljs-string">""</span></span>,
+                "<span class="hljs-attribute">year</span>": <span class="hljs-value"><span class="hljs-string">""</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">sort</span>": <span class="hljs-value">[<span class="hljs-string">"Abmarsch in Linie"</span>]
+        </span>}, {
+        }]
+    </span>}
+</span>}
+</code></pre>
+            </div>
+        </section>
+
+    </div>
+
+{% endblock %} {# end pageContent #}
