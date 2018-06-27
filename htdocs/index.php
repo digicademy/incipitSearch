@@ -25,7 +25,7 @@ use Slim\Views as Views;
 
 $configuration = [
     'settings' => [
-        'displayErrorDetails' => true,
+        'displayErrorDetails' => false,
     ],
 ];
 
@@ -315,11 +315,16 @@ $app->get('/api[/]', function (Request $request, Response $response, $args) {
 /**
  * Route for search json.
  */
-$app->get('/json/', function (Request $request, Response $response, $args) {
+$app->get('/json[/]', function (Request $request, Response $response, $args) {
 
     $this->logger->addInfo('Get: /json/');
 
-    $incipit = $request->getParam('incipit');
+    if ($request->getParam('incipit')) {
+        $incipit = $request->getParam('incipit');
+    } else {
+        $incipit = '*';
+    }
+
     $repository = $request->getParam('repository');
     $page = $request->getParam('page');
     $isPrefixSearch = $request->getParam('prefix') != null;
