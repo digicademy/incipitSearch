@@ -54,11 +54,7 @@
 
                 <!-- Display the rendered notes -->
                 <span>Plaine & Easie Code: </span>
-                <span class="incipitNotes hidden">{{ catalogEntry.incipit.notes }}</span>
-                <span class="incipitClef hidden">{{ catalogEntry.incipit.clef }}</span>
-                <span class="incipitAccidentals hidden">{{ catalogEntry.incipit.accidentals }}</span>
-                <span class="incipitTime hidden">{{ catalogEntry.incipit.time }}</span>
-                <span class="incipitNormalized hidden">{{ catalogEntry.incipit.notesNormalizedToSingleOctave }}</span>
+                <span class="incipitClef hidden">{%  if catalogEntry.incipit.clef %}%{{ catalogEntry.incipit.clef }}{% endif %}</span><span class="incipitAccidentals hidden">{%  if catalogEntry.incipit.accidentals %}${{ catalogEntry.incipit.accidentals }}{% endif %}</span><span class="incipitTime hidden">{%  if catalogEntry.incipit.time %}@{{ catalogEntry.incipit.time }}{% endif %}</span>&nbsp;<span class="incipitNotes hidden">{{ catalogEntry.incipit.notes }}</span>
 
                 <div class="incipitSVG"></div>
                 <!-- end notes displaying -->
