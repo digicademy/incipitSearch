@@ -5,7 +5,7 @@
         "id": "{{ app.request.uri }}",
         "hasPart": [
             {% for catalogEntry in catalogEntries %}
-                {% include 'de/singleresult-json.twig' %}
+                {% include 'singleresult-json.twig' %}
             {% endfor %}
             {# quick fix: empty element in the end; TODO: loop to check if last element, then do not set a final comma#}
             {
