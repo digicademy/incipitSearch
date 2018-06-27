@@ -2,39 +2,79 @@
     This template inherits from base.twig. See twig documentation: http://twig.sensiolabs.org/doc/templates.html
  #}
 
-{% extends 'de/base.twig' %}
+{% extends "en/base.twig" %}
 
 {% block pageContent %}
 
-<div class="wrapper style1">
-	<section id="main" class="container">
-		<div class="box">
-			<h2>Mitwirkung</h2>
-			<p>Digitale Werkverzeichnisse, Editionen und sämtliche andere Formen digitaler Notenrepositorien,
-				die ihr Material in einem standardisierten Format bereitstellt, können an IncipitSearch angeschlossen werden.
-				Die Inhalte der <a href="{{ path_for('repositories', {'langkey' : 'de'}) }}">aktuell eingebundenen Repsoitorien</a> werden über RDF/XML, über das IncipitSearch Metadatenformat
-				sowie aus der HTML-Struktur bezogen.<br>
-				 Wenn Sie Ihr Repositorium an IncipitSearch anbinden möchten, <a href="mailto:incipitsearch@adwmainz.net">kontaktieren Sie uns</a>.</p>
-			<h3>IncipitSearch Metadatenformat (RDF)</h3>
-			<p> Das Standardmetadatenformat für den Datenaustausch und die Datenaggregation mit IncipitSearch
-				nutzt das Vokabular <a href="http://schema.org/">schema.org</a>.
-				Dabei kommen Turtle als führende Serialisierungsform und JSON-LD als bevorzugte Einbettungsform zum Einsatz.
-				Die Struktur der Daten teilt sich auf folgende Ebenen auf:
-				Datensets bestehen aus Gesamtkompositionen, Gesamtkompositionen bestehen aus Teilkompositionen, Teilkompositionen haben
-				ein oder mehrere Incipits.
-			</p>
-			<span class="image fit" style="max-width: 600px;"><a href="/public/img/schema-illustration.png" title="Link zur Illustrationsgrafik"><img src="/public/img/schema-illustration.png" alt="Illustration des IncipitSearch Metadatenformats"></a></span>
-			<h2>Nachnutzung</h2>
-			<h3>IncipitSearch API</h3>
-			<p>Die IncipitSearch-API ist im Grunde ein ElasticSearch Endpoint. Sie ist HTTP-basiert mit in JSON formatierten Request- und Response-Bodies.<br/><a href="{{ path_for('api') }}">IncipitSearch API Documentation</a></p>
-			<h3>Reintegration</h3>
-			<p>Mithilfe der IncipitSearch API ist eine Reintegration der IncipitSearch einfach möglich. Beispiehaft hierfür die die
-				<a href="http://www.gluck-gesamtausgabe.de/gwv/incipitsuche.html">Incipitsuche des Onlinewerkverzeichnisses der Gluck-Gesamtausgabe.</a></p>
-			<span class="image fit" style="max-width: 600px;"><a href="/public/img/gluck-incipitsuche.png" title="Beispielgrafik zur Gluck-Incipitsuche"><img src="/public/img/gluck-incipitsuche.png" alt="Beispielgrafik zur Gluck-Incipitsuche"></a></span>
+	<div class="wrapper style1">
+		<section id="main" class="container">
+			<div class="box">
+				<h2>Mitwirkung</h2>
+				<h3>Integrieren Sie Ihr Repositorium in IncipitSearch</h3>
+				<p>Digitale Werkverzeichnisse, Editionen und sämtliche andere Formen digitaler Notenrepositorien, die ihr Material in einem standardisierten Format bereitstellt, können an IncipitSearch angeschlossen werden.
+					Die Inhalte der <a href="{{ path_for('repositories', {'langkey' : 'de'}) }}">aktuell eingebundenen Repsoitorien</a> werden über RDF/XML, über das IncipitSearch Metadatenformat
+					sowie aus der HTML-Struktur bezogen.<br>
+					Wenn Sie Ihr Repositorium an IncipitSearch anbinden möchten, <a href="mailto:incipitsearch@adwmainz.net">kontaktieren Sie uns</a>.</p>
 
-		</div>
-	</section>
+				<h3>Reintegration: nutzen Sie IncipitSearch in ihrer Samlung</h3>
+				<p>Mithilfe der IncipitSearch API ist eine Reintegration der IncipitSearch einfach möglich. Beispiehaft hierfür die die
+					<a href="http://www.gluck-gesamtausgabe.de/gwv/incipitsuche.html">Incipitsuche des Onlinewerkverzeichnisses der Gluck-Gesamtausgabe.</a></p>
+				<span class="image fit" style="max-width: 600px;"><a href="/public/img/gluck-incipitsuche.png" title="Beispielgrafik zur Gluck-Incipitsuche"><img src="/public/img/gluck-incipitsuche.png" alt="Beispielgrafik zur Gluck-Incipitsuche"></a></span>
 
-</div>
+				<h2>Offene Daten und Standards</h2>
+				<h3>IncipitSearch API</h3>
+				<p>Die IncipitSearch-API ist im Grunde ein ElasticSearch Endpoint. Sie ist HTTP-basiert mit in JSON formatierten Request- und Response-Bodies.<br/><a href="{{ path_for('api') }}">IncipitSearch API Documentation</a></p>
+
+
+				<h3 id="jsonld">JSON-LD und schema.org Format</h3>
+				<p>Die Ergebnisliste ist semantisch angereichert und enthält die Informationen zur Komposition und zu den Incipits. Eingebunden sind die Informationen mittels<a href="https://json-ld.org">JSON-LD</a> Serialisierung unter Nutzung des Vokabulars
+					<a href="https://schema.org/MusicComposition">schema.org</a>. Wir haben das schema.org Vokabular um "MusicIncipit" erweitert um Informationen zu den Incipits in die Daten zu integrieren.<br/>Das Format kann genutzt werden, um bereits bestehende Repositorien um Incipits zu erweitern und diese dann in IncipitSearch zu integrieren.<br/>Beispiel für eine Annotation mit schema.org und JSON-LD:</p>
+				<p><pre>
+{
+	"@context": "http://schema.org",
+	"type": "Dataset",
+	"id": "https://incipitsearch.adwmainz.net/en/results/?repository%5B%5D=GluckWV-online&repository%5B%5D=RISM&repository%5B%5D=SBN&incipit=%274C%274D%274E4D",
+	"hasPart": [
+
+		{
+			"type": "MusicComposition",
+			"url": "http://www.gluck-gesamtausgabe.de/id/01-25-00-0#parts&1498",
+			"name": "Le Diable à quatre, ou La Double Métamorphose",
+			"alternativeHeadline": "No. 9 Ariette: "Quel plaisir me transporte?" (Margot)",
+			"composer": [{
+				"@type": "Person",
+				"name": "Christoph Willibald Gluck"
+			}],
+			"hasPart": [{
+				"type": "MusicIncipit",
+				"incipitValue": "4C8D/EDC/C'BA/4G8F/4E8G/{AF}''C/'BG''D/C'G''E/D'G-/ G 3/8 CDEDCCBAGFEGAFCBGDCGEDG",
+				"incipitClef": "G",
+				"incipitKeysig": "",
+				"incipitTimesig": "3/8"
+			}]
+		}
+	]
+}
+</pre></p>
+				<p>Eine Anzeige der Daten aus der Ergebnisliste mit dem "Google Tool for structured data" finden Sie <a href="https://search.google.com/structured-data/testing-tool?hl=de#url=https%3A%2F%2Fincipitsearch.adwmainz.net%2Fen%2Fresults%2F%3Frepository%255B%255D%3DGluckWV-online%26incipit%3D%25274C4C4C%25274D">here</a>.</p>
+
+				<h3 id="rdf">IncipitSearch Metadatenformat (RDF)</h3>
+				<p> Das Standardmetadatenformat für den Datenaustausch und die Datenaggregation mit IncipitSearch
+					nutzt das Vokabular <a href="http://schema.org/">schema.org</a>.
+					Dabei kommen Turtle als führende Serialisierungsform und JSON-LD als bevorzugte Einbettungsform zum Einsatz.
+					Die Struktur der Daten teilt sich auf folgende Ebenen auf:
+					Datensets bestehen aus Gesamtkompositionen, Gesamtkompositionen bestehen aus Teilkompositionen, Teilkompositionen haben
+					ein oder mehrere Incipits.<br/>
+					Das Format kann genutzt werden, um rein analoge Inhalte zu katalogisieren oder um Digitalisate und PDFs durchsuchbar zu machen.</p>
+				<span class="image fit" style="max-width: 600px;">
+					<a href="/public/img/schema-illustration.png" title="Link to illustration">
+						<img src="/public/img/schema-illustration.png" alt="Illustration of the IncipitSearch metadatenformat"></a>
+				</span>
+				<p>Für eine beispielhafte Annotation für die Anreicherung und Einbindung von Digitalisaten mit dem Schema siehe den <a href="https://github.com/digicademy/incipitSearch/blob/master/catalogues/Breitkopf_Catalogo_delle_Sinfonie.txt">Breitkopf Catalogi delle Sinfonie 1762</a>.</p>
+
+			</div>
+		</section>
+
+	</div>
 
 {% endblock %} {# end pageContent #}
