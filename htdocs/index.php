@@ -23,21 +23,21 @@ use Slim\App as App;
 use Slim\Container as Container;
 use Slim\Views as Views;
 
-$configuration = [
-    'settings' => [
-        'displayErrorDetails' => false,
-    ],
-];
+$configuration = json_decode(file_get_contents(__DIR__ . '/../config.json'), true);
 
 $container = new Container($configuration);
 $app = new App($container);
 
 // Register component on container
 $container['view'] = function ($container) {
-    $view = new Views\Twig('../templates', [
-        'cache' => false,
-        'debug' => true
-    ]);
+
+    $view = new Views\Twig(
+        $container->slim['templatesPath'],
+        [
+            'cache' => false,
+            'debug' => true
+        ]
+    );
 
     $view->addExtension(new \Twig_Extension_Debug());
 

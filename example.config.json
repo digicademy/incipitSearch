@@ -1,5 +1,11 @@
 {
   "elasticSearch": {
     "host": "__ELASTICSEARCHHOST__"
+  },
+  "settings": {
+    "displayErrorDetails": false
+  },
+  "slim": {
+    "templatesPath": "../views"
   }
 }
