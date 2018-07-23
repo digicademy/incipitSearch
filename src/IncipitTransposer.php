@@ -35,7 +35,7 @@ class IncipitTransposer
      */
     public static function transposeNormalizedNotes(string $incipit): string
     {
-        if (empty($incipit)) {
+        if (empty($incipit) || !preg_match('/[xbCDEFGAB]/', $incipit[0])) {
             return '';
         }
 
@@ -46,16 +46,15 @@ class IncipitTransposer
         $accidentalValue = ''; // x or b
         $initialNote = '';
 
-        switch($incipit[0]){
-            case 'x':
+        if (preg_match('/[xbCDEFGAB]/', $incipit[0])) {
+            if ($incipit[0] === 'x') {
                 $initialNote = 'x' . $incipit[1];
-                break;
-            case 'b':
+            } elseif ($incipit[0] === 'b') {
                 $initialNote = 'b' . $incipit[1];
-                break;
-            default:
+            } else {
                 $initialNote = $incipit[0];
-        }
+            }
+        };
 
         $x = 0;
 
@@ -94,20 +93,16 @@ class IncipitTransposer
         }
 
         foreach (str_split($incipit) as $token) {
-            switch ($token) {
-                case '*':
-                    break;
-                case 'x':
-                    $accidentalValue = 'x';
-                    break;
-                case 'b':
-                    $accidentalValue = 'b';
-                    break;
-                default:
-                    $note = $accidentalValue . $token;
-                    $transposedNotes .= $notesIndex[$note] . ' ';
-                    $accidentalValue = '';
-                    break;
+            if (preg_match('/[xb]/', $token)) {
+                $accidentalValue = $token;
+            }
+            if (preg_match('/[CDEFGAB]/', $token)) {
+                $note = $accidentalValue . $token;
+                $transposedNotes .= $notesIndex[$note] . ' ';
+                $accidentalValue = '';
+            }
+            else {
+                continue;
             }
         }
 
