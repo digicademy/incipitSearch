@@ -62,13 +62,14 @@ class IncipitTransposer
 
         for($i; $i < count(IncipitTransposer::$notes); $i++) {
             if (IncipitTransposer::$notes[$i] === 'xB' ||
-                IncipitTransposer::$notes[$i] === 'bD' ||
-                IncipitTransposer::$notes[$i] === 'bE' ||
+                IncipitTransposer::$notes[$i] === 'xC' ||
+                IncipitTransposer::$notes[$i] === 'xD' ||
+                IncipitTransposer::$notes[$i] === 'E' ||
                 IncipitTransposer::$notes[$i] === 'xE' ||
-                IncipitTransposer::$notes[$i] === 'bG' ||
-                IncipitTransposer::$notes[$i] === 'bA' ||
-                IncipitTransposer::$notes[$i] === 'bB' ||
-                IncipitTransposer::$notes[$i] === 'bC') {
+                IncipitTransposer::$notes[$i] === 'xF' ||
+                IncipitTransposer::$notes[$i] === 'xG' ||
+                IncipitTransposer::$notes[$i] === 'A' ||
+                IncipitTransposer::$notes[$i] === 'B') {
                 $notesIndex[IncipitTransposer::$notes[$i]] = $x;
             } else {
                 $notesIndex[IncipitTransposer::$notes[$i]] = $x;
@@ -77,14 +78,15 @@ class IncipitTransposer
         }
 
         for($a = 0; $a < array_search($initialNote, IncipitTransposer::$notes); $a++) {
-            if (IncipitTransposer::$notes[$a] === 'xB' ||
-                IncipitTransposer::$notes[$a] === 'bD' ||
-                IncipitTransposer::$notes[$a] === 'bE' ||
-                IncipitTransposer::$notes[$a] === 'xE' ||
-                IncipitTransposer::$notes[$a] === 'bG' ||
-                IncipitTransposer::$notes[$a] === 'bA' ||
-                IncipitTransposer::$notes[$a] === 'bB' ||
-                IncipitTransposer::$notes[$a] === 'bC') {
+            if (IncipitTransposer::$notes[$a] === 'xB'||
+                IncipitTransposer::$notes[$a] === 'xC'||
+                IncipitTransposer::$notes[$a] === 'xD'||
+                IncipitTransposer::$notes[$a] === 'E' ||
+                IncipitTransposer::$notes[$a] === 'xE'||
+                IncipitTransposer::$notes[$a] === 'xF'||
+                IncipitTransposer::$notes[$a] === 'xG'||
+                IncipitTransposer::$notes[$a] === 'A' ||
+                IncipitTransposer::$notes[$a] === 'B') {
                 $notesIndex[IncipitTransposer::$notes[$a]] = $x;
             } else {
                 $notesIndex[IncipitTransposer::$notes[$a]] = $x;
