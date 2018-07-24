@@ -35,6 +35,7 @@ class SearchQuery
     private $userInput = '';
     private $catalogFilter = null;
 
+    private $indexName;
 
     private $numOfResults = 0;
     private $elasticClient;
@@ -53,12 +54,10 @@ class SearchQuery
      */
     public function __construct()
     {
-
         $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../config.json'));
-        $elasticHost = $jsonConfig->elasticSearch->host;
-        if (empty($elasticHost)) {
-            $elasticHost = '127.0.0.1';
-        }
+
+        ($jsonConfig->elasticSearch->host) ? $elasticHost = $jsonConfig->elasticSearch->host : $elasticHost = '127.0.0.1';
+        ($jsonConfig->elasticSearch->indexName) ? $this->indexName = $jsonConfig->elasticSearch->indexName : $elasticHost = 'catalog_entries';
 
         $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
     }
@@ -76,7 +75,7 @@ class SearchQuery
     {
 
         $searchParams = [
-            'index' => 'catalog_entries',
+            'index' => $this->indexName,
             'type' => 'catalogEntry',
             'body' => [
                 'query' => [

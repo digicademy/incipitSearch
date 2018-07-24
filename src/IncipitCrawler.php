@@ -35,7 +35,7 @@ class IncipitCrawler
     protected $elasticClient;
     protected $catalogClient;
 
-    protected $indexName = 'catalog_entries';
+    protected $indexName;
 
     protected $logs = [];
     protected function addLog(string $message)
@@ -60,12 +60,11 @@ class IncipitCrawler
     public function __construct()
     {
         print(__DIR__);
-        $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../config.json'));
-        $elasticHost = $jsonConfig->elasticSearch->host;
 
-        if (empty($elasticHost)) {
-            $elasticHost = '127.0.0.1';
-        }
+        $jsonConfig = json_decode(file_get_contents(__DIR__ . '/../config.json'));
+
+        ($jsonConfig->elasticSearch->host) ? $elasticHost = $jsonConfig->elasticSearch->host : $elasticHost = '127.0.0.1';
+        ($jsonConfig->elasticSearch->indexName) ? $this->indexName = $jsonConfig->elasticSearch->indexName : $elasticHost = 'catalog_entries';
 
         $this->elasticClient = ClientBuilder::create()->setHosts([$elasticHost])->build();
 
