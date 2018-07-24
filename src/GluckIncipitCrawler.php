@@ -40,7 +40,7 @@ class GluckIncipitCrawler extends IncipitCrawler
      * @param string $dataURL url of data in catalog
      *                        is: http://www.gluck-gesamtausgabe.de/rdf/collection/works/
      *
-     * @return CatalogEntries Array of catalog entries
+     * @return array $catalogEntries Array of catalog entries
      */
     public function catalogEntriesFromWork(string $dataURL) //can return null
     {
@@ -50,20 +50,22 @@ class GluckIncipitCrawler extends IncipitCrawler
         // retrun null when emoty or invalid
         if ($xml == null || strlen($xml) == 0) {
             $this->addLog("error: catalogEntryFromWork > not found at {$dataURL}");
-
-            return;
+            return null;
         }
         try {
             $parentXMLElement = new SimpleXMLElement($xml);
         } catch (\Exception $e) {
             // Handle all other exceptions
             $this->addLog("error: catalogEntryFromXML at {$dataURL} > could not parse XML > {$e->getMessage()}");
-
             return null;
         }
 
         // url to work
-        $work = $parentXMLElement->xpath('/rdf:RDF/skos:Concept')[0];
+        if ($parentXMLElement->xpath('/rdf:RDF/skos:Concept')[0]) {
+            $work = $parentXMLElement->xpath('/rdf:RDF/skos:Concept')[0];
+        } else {
+            return null;
+        }
         $workIdentifier = $this->contentOfXMLPath($work, 'dc:identifier');
         $workTitle = $this->contentOfXMLPath($work, 'dc:title');
         //$workDetailUrl = $work->attributes()["about"];
@@ -107,8 +109,6 @@ class GluckIncipitCrawler extends IncipitCrawler
                     $partTitle,
                     ''
                 );
-
-
                 array_push($catalogEntries, $catalogEntry);
             }
 
