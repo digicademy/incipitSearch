@@ -1,6 +1,7 @@
 {
   "elasticSearch": {
-    "host": "__ELASTICSEARCHHOST__"
+    "host": "__ELASTICSEARCHHOST__",
+    "indexName": "__ELASTICSEARCHINDEXNAME__"
   },
   "settings": {
     "displayErrorDetails": false
