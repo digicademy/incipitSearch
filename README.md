@@ -34,13 +34,13 @@ IncipitSearch is developed at the [Digital Academy](https://www.digitale-akademi
 
 # Contributors
 
-[Anna Neovesky](http://www.adwmainz.de/mitarbeiter/profil/anna-neovesky.html) (Idea, Concept, Application Development, Data Processing) 
+[Anna Neovesky](http://www.adwmainz.de/mitarbeiterinnen/profil/anna-neovesky.html) (Idea, Concept, Application Development, Data Processing) 
 
 Gabriel Reimers (Idea, Concept, Application Development)
 
-[Frederic von Vlahovits](http://www.adwmainz.de/mitarbeiter/profil/frederic-von-vlahovits.html) (Frontend Development, Design, Documentation)
+[Frederic von Vlahovits](http://www.adwmainz.de/mitarbeiterinnen/profil/frederic-von-vlahovits.html) (Frontend Development, Design, Documentation)
 
-[Torsten Schrade](http://www.adwmainz.de/mitarbeiter/profil/prof-torsten-schrade.html) (Metadata schema, LOD, DevOps)
+[Torsten Schrade](http://www.adwmainz.de/mitarbeiterinnen/profil/prof-torsten-schrade.html) (Metadata schema, LOD, DevOps)
 
 
 # Used Software and Standards
