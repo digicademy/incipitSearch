@@ -24,16 +24,14 @@
             //to get constant size we multiply with the inverse
             var pageWidth = containerWidth * (100 / scale)
 
-            var options = JSON.stringify({
+            var options = {
                 inputFormat: 'pae',
                 pageHeight: 500,
                 pageWidth: pageWidth,
-                ignoreLayout: 1,
-                noLayout: 1,
-                border: 0,
+                breaks: 'none',
                 scale: 40,
                 adjustPageHeight: 1
-            });
+            };
 
             var notesSVG = vrvToolkit.renderData(data, options);
             var svgContainerDiv = result.find('.incipitSVG');
