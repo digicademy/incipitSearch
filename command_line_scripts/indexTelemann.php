@@ -5,7 +5,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 
 /**
- * This is to be called from command line to index the Offline Catalogues.
+ * This is to be called from command line to index the Telemann works catalog.
  * ATTENTION: this must be called from the same directory as index.php
  * or paths will be wrong
  *
@@ -13,7 +13,7 @@ require __DIR__ . '/../vendor/autoload.php';
  * Copyright notice
  *
  * (c) 2016
- * Anna Neovesky  Anna.Neovesky@adwmainz.de
+ * Carlo Licciulli  Carlo.Licciulli@adwmainz.de
  *
  * Digital Academy www.digitale-akademie.de
  * Academy of Sciences and Literatur | Mainz www.adwmainz.de
@@ -27,4 +27,4 @@ require __DIR__ . '/../vendor/autoload.php';
 $crawler = new SchemaIncipitCrawler();
 
 $crawler->createIndex();
-$crawler->crawlCatalog('http://www.gluck-gesamtausgabe.de/fileadmin/incipitsearch/Breitkopf_Catalogo_delle_Sinfonie.txt');
+$crawler->crawlCatalog('https://adwmainz.pages.gitlab.rlp.net/nfdi4culture/cdmd/telemann-indexes/peritext/incipits/telemann-incipits-schema.ttl');

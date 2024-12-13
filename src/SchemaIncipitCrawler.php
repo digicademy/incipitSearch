@@ -38,11 +38,11 @@ class SchemaIncipitCrawler extends IncipitCrawler
      *
      * This operation might take quite some time to complete.
      */
-    public function crawlCatalog()
+    public function crawlCatalog(string $dataUrl)
     {
 
         // @TODO: QUICK FIX !!! EASYRDF only supports http => how to address?
-        $dataUrl = 'http://www.gluck-gesamtausgabe.de/fileadmin/incipitsearch/Breitkopf_Catalogo_delle_Sinfonie.txt';
+        # $dataUrl = 'http://www.gluck-gesamtausgabe.de/fileadmin/incipitsearch/Breitkopf_Catalogo_delle_Sinfonie.txt';
 
         $graph = new EasyRdf_Graph();
 
@@ -82,6 +82,7 @@ class SchemaIncipitCrawler extends IncipitCrawler
 
                     foreach ($compositionIncipits as $musicIncipit) {
                         // get incipit components
+                        $entryUid = $musicIncipit->get('schema:identifier');
                         $incipitName = $musicIncipit->get('schema:name')->getValue();
                         $incipitValue = $musicIncipit->get('schema:incipitValue')->getValue();
                         $incipitClef = $musicIncipit->get('schema:incipitClef')->getValue();
@@ -101,7 +102,7 @@ class SchemaIncipitCrawler extends IncipitCrawler
                         $incipit = new Incipit($incipitValue, $incipitClef, $incipitKeysig, $incipitTimesig);
 
                         // generate constant hash based uid on catalogue title and incipit name (both obligatory)
-                        $entryUid = hash('crc32', $dataCatalogName) . '-' . hash('md5', $incipitName);
+                        // $entryUid = hash('crc32', $dataCatalogName) . '-' . hash('md5', $incipitName);
 
                         // create new catalog entry
                         $catalogEntry = new CatalogEntry(
